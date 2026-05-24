@@ -304,7 +304,8 @@ function updateTileInstancesForState(stateName, newValue) {
   for (const [, instance] of tileInstances) {
     const inputs = instance.stateMachineInputs('SMAvatar');
     if (!inputs) continue;
-    const inp = inputs.find(i => i.name === stateName);
+    let inp = null;
+    for (const x of inputs) { if (x.name === stateName) { inp = x; break; } }
     if (!inp) continue;
     if (inp.type === 56) inp.value = newValue;
     else if (inp.type === 59) inp.value = !!newValue;
@@ -490,7 +491,6 @@ function applyFeatureButton(fb) {
     if (val === 0 && key !== primaryState) continue;
     setSMValue(key, val);
   }
-  scheduleTrigger();
 }
 
 // ===================== BACKGROUND =====================
@@ -581,7 +581,6 @@ function renderUI() {
           swatch.title = ib.color;
           swatch.onclick = () => {
             setSMValue(ib.state, ib.value);
-            scheduleTrigger();
             if (ib.state === 'BackgroundColor') updateBackground();
             grid.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
             swatch.classList.add('selected');
