@@ -8,184 +8,165 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #131f2c; color: #e8e8e8; display: flex; height: 100vh; overflow: hidden; }
 
-/* ---- Sidebar ---- */
 .sidebar { width: 420px; background: #1a2d3d; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #243647; }
 .sidebar-header { padding: 16px 20px; border-bottom: 1px solid #243647; flex-shrink: 0; }
 .sidebar-header h1 { font-size: 18px; font-weight: 700; color: #fff; }
 .sidebar-header .subtitle { font-size: 11px; color: #6b8299; margin-top: 2px; }
 
-/* Tab bar */
-.tab-bar { display: flex; background: #152536; border-bottom: 2px solid #243647; flex-shrink: 0; overflow-x: auto; }
+.tab-bar { display: flex; background: #152536; border-bottom: 2px solid #243647; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; }
 .tab-bar::-webkit-scrollbar { height: 0; }
-.tab-btn { flex: 0 0 auto; padding: 12px 16px; font-size: 12px; font-weight: 600; color: #6b8299; cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
-.tab-btn:hover { color: #a0bcd0; }
+.tab-btn { flex: 0 0 auto; padding: 12px 18px; font-size: 12px; font-weight: 600; color: #6b8299; cursor: pointer; border: none; background: none; border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all 0.15s; }
+.tab-btn:hover { color: #b0c8d8; }
 .tab-btn.active { color: #58cc02; border-bottom-color: #58cc02; }
 
-/* Scrollable content */
-.tab-content { flex: 1; overflow-y: auto; padding: 16px; }
+.tab-content { flex: 1; overflow-y: auto; padding: 16px 12px; }
 .tab-content::-webkit-scrollbar { width: 4px; }
 .tab-content::-webkit-scrollbar-thumb { background: #2a4055; border-radius: 2px; }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
-/* Section */
-.section { margin-bottom: 20px; }
-.section-header { font-size: 13px; font-weight: 700; color: #a0bcd0; margin-bottom: 10px; text-transform: none; letter-spacing: 0; }
+.section { margin-bottom: 22px; }
+.section-header { font-size: 13px; font-weight: 700; color: #b0c8d8; margin-bottom: 10px; }
 
 /* Color swatches */
 .swatch-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-.swatch { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.12s, border-color 0.12s; position: relative; }
-.swatch:hover { transform: scale(1.1); }
-.swatch.selected { border-color: #58cc02; box-shadow: 0 0 0 2px rgba(88,204,2,0.3); }
-.swatch.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+.swatch { width: 42px; height: 42px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.12s, border-color 0.12s; position: relative; flex-shrink: 0; }
+.swatch:hover { transform: scale(1.12); }
+.swatch.selected { border-color: #58cc02; box-shadow: 0 0 0 3px rgba(88,204,2,0.3); }
+.swatch.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
 
 /* Feature tiles */
-.tile-grid { display: flex; flex-wrap: wrap; gap: 6px; }
-.tile { width: 52px; height: 52px; border-radius: 10px; cursor: pointer; border: 2px solid #2a4055; background: #1e3347; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #a0bcd0; transition: all 0.12s; position: relative; }
-.tile:hover { border-color: #58cc02; background: #1a3a2a; color: #fff; transform: scale(1.05); }
-.tile.selected { border-color: #58cc02; background: #1a3a2a; color: #58cc02; box-shadow: 0 0 0 3px rgba(88,204,2,0.25); }
-.tile.selected::after { content: '✓'; position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; background: #58cc02; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; }
-.tile.zero-tile { border-style: dashed; }
-.tile.zero-tile::before { content: '✕'; font-size: 18px; color: #4a6075; }
+.tile-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.tile { width: 76px; height: 76px; border-radius: 12px; cursor: pointer; border: 2px solid #2a4055; background: #1e3347; transition: all 0.12s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tile:hover { border-color: #58cc02; transform: scale(1.05); }
+.tile.selected { border-color: #58cc02; box-shadow: 0 0 0 3px rgba(88,204,2,0.3); }
+.tile img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; position: absolute; inset: 0; }
+.tile .tile-icon { font-size: 28px; opacity: 0.3; z-index: 1; }
+.tile.loading .tile-icon { animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.5; } }
 
-/* File picker */
 .file-area { padding: 12px 20px; border-top: 1px solid #243647; flex-shrink: 0; display: flex; gap: 8px; align-items: center; }
 .file-area input[type="file"] { flex: 1; font-size: 11px; color: #6b8299; }
-.file-area .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.file-area .status-dot.loaded { background: #58cc02; }
-.file-area .status-dot.waiting { background: #ffc107; }
+.file-area .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.file-area .dot.ok { background: #58cc02; }
+.file-area .dot.wait { background: #ffc107; }
 
-/* ---- Main canvas area ---- */
 .main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; background: #0f1a24; }
-.canvas-wrap { position: relative; }
-canvas { border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.5); background: #0f3460; max-width: 100%; height: auto; }
+canvas#riveCanvas { border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.5); background: #0f3460; max-width: 100%; height: auto; }
 .main-actions { margin-top: 16px; display: flex; gap: 10px; }
-.btn { padding: 10px 20px; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+.btn { padding: 10px 22px; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
 .btn-primary { background: #58cc02; color: #fff; }
 .btn-primary:hover { background: #4cb000; }
-.btn-secondary { background: #2a4055; color: #a0bcd0; }
+.btn-secondary { background: #2a4055; color: #b0c8d8; }
 .btn-secondary:hover { background: #354f6a; }
 
-/* Loading overlay */
-.loading-overlay { position: fixed; inset: 0; background: rgba(15,26,36,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+.loading-overlay { position: fixed; inset: 0; background: rgba(15,26,36,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
 .loading-overlay.hidden { display: none; }
-.spinner { width: 48px; height: 48px; border: 4px solid #2a4055; border-top-color: #58cc02; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
+.loading-overlay .spinner { width: 48px; height: 48px; border: 4px solid #2a4055; border-top-color: #58cc02; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { font-size: 14px; color: #a0bcd0; }
+.loading-overlay .loading-text { font-size: 14px; color: #b0c8d8; }
 
-.config-notice { font-size: 11px; color: #8b9f33; margin-top: 4px; }
+.thumb-status { font-size: 10px; color: #506070; padding: 4px 12px; text-align: center; flex-shrink: 0; min-height: 18px; }
 </style>
 </head>
 <body>
 
-<!-- Loading overlay -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
   <div class="loading-text">加载 Avatar Builder...</div>
 </div>
 
-<!-- Sidebar -->
 <div class="sidebar">
   <div class="sidebar-header">
     <h1>Avatar Builder</h1>
-    <div class="subtitle" id="fileStatus">等待加载 .riv 文件...</div>
+    <div class="subtitle" id="fileStatus">等待加载...</div>
   </div>
-
   <div class="tab-bar" id="tabBar"></div>
+  <div class="thumb-status" id="thumbStatus"></div>
   <div class="tab-content" id="tabContent"></div>
-
   <div class="file-area">
-    <div class="status-dot waiting" id="statusDot"></div>
+    <div class="dot wait" id="statusDot"></div>
     <input type="file" id="fileInput" accept=".riv" title="选择 .riv 文件">
   </div>
 </div>
 
-<!-- Main -->
 <div class="main">
-  <div class="canvas-wrap">
-    <canvas id="riveCanvas" width="500" height="500"></canvas>
-  </div>
+  <canvas id="riveCanvas" width="500" height="500"></canvas>
   <div class="main-actions">
     <button class="btn btn-primary" onclick="exportPNG()">导出 PNG</button>
     <button class="btn btn-secondary" onclick="resetAll()">重置默认</button>
   </div>
 </div>
 
+<canvas id="thumbCanvas" width="80" height="80" style="display:none;"></canvas>
+
 <script src="https://unpkg.com/@rive-app/canvas@2.37.8/rive.js"></script>
 <script>
-// ---- State ----
+// ===================== STATE =====================
 let riveInst = null;
+let thumbRive = null;       // second Rive instance for thumbnail rendering
+let thumbReady = false;
 let smNames = [];
 let currentSM = '';
-let triggerInput = null;   // bounce_trig ref
-let fireTimeout = null;    // debounce timer
-let builderConfig = null;  // avatar_builder_config.json
-let currentInputValues = {}; // track current values per input name
-let stateMachineInputs = {}; // name -> StateMachineInput object map
+let triggerInput = null;
+let fireTimeout = null;
+let builderConfig = null;
+let currentInputValues = {};
+let stateMachineInputs = {};  // name -> StateMachineInput (main instance)
+let riveBuffer = null;
+let thumbCache = {};          // "state_value" -> data URI
 
-// ---- DOM refs ----
+const TAB_LABELS = ['Body', 'Eyes', 'Hair', 'Face', 'Facial Hair', 'Headwear', 'Clothing', 'Background'];
+
+// ===================== DOM =====================
 const canvas = document.getElementById('riveCanvas');
+const thumbCanvas = document.getElementById('thumbCanvas');
 const tabBar = document.getElementById('tabBar');
 const tabContent = document.getElementById('tabContent');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const fileStatus = document.getElementById('fileStatus');
 const statusDot = document.getElementById('statusDot');
+const thumbStatus = document.getElementById('thumbStatus');
 
-// ---- Trigger scheduling ----
+// ===================== TRIGGER =====================
 function scheduleTrigger() {
   if (!triggerInput) return;
   if (fireTimeout) clearTimeout(fireTimeout);
-  fireTimeout = setTimeout(() => {
-    triggerInput.fire();
-    fireTimeout = null;
-  }, 120);
+  fireTimeout = setTimeout(() => { triggerInput.fire(); fireTimeout = null; }, 100);
 }
 
-// ---- Loading ----
+// ===================== MAIN RIVE INSTANCE =====================
 function loadRiveFile(buffer) {
-  if (riveInst) {
-    try { riveInst.cleanup(); } catch(e) {}
-    riveInst = null;
-  }
-  smNames = [];
-  currentSM = '';
-  stateMachineInputs = {};
-  currentInputValues = {};
+  riveBuffer = buffer;
+  if (riveInst) { try { riveInst.cleanup(); } catch(e) {} riveInst = null; }
+  if (thumbRive) { try { thumbRive.cleanup(); } catch(e) {} thumbRive = null; }
+  smNames = []; currentSM = ''; stateMachineInputs = {}; currentInputValues = {};
+  thumbCache = {}; thumbReady = false;
 
   const Rive = window.rive?.Rive;
   if (!Rive) { fileStatus.textContent = '错误: Rive SDK 未加载'; return; }
 
   fileStatus.textContent = '加载中...';
   riveInst = new Rive({
-    canvas: canvas,
-    buffer: new Uint8Array(buffer),
-    autoplay: false,
-    onLoad: () => onRiveLoaded(),
+    canvas, buffer: new Uint8Array(buffer), autoplay: false,
+    onLoad: () => onMainLoaded(),
     onLoadError: (err) => fileStatus.textContent = `加载错误: ${err}`,
   });
 }
 
-function onRiveLoaded() {
+function onMainLoaded() {
   if (!riveInst) return;
-
-  const file = riveInst.riveFile.file;
-  const ab = file.defaultArtboard();
-  const smCount = ab.stateMachineCount();
-
+  const ab = riveInst.riveFile.file.defaultArtboard();
   smNames = [];
-  for (let i = 0; i < smCount; i++) {
-    smNames.push(ab.stateMachineByIndex(i).name);
-  }
-
-  fileStatus.textContent = `${ab.name} · ${ab.animationCount()} 动画 · ${smCount} 状态机`;
-  statusDot.className = 'status-dot loaded';
+  for (let i = 0; i < ab.stateMachineCount(); i++) smNames.push(ab.stateMachineByIndex(i).name);
+  fileStatus.textContent = `${ab.name} · ${smNames.length} 状态机`;
+  statusDot.className = 'dot ok';
 
   riveInst.play(smNames);
-
-  // Defer: Animator needs frames to initialize
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       selectStateMachine('SMAvatar');
+      initThumbnailRive();
       loadingOverlay.classList.add('hidden');
     });
   });
@@ -194,96 +175,234 @@ function onRiveLoaded() {
 function selectStateMachine(name) {
   if (!riveInst || !name) return;
   currentSM = name;
-
   const inputs = riveInst.stateMachineInputs(name);
-  if (!inputs) {
-    fileStatus.textContent = `stateMachineInputs('${name}') 返回 null`;
-    return;
-  }
+  if (!inputs) { fileStatus.textContent = `无法获取: ${name}`; return; }
 
-  // Build name -> input map
-  stateMachineInputs = {};
-  currentInputValues = {};
-  triggerInput = null;
-
+  stateMachineInputs = {}; currentInputValues = {}; triggerInput = null;
   for (const inp of inputs) {
     stateMachineInputs[inp.name] = inp;
-    if (inp.type === 58) { // Trigger
-      if (inp.name === 'bounce_trig') triggerInput = inp;
-    } else {
-      currentInputValues[inp.name] = inp.value;
-    }
+    if (inp.type === 58) { if (inp.name === 'bounce_trig') triggerInput = inp; }
+    else currentInputValues[inp.name] = inp.value;
   }
-
   if (builderConfig) renderUI();
 }
 
-// ---- Apply state machine value ----
+// ===================== VALUE SETTING =====================
 function setSMValue(name, value) {
   const inp = stateMachineInputs[name];
   if (!inp) return;
-  if (inp.type === 56) { // Number
-    inp.value = value;
-  } else if (inp.type === 59) { // Boolean
-    inp.value = !!value;
-  }
+  if (inp.type === 56) inp.value = value;
+  else if (inp.type === 59) inp.value = !!value;
   currentInputValues[name] = value;
+}
+
+function applyFeatureButton(fb) {
+  const primaryState = fb.state;
+  for (const [key, val] of Object.entries(fb.statesToOverride)) {
+    if (val === 0 && key !== primaryState) continue;
+    setSMValue(key, val);
+  }
   scheduleTrigger();
 }
 
-function applyStatesToOverride(overrides) {
-  for (const [name, value] of Object.entries(overrides)) {
-    setSMValue(name, value);
-  }
+// ===================== THUMBNAIL RIVE INSTANCE =====================
+function initThumbnailRive() {
+  if (!riveBuffer) return;
+  const Rive = window.rive?.Rive;
+  if (!Rive) return;
+
+  thumbRive = new Rive({
+    canvas: thumbCanvas,
+    buffer: new Uint8Array(riveBuffer),
+    autoplay: false,
+    onLoad: () => {
+      thumbRive.play(smNames);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          // Initialize state machine with current values
+          const inputs = thumbRive.stateMachineInputs('SMAvatar');
+          if (inputs) {
+            let trig = null;
+            for (const inp of inputs) {
+              if (inp.type === 58 && inp.name === 'bounce_trig') trig = inp;
+              else if (inp.type === 56 && currentInputValues[inp.name] !== undefined) {
+                inp.value = currentInputValues[inp.name];
+              }
+            }
+            if (trig) trig.fire();
+          }
+          thumbReady = true;
+          // Generate thumbnails for whatever tab is visible
+          requestAnimationFrame(() => generateVisibleThumbnails());
+        });
+      });
+    },
+    onLoadError: () => console.warn('Thumbnail instance load error'),
+  });
 }
 
-// ---- Build UI from config ----
+function captureThumbFor(fb) {
+  return new Promise((resolve) => {
+    const key = `${fb.state}_${fb.value}`;
+    if (thumbCache[key]) { resolve(thumbCache[key]); return; }
+    if (!thumbReady || !thumbRive) { resolve(null); return; }
+
+    const inputs = thumbRive.stateMachineInputs('SMAvatar');
+    if (!inputs) { resolve(null); return; }
+
+    const nameMap = {};
+    let trig = null;
+    for (const inp of inputs) {
+      nameMap[inp.name] = inp;
+      if (inp.type === 58 && inp.name === 'bounce_trig') trig = inp;
+      else if (inp.type === 56 && currentInputValues[inp.name] !== undefined) {
+        inp.value = currentInputValues[inp.name];
+      }
+    }
+
+    // Apply feature overrides (skip 0 for non-primary states)
+    const primaryState = fb.state;
+    for (const [key, val] of Object.entries(fb.statesToOverride)) {
+      if (val === 0 && key !== primaryState) continue;
+      if (nameMap[key] && nameMap[key].type === 56) nameMap[key].value = val;
+    }
+
+    if (trig) trig.fire();
+
+    // Let the animation settle, then capture
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        try {
+          const uri = thumbCanvas.toDataURL('image/png');
+          thumbCache[key] = uri;
+          resolve(uri);
+        } catch(e) { resolve(null); }
+      });
+    });
+  });
+}
+
+async function generateVisibleThumbnails() {
+  if (!thumbReady || !builderConfig) return;
+
+  const activePanel = tabContent.querySelector('.tab-panel.active');
+  if (!activePanel) return;
+
+  const panels = [...tabContent.querySelectorAll('.tab-panel')];
+  const activeIdx = panels.indexOf(activePanel);
+  const tabs = builderConfig.avatarBuilderConfig.stateChooserTabs;
+  if (activeIdx < 0 || activeIdx >= tabs.length) return;
+
+  const tab = tabs[activeIdx];
+
+  // Collect all feature buttons + their corresponding tile elements
+  const tileGrids = activePanel.querySelectorAll('.tile-grid');
+  let gridIdx = 0;
+  const workItems = [];
+
+  for (const section of tab.sections) {
+    if (section.buttonType === 'FEATURE' && gridIdx < tileGrids.length) {
+      const grid = tileGrids[gridIdx];
+      const tiles = grid.querySelectorAll('.tile');
+      for (let i = 0; i < section.featureButtons.length; i++) {
+        workItems.push({
+          fb: section.featureButtons[i],
+          tile: tiles[i] || null,
+        });
+      }
+      gridIdx++;
+    }
+  }
+
+  if (workItems.length === 0) { thumbStatus.textContent = ''; return; }
+
+  let done = 0;
+  const total = workItems.filter(w => !thumbCache[`${w.fb.state}_${w.fb.value}`]).length;
+  if (total === 0) {
+    // All cached, just update tiles
+    for (const w of workItems) {
+      updateTileWithThumb(w.tile, w.fb);
+    }
+    return;
+  }
+
+  thumbStatus.textContent = `生成预览图... 0/${total}`;
+
+  for (const w of workItems) {
+    const key = `${w.fb.state}_${w.fb.value}`;
+    if (thumbCache[key]) {
+      updateTileWithThumb(w.tile, w.fb);
+      continue;
+    }
+    const uri = await captureThumbFor(w.fb);
+    done++;
+    thumbStatus.textContent = `生成预览图... ${done}/${total}`;
+    if (uri && w.tile) {
+      updateTileWithThumb(w.tile, w.fb);
+    }
+  }
+
+  thumbStatus.textContent = '';
+}
+
+function updateTileWithThumb(tile, fb) {
+  if (!tile) return;
+  const key = `${fb.state}_${fb.value}`;
+  const uri = thumbCache[key];
+  if (!uri) return;
+  tile.classList.remove('loading');
+  const icon = tile.querySelector('.tile-icon');
+  if (icon) icon.style.display = 'none';
+  const oldImg = tile.querySelector('img');
+  if (oldImg) oldImg.remove();
+  const img = document.createElement('img');
+  img.src = uri;
+  tile.appendChild(img);
+}
+
+// ===================== UI RENDER =====================
 function renderUI() {
   if (!builderConfig) return;
-
   const tabs = builderConfig.avatarBuilderConfig.stateChooserTabs;
+
   tabBar.innerHTML = '';
   tabContent.innerHTML = '';
 
   tabs.forEach((tab, ti) => {
-    // Tab button
-    const firstSection = tab.sections[0];
-    const tabLabel = firstSection.header;
     const btn = document.createElement('button');
     btn.className = 'tab-btn';
-    btn.textContent = tabLabel;
+    btn.textContent = TAB_LABELS[ti] || tab.sections[0].header;
     btn.onclick = () => switchTab(ti);
     tabBar.appendChild(btn);
 
-    // Tab panel
     const panel = document.createElement('div');
     panel.className = 'tab-panel';
 
     for (const section of tab.sections) {
       const secDiv = document.createElement('div');
       secDiv.className = 'section';
-
       const header = document.createElement('div');
       header.className = 'section-header';
       header.textContent = section.header;
       secDiv.appendChild(header);
 
       if (section.buttonType === 'IMAGE') {
-        // Color swatch grid
         const grid = document.createElement('div');
         grid.className = 'swatch-grid';
         const stateName = section.imageButtons[0]?.state;
         const currentVal = currentInputValues[stateName];
 
-        for (const btn of section.imageButtons) {
+        for (const ib of section.imageButtons) {
           const swatch = document.createElement('div');
           swatch.className = 'swatch';
-          if (btn.value === currentVal) swatch.classList.add('selected');
-          swatch.style.backgroundColor = btn.color;
-          swatch.title = `${stateName}: ${btn.value}`;
+          swatch.dataset.state = ib.state;
+          swatch.dataset.value = ib.value;
+          if (ib.value === currentVal) swatch.classList.add('selected');
+          swatch.style.backgroundColor = ib.color;
+          swatch.title = ib.color;
           swatch.onclick = () => {
-            setSMValue(btn.state, btn.value);
-            // Update selection visual
+            setSMValue(ib.state, ib.value);
+            scheduleTrigger();
             grid.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
             swatch.classList.add('selected');
           };
@@ -291,122 +410,116 @@ function renderUI() {
         }
         secDiv.appendChild(grid);
       } else if (section.buttonType === 'FEATURE') {
-        // Feature tile grid
         const grid = document.createElement('div');
         grid.className = 'tile-grid';
         const stateName = section.featureButtons[0]?.state;
         const currentVal = currentInputValues[stateName];
 
-        for (const btn of section.featureButtons) {
+        for (const fb of section.featureButtons) {
           const tile = document.createElement('div');
-          tile.className = 'tile';
-          if (btn.value === 0) tile.classList.add('zero-tile');
-          if (btn.value === currentVal) tile.classList.add('selected');
-          if (btn.value > 0) tile.textContent = btn.value;
-          tile.title = `${stateName}: ${btn.value}`;
+          tile.className = 'tile loading';
+          tile.dataset.state = fb.state;
+          tile.dataset.value = fb.value;
+          if (fb.value === currentVal) tile.classList.add('selected');
+          if (thumbCache[`${fb.state}_${fb.value}`]) tile.classList.remove('loading');
+
+          // Placeholder icon
+          const icon = document.createElement('span');
+          icon.className = 'tile-icon';
+          icon.textContent = fb.value === 0 ? '✕' : '';
+          tile.appendChild(icon);
+
+          // Show cached thumbnail immediately
+          const cachedUri = thumbCache[`${fb.state}_${fb.value}`];
+          if (cachedUri) {
+            icon.style.display = 'none';
+            const img = document.createElement('img');
+            img.src = cachedUri;
+            tile.appendChild(img);
+          }
+
           tile.onclick = () => {
-            applyStatesToOverride(btn.statesToOverride);
-            // Update selection visuals within this section
+            applyFeatureButton(fb);
             grid.querySelectorAll('.tile').forEach(t => t.classList.remove('selected'));
             tile.classList.add('selected');
-            // Also refresh color swatch highlights in other sections
             refreshAllHighlights();
           };
           grid.appendChild(tile);
         }
         secDiv.appendChild(grid);
       }
-
       panel.appendChild(secDiv);
     }
-
     tabContent.appendChild(panel);
   });
 
-  // Activate first tab
   switchTab(0);
+  setTimeout(() => generateVisibleThumbnails(), 200);
 }
 
 function switchTab(idx) {
-  const btns = tabBar.querySelectorAll('.tab-btn');
-  const panels = tabContent.querySelectorAll('.tab-panel');
-  btns.forEach((b, i) => b.classList.toggle('active', i === idx));
-  panels.forEach((p, i) => p.classList.toggle('active', i === idx));
+  tabBar.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  tabContent.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+  setTimeout(() => generateVisibleThumbnails(), 100);
 }
 
 function refreshAllHighlights() {
-  // Re-render all swatch/tile highlights based on currentInputValues
+  const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
+  if (!tabs) return;
   const panels = tabContent.querySelectorAll('.tab-panel');
-  panels.forEach(panel => {
-    panel.querySelectorAll('.swatch-grid').forEach(grid => {
-      const swatches = grid.querySelectorAll('.swatch');
-      const firstSwatch = swatches[0];
-      if (!firstSwatch) return;
-      const stateName = firstSwatch.title?.split(':')[0]?.trim();
-      if (!stateName) return;
-      const currentVal = currentInputValues[stateName];
-      swatches.forEach(s => {
-        const match = s.title?.match(new RegExp(`${stateName}:\\s*(\\d+)`));
-        const val = match ? parseInt(match[1]) : null;
-        s.classList.toggle('selected', val === currentVal);
-      });
-    });
 
-    panel.querySelectorAll('.tile-grid').forEach(grid => {
-      const tiles = grid.querySelectorAll('.tile');
-      const firstTile = tiles[0];
-      if (!firstTile) return;
-      const stateName = firstTile.title?.split(':')[0]?.trim();
-      if (!stateName) return;
-      const currentVal = currentInputValues[stateName];
-      tiles.forEach(t => {
-        const match = t.title?.match(new RegExp(`${stateName}:\\s*(\\d+)`));
-        const val = match ? parseInt(match[1]) : null;
-        t.classList.toggle('selected', val === currentVal);
-      });
-    });
+  panels.forEach((panel, ti) => {
+    if (ti >= tabs.length) return;
+    const tab = tabs[ti];
+    let si = 0, fi = 0;
+    const swatchGrids = panel.querySelectorAll('.swatch-grid');
+    const tileGrids = panel.querySelectorAll('.tile-grid');
+
+    for (const section of tab.sections) {
+      if (section.buttonType === 'IMAGE' && si < swatchGrids.length) {
+        const cur = currentInputValues[section.imageButtons[0]?.state];
+        swatchGrids[si].querySelectorAll('.swatch').forEach(s => {
+          s.classList.toggle('selected', parseInt(s.dataset.value) === cur);
+        });
+        si++;
+      } else if (section.buttonType === 'FEATURE' && fi < tileGrids.length) {
+        const cur = currentInputValues[section.featureButtons[0]?.state];
+        tileGrids[fi].querySelectorAll('.tile').forEach(t => {
+          t.classList.toggle('selected', parseInt(t.dataset.value) === cur);
+        });
+        fi++;
+      }
+    }
   });
 }
 
-// ---- Actions ----
-function resetAll() {
-  if (currentSM) selectStateMachine(currentSM);
-}
-
+// ===================== ACTIONS =====================
+function resetAll() { if (currentSM) selectStateMachine(currentSM); }
 function exportPNG() {
   const link = document.createElement('a');
-  link.download = `avatar_${currentSM || 'export'}_${Date.now()}.png`;
+  link.download = `avatar_${Date.now()}.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
 }
 
-// ---- Events ----
+// ===================== EVENTS =====================
 document.getElementById('fileInput').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
-  const buf = await file.arrayBuffer();
-  loadRiveFile(buf);
+  loadRiveFile(await file.arrayBuffer());
 });
 
-// ---- Initialization ----
+// ===================== INIT =====================
 async function init() {
-  // Load config
   try {
     const resp = await fetch('avatar_builder_config.json');
-    if (resp.ok) {
-      builderConfig = await resp.json();
-      console.log('Config loaded:', builderConfig.avatarBuilderConfig.stateChooserTabs.length, 'tabs');
-    }
-  } catch(e) {
-    console.warn('Config load failed:', e.message);
-  }
+    if (resp.ok) builderConfig = await resp.json();
+  } catch(e) { console.warn('Config:', e.message); }
 
-  // Load Rive file
   try {
     const resp = await fetch('avatar_builder_25_sept2025.riv');
     if (resp.ok) {
-      const buf = await resp.arrayBuffer();
-      loadRiveFile(buf);
+      loadRiveFile(await resp.arrayBuffer());
     } else {
       fileStatus.textContent = `HTTP ${resp.status}，请手动选择 .riv 文件`;
       loadingOverlay.classList.add('hidden');
@@ -416,7 +529,6 @@ async function init() {
     loadingOverlay.classList.add('hidden');
   }
 }
-
 window.addEventListener('load', init);
 </script>
 </body>
