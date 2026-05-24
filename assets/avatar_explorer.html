@@ -6,67 +6,83 @@
 <title>Duolingo Avatar Explorer</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #131f2c; color: #e8e8e8; display: flex; height: 100vh; overflow: hidden; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Feather Bold', sans-serif; background: #131f2c; color: #e8e8e8; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-.sidebar { width: 420px; background: #1a2d3d; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #243647; }
-.sidebar-header { padding: 16px 20px; border-bottom: 1px solid #243647; flex-shrink: 0; }
-.sidebar-header h1 { font-size: 18px; font-weight: 700; color: #fff; }
-.sidebar-header .subtitle { font-size: 11px; color: #6b8299; margin-top: 2px; }
-
-.tab-bar { display: flex; background: #152536; border-bottom: 2px solid #243647; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; }
-.tab-bar::-webkit-scrollbar { height: 0; }
-.tab-btn { flex: 0 0 auto; padding: 12px 18px; font-size: 12px; font-weight: 600; color: #6b8299; cursor: pointer; border: none; background: none; border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: all 0.15s; }
-.tab-btn:hover { color: #b0c8d8; }
-.tab-btn.active { color: #58cc02; border-bottom-color: #58cc02; }
-
-.tab-content { flex: 1; overflow-y: auto; padding: 16px 12px; }
-.tab-content::-webkit-scrollbar { width: 4px; }
-.tab-content::-webkit-scrollbar-thumb { background: #2a4055; border-radius: 2px; }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-.section { margin-bottom: 22px; }
-.section-header { font-size: 13px; font-weight: 700; color: #b0c8d8; margin-bottom: 10px; }
-
-/* Color swatches */
-.swatch-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-.swatch { width: 42px; height: 42px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.12s, border-color 0.12s; position: relative; flex-shrink: 0; }
-.swatch:hover { transform: scale(1.12); }
-.swatch.selected { border-color: #58cc02; box-shadow: 0 0 0 3px rgba(88,204,2,0.3); }
-.swatch.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
-
-/* Feature tiles */
-.tile-grid { display: flex; flex-wrap: wrap; gap: 8px; }
-.tile { width: 76px; height: 76px; border-radius: 12px; cursor: pointer; border: 2px solid #2a4055; background: #1e3347; transition: all 0.12s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.tile:hover { border-color: #58cc02; transform: scale(1.05); }
-.tile.selected { border-color: #58cc02; box-shadow: 0 0 0 3px rgba(88,204,2,0.3); }
-.tile img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; position: absolute; inset: 0; }
-.tile .tile-icon { font-size: 28px; opacity: 0.3; z-index: 1; }
-.tile.loading .tile-icon { animation: pulse 1s ease-in-out infinite; }
-@keyframes pulse { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.5; } }
-
-.file-area { padding: 12px 20px; border-top: 1px solid #243647; flex-shrink: 0; display: flex; gap: 8px; align-items: center; }
-.file-area input[type="file"] { flex: 1; font-size: 11px; color: #6b8299; }
-.file-area .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.file-area .dot.ok { background: #58cc02; }
-.file-area .dot.wait { background: #ffc107; }
-
-.main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; background: #0f1a24; }
-canvas#riveCanvas { border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.5); background: #0f3460; max-width: 100%; height: auto; }
-.main-actions { margin-top: 16px; display: flex; gap: 10px; }
-.btn { padding: 10px 22px; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+/* Header */
+.header { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; background: #1a2d3d; border-bottom: 1px solid #243647; flex-shrink: 0; }
+.header h1 { font-size: 20px; font-weight: 800; color: #fff; }
+.header-info { font-size: 12px; color: #6b8299; }
+.header-actions { display: flex; gap: 10px; }
+.btn { padding: 10px 22px; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
 .btn-primary { background: #58cc02; color: #fff; }
-.btn-primary:hover { background: #4cb000; }
+.btn-primary:hover { background: #4cb000; transform: translateY(-1px); }
 .btn-secondary { background: #2a4055; color: #b0c8d8; }
 .btn-secondary:hover { background: #354f6a; }
 
+/* Main layout: 50/50 split */
+.main-layout { display: flex; flex: 1; overflow: hidden; }
+
+/* Left: Avatar preview */
+.preview-panel { width: 50%; display: flex; align-items: center; justify-content: center; background: #0f1a24; position: relative; }
+.preview-panel canvas { border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.5); max-width: 90%; max-height: 85%; }
+.file-drop-area { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; }
+.file-drop-area input[type="file"] { font-size: 11px; color: #6b8299; width: 200px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot.ok { background: #58cc02; }
+.dot.wait { background: #ffc107; }
+
+/* Right: Options panel */
+.options-panel { width: 50%; display: flex; flex-direction: column; background: #1a2d3d; border-left: 1px solid #243647; }
+
+/* Icon tab bar */
+.tab-bar { display: flex; background: #152536; border-bottom: 2px solid #243647; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; padding: 0 4px; }
+.tab-bar::-webkit-scrollbar { height: 0; }
+.tab-btn { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 14px 10px; cursor: pointer; border: none; background: none; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; min-width: 56px; }
+.tab-btn svg { width: 26px; height: 26px; }
+.tab-btn .tab-label { font-size: 11px; font-weight: 600; color: #6b8299; }
+.tab-btn:hover .tab-label { color: #b0c8d8; }
+.tab-btn:hover svg { opacity: 0.8; }
+.tab-btn.active { border-bottom-color: #58cc02; }
+.tab-btn.active .tab-label { color: #58cc02; }
+.tab-btn.active svg { opacity: 1; }
+
+/* Scrollable sections */
+.options-scroll { flex: 1; overflow-y: auto; padding: 20px 24px; }
+.options-scroll::-webkit-scrollbar { width: 4px; }
+.options-scroll::-webkit-scrollbar-thumb { background: #2a4055; border-radius: 2px; }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.section { margin-bottom: 24px; }
+.section-header { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 12px; }
+
+/* Color swatches */
+.swatch-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.swatch { width: 48px; height: 48px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.12s, border-color 0.12s; position: relative; flex-shrink: 0; }
+.swatch:hover { transform: scale(1.15); }
+.swatch.selected { border-color: #58cc02; box-shadow: 0 0 0 4px rgba(88,204,2,0.25); }
+.swatch.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
+
+/* Feature tiles */
+.tile-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+.tile { width: 96px; height: 96px; border-radius: 14px; cursor: pointer; border: 3px solid #2a4055; background: #1e3347; transition: all 0.12s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tile:hover { border-color: #58cc02; transform: scale(1.06); }
+.tile.selected { border-color: #58cc02; box-shadow: 0 0 0 4px rgba(88,204,2,0.3); }
+.tile img { width: 100%; height: 100%; object-fit: cover; border-radius: 11px; position: absolute; inset: 0; }
+.tile .tile-placeholder { font-size: 32px; opacity: 0.25; z-index: 1; }
+.tile.loading .tile-placeholder { animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.4; } }
+
+/* Thumb status */
+.thumb-status { font-size: 10px; color: #506070; text-align: center; padding: 4px; flex-shrink: 0; min-height: 20px; }
+
+/* Loading */
 .loading-overlay { position: fixed; inset: 0; background: rgba(15,26,36,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
 .loading-overlay.hidden { display: none; }
-.loading-overlay .spinner { width: 48px; height: 48px; border: 4px solid #2a4055; border-top-color: #58cc02; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
+.spinner { width: 48px; height: 48px; border: 4px solid #2a4055; border-top-color: #58cc02; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.loading-overlay .loading-text { font-size: 14px; color: #b0c8d8; }
-
-.thumb-status { font-size: 10px; color: #506070; padding: 4px 12px; text-align: center; flex-shrink: 0; min-height: 18px; }
+.loading-text { font-size: 14px; color: #b0c8d8; }
 </style>
 </head>
 <body>
@@ -76,35 +92,64 @@ canvas#riveCanvas { border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.5);
   <div class="loading-text">加载 Avatar Builder...</div>
 </div>
 
-<div class="sidebar">
-  <div class="sidebar-header">
+<div class="header">
+  <div>
     <h1>Avatar Builder</h1>
-    <div class="subtitle" id="fileStatus">等待加载...</div>
+    <div class="header-info" id="fileStatus">等待加载...</div>
   </div>
-  <div class="tab-bar" id="tabBar"></div>
-  <div class="thumb-status" id="thumbStatus"></div>
-  <div class="tab-content" id="tabContent"></div>
-  <div class="file-area">
-    <div class="dot wait" id="statusDot"></div>
-    <input type="file" id="fileInput" accept=".riv" title="选择 .riv 文件">
-  </div>
-</div>
-
-<div class="main">
-  <canvas id="riveCanvas" width="500" height="500"></canvas>
-  <div class="main-actions">
+  <div class="header-actions">
+    <button class="btn btn-secondary" onclick="resetAll()">重置</button>
     <button class="btn btn-primary" onclick="exportPNG()">导出 PNG</button>
-    <button class="btn btn-secondary" onclick="resetAll()">重置默认</button>
   </div>
 </div>
 
-<canvas id="thumbCanvas" width="80" height="80" style="display:none;"></canvas>
+<div class="main-layout">
+  <!-- LEFT: Avatar preview -->
+  <div class="preview-panel">
+    <canvas id="riveCanvas" width="500" height="500"></canvas>
+    <div class="file-drop-area">
+      <div class="dot wait" id="statusDot"></div>
+      <input type="file" id="fileInput" accept=".riv" title="选择 .riv 文件">
+    </div>
+  </div>
+
+  <!-- RIGHT: Options -->
+  <div class="options-panel">
+    <div class="tab-bar" id="tabBar"></div>
+    <div class="thumb-status" id="thumbStatus"></div>
+    <div class="options-scroll" id="tabContent"></div>
+  </div>
+</div>
+
+<canvas id="thumbCanvas" width="150" height="150" style="display:none;"></canvas>
+
+<!-- Tab icon SVGs -->
+<svg style="display:none;" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Body icon -->
+    <g id="icon-body"><circle cx="12" cy="7" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 24c0-3.3 2.7-6 6-6s6 2.7 6 6" fill="none" stroke="currentColor" stroke-width="2"/><line x1="12" y1="13" x2="12" y2="24" stroke="currentColor" stroke-width="2"/></g>
+    <!-- Eyes icon -->
+    <g id="icon-eyes"><ellipse cx="8" cy="12" rx="3" ry="3.5" fill="none" stroke="currentColor" stroke-width="2"/><ellipse cx="16" cy="12" rx="3" ry="3.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="12" r="1.5" fill="currentColor"/><circle cx="16" cy="12" r="1.5" fill="currentColor"/></g>
+    <!-- Hair icon -->
+    <g id="icon-hair"><path d="M6 14c1-5 5-8 6-8s5 3 6 8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 11c2-2 4-3 7-3s5 1 7 3" fill="none" stroke="currentColor" stroke-width="1.5"/></g>
+    <!-- Face icon -->
+    <g id="icon-face"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="10" r="1.5" fill="currentColor"/><circle cx="16" cy="10" r="1.5" fill="currentColor"/><path d="M8 16c1.5 2 6.5 2 8 0" fill="none" stroke="currentColor" stroke-width="1.5"/></g>
+    <!-- Facial hair icon -->
+    <g id="icon-beard"><path d="M6 11c0 4 2.7 8 6 8s6-4 6-8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 13c1 2 2.5 3 4 3s3-1 4-3" fill="none" stroke="currentColor" stroke-width="1.5"/></g>
+    <!-- Headwear icon -->
+    <g id="icon-hat"><path d="M4 14h16l-1 6H5l-1-6z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 14V9c0-2.8 2.2-5 5-5s5 2.2 5 5v5" fill="none" stroke="currentColor" stroke-width="2"/></g>
+    <!-- Clothing icon -->
+    <g id="icon-shirt"><path d="M6 6l3-3h6l3 3v14H6V6z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 3v4h6V3" fill="none" stroke="currentColor" stroke-width="2"/></g>
+    <!-- Background icon -->
+    <g id="icon-bg"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="currentColor" opacity="0.3"/><circle cx="16" cy="9" r="3" fill="currentColor" opacity="0.5"/><circle cx="8" cy="15" r="2" fill="currentColor" opacity="0.4"/></g>
+  </defs>
+</svg>
 
 <script src="https://unpkg.com/@rive-app/canvas@2.37.8/rive.js"></script>
 <script>
 // ===================== STATE =====================
 let riveInst = null;
-let thumbRive = null;       // second Rive instance for thumbnail rendering
+let thumbRive = null;
 let thumbReady = false;
 let smNames = [];
 let currentSM = '';
@@ -112,11 +157,12 @@ let triggerInput = null;
 let fireTimeout = null;
 let builderConfig = null;
 let currentInputValues = {};
-let stateMachineInputs = {};  // name -> StateMachineInput (main instance)
+let stateMachineInputs = {};
 let riveBuffer = null;
-let thumbCache = {};          // "state_value" -> data URI
+let thumbCache = {};
 
-const TAB_LABELS = ['Body', 'Eyes', 'Hair', 'Face', 'Facial Hair', 'Headwear', 'Clothing', 'Background'];
+const TAB_ICONS = ['icon-body','icon-eyes','icon-hair','icon-face','icon-beard','icon-hat','icon-shirt','icon-bg'];
+const TAB_LABELS = ['Body','Eyes','Hair','Face','Beard','Hat','Shirt','BG'];
 
 // ===================== DOM =====================
 const canvas = document.getElementById('riveCanvas');
@@ -135,7 +181,7 @@ function scheduleTrigger() {
   fireTimeout = setTimeout(() => { triggerInput.fire(); fireTimeout = null; }, 100);
 }
 
-// ===================== MAIN RIVE INSTANCE =====================
+// ===================== MAIN RIVE =====================
 function loadRiveFile(buffer) {
   riveBuffer = buffer;
   if (riveInst) { try { riveInst.cleanup(); } catch(e) {} riveInst = null; }
@@ -205,7 +251,7 @@ function applyFeatureButton(fb) {
   scheduleTrigger();
 }
 
-// ===================== THUMBNAIL RIVE INSTANCE =====================
+// ===================== THUMBNAIL RIVE =====================
 function initThumbnailRive() {
   if (!riveBuffer) return;
   const Rive = window.rive?.Rive;
@@ -219,7 +265,6 @@ function initThumbnailRive() {
       thumbRive.play(smNames);
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          // Initialize state machine with current values
           const inputs = thumbRive.stateMachineInputs('SMAvatar');
           if (inputs) {
             let trig = null;
@@ -232,12 +277,11 @@ function initThumbnailRive() {
             if (trig) trig.fire();
           }
           thumbReady = true;
-          // Generate thumbnails for whatever tab is visible
           requestAnimationFrame(() => generateVisibleThumbnails());
         });
       });
     },
-    onLoadError: () => console.warn('Thumbnail instance load error'),
+    onLoadError: () => console.warn('Thumbnail load error'),
   });
 }
 
@@ -260,7 +304,6 @@ function captureThumbFor(fb) {
       }
     }
 
-    // Apply feature overrides (skip 0 for non-primary states)
     const primaryState = fb.state;
     for (const [key, val] of Object.entries(fb.statesToOverride)) {
       if (val === 0 && key !== primaryState) continue;
@@ -269,7 +312,6 @@ function captureThumbFor(fb) {
 
     if (trig) trig.fire();
 
-    // Let the animation settle, then capture
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         try {
@@ -284,7 +326,6 @@ function captureThumbFor(fb) {
 
 async function generateVisibleThumbnails() {
   if (!thumbReady || !builderConfig) return;
-
   const activePanel = tabContent.querySelector('.tab-panel.active');
   if (!activePanel) return;
 
@@ -294,8 +335,6 @@ async function generateVisibleThumbnails() {
   if (activeIdx < 0 || activeIdx >= tabs.length) return;
 
   const tab = tabs[activeIdx];
-
-  // Collect all feature buttons + their corresponding tile elements
   const tileGrids = activePanel.querySelectorAll('.tile-grid');
   let gridIdx = 0;
   const workItems = [];
@@ -305,56 +344,40 @@ async function generateVisibleThumbnails() {
       const grid = tileGrids[gridIdx];
       const tiles = grid.querySelectorAll('.tile');
       for (let i = 0; i < section.featureButtons.length; i++) {
-        workItems.push({
-          fb: section.featureButtons[i],
-          tile: tiles[i] || null,
-        });
+        workItems.push({ fb: section.featureButtons[i], tile: tiles[i] || null });
       }
       gridIdx++;
     }
   }
 
-  if (workItems.length === 0) { thumbStatus.textContent = ''; return; }
-
-  let done = 0;
-  const total = workItems.filter(w => !thumbCache[`${w.fb.state}_${w.fb.value}`]).length;
-  if (total === 0) {
-    // All cached, just update tiles
-    for (const w of workItems) {
-      updateTileWithThumb(w.tile, w.fb);
-    }
+  const pending = workItems.filter(w => !thumbCache[`${w.fb.state}_${w.fb.value}`]);
+  if (pending.length === 0) {
+    for (const w of workItems) updateTile(w.tile, w.fb);
     return;
   }
 
-  thumbStatus.textContent = `生成预览图... 0/${total}`;
+  let done = 0;
+  thumbStatus.textContent = `生成预览... 0/${pending.length}`;
 
   for (const w of workItems) {
-    const key = `${w.fb.state}_${w.fb.value}`;
-    if (thumbCache[key]) {
-      updateTileWithThumb(w.tile, w.fb);
-      continue;
-    }
     const uri = await captureThumbFor(w.fb);
-    done++;
-    thumbStatus.textContent = `生成预览图... ${done}/${total}`;
-    if (uri && w.tile) {
-      updateTileWithThumb(w.tile, w.fb);
-    }
+    if (uri) updateTile(w.tile, w.fb);
+    const key = `${w.fb.state}_${w.fb.value}`;
+    if (thumbCache[key]) { done++; thumbStatus.textContent = `生成预览... ${done}/${pending.length}`; }
   }
-
   thumbStatus.textContent = '';
 }
 
-function updateTileWithThumb(tile, fb) {
+function updateTile(tile, fb) {
   if (!tile) return;
   const key = `${fb.state}_${fb.value}`;
   const uri = thumbCache[key];
   if (!uri) return;
   tile.classList.remove('loading');
-  const icon = tile.querySelector('.tile-icon');
-  if (icon) icon.style.display = 'none';
-  const oldImg = tile.querySelector('img');
-  if (oldImg) oldImg.remove();
+  const ph = tile.querySelector('.tile-placeholder');
+  if (ph) ph.style.display = 'none';
+  const old = tile.querySelector('img');
+  if (old) old.remove();
   const img = document.createElement('img');
   img.src = uri;
   tile.appendChild(img);
@@ -369,12 +392,14 @@ function renderUI() {
   tabContent.innerHTML = '';
 
   tabs.forEach((tab, ti) => {
+    // Icon tab button
     const btn = document.createElement('button');
     btn.className = 'tab-btn';
-    btn.textContent = TAB_LABELS[ti] || tab.sections[0].header;
+    btn.innerHTML = `<svg width="26" height="26" viewBox="0 0 24 24"><use href="#${TAB_ICONS[ti] || 'icon-face'}"/></svg><span class="tab-label">${TAB_LABELS[ti] || 'Tab'}</span>`;
     btn.onclick = () => switchTab(ti);
     tabBar.appendChild(btn);
 
+    // Panel
     const panel = document.createElement('div');
     panel.className = 'tab-panel';
 
@@ -421,18 +446,17 @@ function renderUI() {
           tile.dataset.state = fb.state;
           tile.dataset.value = fb.value;
           if (fb.value === currentVal) tile.classList.add('selected');
-          if (thumbCache[`${fb.state}_${fb.value}`]) tile.classList.remove('loading');
 
-          // Placeholder icon
-          const icon = document.createElement('span');
-          icon.className = 'tile-icon';
-          icon.textContent = fb.value === 0 ? '✕' : '';
-          tile.appendChild(icon);
+          const ph = document.createElement('span');
+          ph.className = 'tile-placeholder';
+          ph.textContent = fb.value === 0 ? '✕' : '';
+          tile.appendChild(ph);
 
-          // Show cached thumbnail immediately
+          // Show cached immediately
           const cachedUri = thumbCache[`${fb.state}_${fb.value}`];
           if (cachedUri) {
-            icon.style.display = 'none';
+            tile.classList.remove('loading');
+            ph.style.display = 'none';
             const img = document.createElement('img');
             img.src = cachedUri;
             tile.appendChild(img);
@@ -454,27 +478,25 @@ function renderUI() {
   });
 
   switchTab(0);
-  setTimeout(() => generateVisibleThumbnails(), 200);
+  setTimeout(() => generateVisibleThumbnails(), 300);
 }
 
 function switchTab(idx) {
   tabBar.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
   tabContent.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
-  setTimeout(() => generateVisibleThumbnails(), 100);
+  setTimeout(() => generateVisibleThumbnails(), 120);
 }
 
 function refreshAllHighlights() {
   const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
   if (!tabs) return;
   const panels = tabContent.querySelectorAll('.tab-panel');
-
   panels.forEach((panel, ti) => {
     if (ti >= tabs.length) return;
     const tab = tabs[ti];
     let si = 0, fi = 0;
     const swatchGrids = panel.querySelectorAll('.swatch-grid');
     const tileGrids = panel.querySelectorAll('.tile-grid');
-
     for (const section of tab.sections) {
       if (section.buttonType === 'IMAGE' && si < swatchGrids.length) {
         const cur = currentInputValues[section.imageButtons[0]?.state];
