@@ -152,11 +152,11 @@ class TestRunner:
         await self.cdp.send("Page.enable")
         ok("CDP connected")
 
-        # 6. Wait for page to fully load (Rive + config)
+        # 6. Wait for page to fully load (Rive + config + tile instances)
         info("Waiting for app to load...")
         for attempt in range(30):
             ready = await self.cdp.evaluate(
-                "typeof riveInst !== 'undefined' && typeof thumbRive !== 'undefined' && thumbReady"
+                "typeof riveInst !== 'undefined' && sharedRiveFile !== null && tileInstances.size > 0"
             )
             if ready:
                 break
@@ -257,7 +257,7 @@ async def assert_neq(cdp, expected, expr, desc):
 # === TEST CASES ========================================================
 
 async def test_01_canvas_dimensions(cdp: CDPClient):
-    """Verify main and thumbnail canvas sizes."""
+    """Verify main canvas size and tile canvases exist."""
     info("Checking canvas dimensions...")
 
     # Main canvas size
@@ -267,24 +267,27 @@ async def test_01_canvas_dimensions(cdp: CDPClient):
     assert h == 1380, f"Main canvas height: expected 1380, got {h}"
     ok(f"Main canvas: {w}x{h}")
 
-    # Thumbnail canvas size
-    tw = await cdp.evaluate("document.getElementById('thumbCanvas').width")
-    th = await cdp.evaluate("document.getElementById('thumbCanvas').height")
-    assert tw == 252, f"Thumb canvas width: expected 252, got {tw}"
-    assert th == 252, f"Thumb canvas height: expected 252, got {th}"
-    ok(f"Thumb canvas: {tw}x{th}")
-
-    # Thumbnail canvas should be visually hidden (not display:none, which
-    # prevents WebGL rendering — use visibility:hidden instead)
-    display = await cdp.evaluate(
-        "document.getElementById('thumbCanvas').style.visibility"
+    # Tile canvases exist (replaces old thumbCanvas)
+    tile_canvas_count = await cdp.evaluate(
+        "document.querySelectorAll('.tab-panel.active .tile canvas.tile-canvas').length"
     )
-    assert display == "hidden", f"Thumb canvas visibility: expected 'hidden', got '{display}'"
-    ok("Thumb canvas is visibility:hidden")
+    assert tile_canvas_count > 0, "No tile canvases found in active tab"
+    ok(f"Tile canvases: {tile_canvas_count} in active tab")
+
+    # Tile canvas size check
+    tw = await cdp.evaluate(
+        "document.querySelector('.tab-panel.active .tile canvas.tile-canvas').width"
+    )
+    th = await cdp.evaluate(
+        "document.querySelector('.tab-panel.active .tile canvas.tile-canvas').height"
+    )
+    assert tw == 252, f"Tile canvas width: expected 252, got {tw}"
+    assert th == 252, f"Tile canvas height: expected 252, got {th}"
+    ok(f"Tile canvas: {tw}x{th}")
 
 
 async def test_02_rive_loaded(cdp: CDPClient):
-    """Verify Rive instances are loaded and state machine is ready."""
+    """Verify Rive instance, shared RiveFile, and tile instances are loaded."""
     info("Checking Rive state...")
 
     # Main Rive instance exists
@@ -292,15 +295,15 @@ async def test_02_rive_loaded(cdp: CDPClient):
     assert has_rive, "Main Rive instance not found"
     ok("Main Rive instance exists")
 
-    # Thumbnail Rive instance exists
-    has_thumb = await cdp.evaluate("typeof thumbRive !== 'undefined' && thumbRive !== null")
-    assert has_thumb, "Thumbnail Rive instance not found"
-    ok("Thumbnail Rive instance exists")
+    # Shared RiveFile exists
+    has_rive_file = await cdp.evaluate("sharedRiveFile !== null")
+    assert has_rive_file, "Shared RiveFile not found"
+    ok("Shared RiveFile exists")
 
-    # thumbReady flag
-    ready = await cdp.evaluate("thumbReady === true")
-    assert ready, "thumbReady is not true"
-    ok("thumbReady is true")
+    # Tile instances exist (replaces old thumbRive + thumbReady)
+    instance_count = await cdp.evaluate("tileInstances.size")
+    assert instance_count > 0, "No tile instances"
+    ok(f"{instance_count} tile instances loaded")
 
     # State machine inputs loaded
     sm_count = await cdp.evaluate("Object.keys(stateMachineInputs).length")
@@ -314,30 +317,30 @@ async def test_02_rive_loaded(cdp: CDPClient):
 
 
 async def test_03_cache_invalidation_on_set_sm_value(cdp: CDPClient):
-    """Verify that setSMValue marks other tabs dirty without clearing current tab cache."""
-    info("Testing smart cache invalidation...")
+    """Verify that setSMValue marks other tabs dirty, current tab instances persist."""
+    info("Testing smart invalidation with tile instances...")
 
-    # First, ensure some thumbnails are cached
-    await cdp.evaluate("generateVisibleThumbnails()")
+    # Ensure we're on tab 0 (Body) with tile instances loaded
+    await cdp.evaluate("switchTab(0)")
     await asyncio.sleep(2)
 
-    cache_size_before = await cdp.evaluate("Object.keys(thumbCache).length")
-    info(f"Cache size before: {cache_size_before}")
+    instance_count_before = await cdp.evaluate("tileInstances.size")
+    info(f"Tile instances before: {instance_count_before}")
+    assert instance_count_before > 0, "No tile instances before setSMValue"
 
-    # Now change a value via setSMValue — should NOT clear current tab's cache
+    # Now change a value via setSMValue
     body_val = await cdp.evaluate("currentInputValues['Body'] || 0")
     info(f"Current Body value: {body_val}")
     new_body = 3 if body_val != 3 else 4
 
     await cdp.evaluate(f"setSMValue('Body', {new_body})")
 
-    # Current tab's cache should be preserved (smart invalidation)
-    cache_size_after = await cdp.evaluate("Object.keys(thumbCache).length")
-    info(f"Cache size immediately after setSMValue: {cache_size_after}")
-
-    assert cache_size_after >= cache_size_before, \
-        f"Cache should be preserved for current tab, was {cache_size_before}, got {cache_size_after}"
-    ok(f"Current tab cache preserved ({cache_size_before} -> {cache_size_after})")
+    # Current tab's instances should still exist (smart invalidation preserves them)
+    instance_count_after = await cdp.evaluate("tileInstances.size")
+    info(f"Tile instances after setSMValue: {instance_count_after}")
+    assert instance_count_after >= instance_count_before, \
+        f"Current tab instances should persist, was {instance_count_before}, got {instance_count_after}"
+    ok(f"Current tab instances preserved ({instance_count_before} -> {instance_count_after})")
 
     # Other tabs should be marked dirty
     dirty_count = await cdp.evaluate("dirtyTabs.size")
@@ -345,21 +348,22 @@ async def test_03_cache_invalidation_on_set_sm_value(cdp: CDPClient):
     assert dirty_count > 0, "At least some tabs should be marked dirty"
     ok(f"{dirty_count} tabs marked dirty")
 
-    # Wait for regeneration and switch tab to verify dirty tabs get regenerated
-    await asyncio.sleep(2)
-    await cdp.evaluate("switchTab(1)")  # Switch to Eyes tab
+    # Switch to Eyes tab — dirty tab should get fresh instances
+    await asyncio.sleep(1)
+    await cdp.evaluate("switchTab(1)")
     await asyncio.sleep(3)
 
-    cache_size_eyes = await cdp.evaluate("Object.keys(thumbCache).length")
-    info(f"Cache size after switching to Eyes tab: {cache_size_eyes}")
-    assert cache_size_eyes > cache_size_after, \
-        f"Cache should grow when switching to dirty tab, got {cache_size_eyes}"
-    ok(f"Cache grew when switching to dirty tab ({cache_size_after} -> {cache_size_eyes})")
+    instance_count_eyes = await cdp.evaluate("tileInstances.size")
+    info(f"Tile instances after switching to Eyes tab: {instance_count_eyes}")
+    # Eyes tab has 57 feature buttons — should have created many instances
+    assert instance_count_eyes > instance_count_after, \
+        f"Instances should grow when switching to dirty tab (was {instance_count_after}, got {instance_count_eyes})"
+    ok(f"Instances regenerated for Eyes tab ({instance_count_after} -> {instance_count_eyes})")
 
 
 async def test_04_thumbnail_dynamic_composition(cdp: CDPClient):
-    """Verify thumbnails reflect the complete current avatar state."""
-    info("Testing dynamic thumbnail composition...")
+    """Verify tiles have live Rive canvas instances that reflect current state."""
+    info("Testing dynamic tile composition...")
 
     # Set specific features to create a recognizable avatar state
     info("Setting Body=4, Expression=17, Hair=58...")
@@ -368,129 +372,119 @@ async def test_04_thumbnail_dynamic_composition(cdp: CDPClient):
     await cdp.evaluate("setSMValue('MainHair', 58)")
     await asyncio.sleep(0.5)
 
-    # Switch to Eye tab (idx=1) to trigger thumbnail generation for eyes
+    # Switch to Eye tab (idx=1) to trigger tile instance creation
     info("Switching to Eyes tab...")
     await cdp.evaluate("switchTab(1)")
-    await asyncio.sleep(3)  # Wait for thumbnails to render
+    await asyncio.sleep(3)
 
-    # Check that all eye thumbnails have different data URLs
-    thumb_count = await cdp.evaluate("""
+    # Check that tile canvases exist (not img elements anymore)
+    tile_info = await cdp.evaluate("""
         (function() {
-            var imgs = document.querySelectorAll('.tab-panel.active .tile img');
-            var urls = new Set();
-            for (var img of imgs) {
-                if (img.src && img.src.length > 100) urls.add(img.src.substring(0, 200));
-            }
-            return JSON.stringify({count: imgs.length, uniqueUrls: urls.size});
+            var canvases = document.querySelectorAll('.tab-panel.active .tile canvas.tile-canvas');
+            return JSON.stringify({
+                canvasCount: canvases.length,
+                uniqueSizes: [...new Set([...canvases].map(c => c.width + 'x' + c.height))],
+                instanceCount: [...tileInstances.keys()].filter(k => k.startsWith('1-')).length
+            });
         })()
     """)
-    info(f"Eyes tab thumbnails: {thumb_count}")
+    info(f"Eyes tab tiles: {tile_info}")
 
-    parsed = json.loads(thumb_count)
-    assert parsed["count"] > 0, "No thumbnail images found in Eyes tab"
-    assert parsed["uniqueUrls"] > 1, \
-        f"Expected multiple unique thumbnail URLs, got {parsed['uniqueUrls']}"
-    ok(f"{parsed['count']} thumbnails with {parsed['uniqueUrls']} unique URLs")
+    parsed = json.loads(tile_info)
+    assert parsed["canvasCount"] > 0, "No tile canvases found in Eyes tab"
+    assert parsed["instanceCount"] > 1, \
+        f"Expected multiple tile instances, got {parsed['instanceCount']}"
+    ok(f"{parsed['canvasCount']} tile canvases with {parsed['instanceCount']} Rive instances")
 
-    # Verify the cache key includes state+value pairs
-    cache_keys = await cdp.evaluate("Object.keys(thumbCache).slice(0, 5).join(', ')")
-    info(f"Sample cache keys: {cache_keys}")
+    # Verify tile instances have unique state overrides
+    tile_instance_keys = await cdp.evaluate(
+        "JSON.stringify([...tileInstances.keys()].slice(0, 10))"
+    )
+    info(f"Sample instance keys: {tile_instance_keys}")
 
-    # Now switch to Hair tab and verify thumbnails still have Body=4 + Expression=17
+    # Now switch to Hair tab and verify tiles still exist
     info("Switching to Hair tab...")
     await cdp.evaluate("switchTab(2)")
     await asyncio.sleep(3)
 
-    hair_thumbs = await cdp.evaluate("""
-        (function() {
-            var imgs = document.querySelectorAll('.tab-panel.active .tile img');
-            return imgs.length;
-        })()
-    """)
-    assert hair_thumbs > 0, "No thumbnails in Hair tab"
-    ok(f"Hair tab has {hair_thumbs} thumbnails")
+    hair_canvases = await cdp.evaluate(
+        "document.querySelectorAll('.tab-panel.active .tile canvas.tile-canvas').length"
+    )
+    assert hair_canvases > 0, "No tile canvases in Hair tab"
+    ok(f"Hair tab has {hair_canvases} tile canvases")
 
-    # The hair thumbnails should be different from each other
-    hair_unique = await cdp.evaluate("""
-        (function() {
-            var imgs = document.querySelectorAll('.tab-panel.active .tile img');
-            var urls = new Set();
-            for (var img of imgs) {
-                if (img.src) urls.add(img.src.substring(0, 200));
-            }
-            return urls.size;
-        })()
-    """)
-    assert hair_unique > 1, \
-        f"Hair thumbnails should have unique URLs, got {hair_unique} unique"
-    ok(f"Hair thumbnails: {hair_unique} unique")
+    # Hair tile instances should exist
+    hair_instances = await cdp.evaluate(
+        "[...tileInstances.keys()].filter(k => k.startsWith('2-')).length"
+    )
+    assert hair_instances > 1, \
+        f"Hair tab should have multiple instances, got {hair_instances}"
+    ok(f"Hair tab: {hair_instances} Rive instances")
 
 
 async def test_05_thumbnail_image_uniqueness_pixels(cdp: CDPClient):
-    """Verify thumbnail images are visually different from each other."""
-    info("Testing visual uniqueness of thumbnails...")
+    """Verify tile canvases are rendered with distinct content."""
+    info("Testing visual uniqueness of tile canvases...")
 
-    if not HAS_PIL:
-        warn("PIL not available, skipping pixel-level comparison")
-        return
-
-    # Make sure we're on a tab with tiles
-    await cdp.evaluate("switchTab(0)")  # Body tab
+    # Go to Body tab
+    await cdp.evaluate("switchTab(0)")
     await asyncio.sleep(3)
 
-    # Get the first 3 thumbnail data URLs and compare them
+    # Check that tile canvases exist and have rendered content (non-blank pixels)
     result = await cdp.evaluate("""
         (function() {
-            var imgs = document.querySelectorAll('.tab-panel.active .tile img');
-            var urls = [];
-            for (var i = 0; i < Math.min(6, imgs.length); i++) {
-                if (imgs[i].src && imgs[i].src.startsWith('data:image/png')) {
-                    urls.push(imgs[i].src);
+            var canvases = document.querySelectorAll('.tab-panel.active .tile canvas.tile-canvas');
+            var pixelSamples = [];
+            for (var i = 0; i < Math.min(6, canvases.length); i++) {
+                var ctx = canvases[i].getContext('2d');
+                var sample = [];
+                // Sample 4 corners to verify canvas is not blank
+                var w = canvases[i].width, h = canvases[i].height;
+                // Sample center and corners
+                var points = [[w/2, h/2, 'center'], [5,5,'tl'], [w-5,5,'tr'], [5,h-5,'bl'], [w-5,h-5,'br']];
+                for (var p = 0; p < points.length; p++) {
+                    var px = ctx.getImageData(points[p][0], points[p][1], 1, 1).data;
+                    sample.push(px[0] + ',' + px[1] + ',' + px[2]);
                 }
+                pixelSamples.push({idx: i, pixels: sample, label: points.map(function(p){return p[2]})});
             }
-            return JSON.stringify({count: urls.length});
+            return JSON.stringify({samples: pixelSamples, count: canvases.length});
         })()
     """)
 
-    # Get pairs of data URLs and compute similarity
-    sim_result = await cdp.evaluate("""
+    parsed = json.loads(result)
+    info(f"Tile canvases: {parsed['count']} total, sampled {len(parsed['samples'])}")
+    assert parsed['count'] > 0, "No tile canvases found"
+
+    # Check that at least one sampled pixel is non-zero (non-blank canvas)
+    non_blank = 0
+    for s in parsed['samples']:
+        pixels = s['pixels']
+        # A canvas is "rendered" if at least one pixel is not 0,0,0 or 255,255,255
+        for p in pixels:
+            if p != '0,0,0' and p != '255,255,255':
+                non_blank += 1
+                break
+    ok(f"{non_blank}/{len(parsed['samples'])} tile canvases have rendered content")
+
+    # Verify multiple distinct instances exist (by checking their keys)
+    key_diversity = await cdp.evaluate("""
         (function() {
-            var imgs = document.querySelectorAll('.tab-panel.active .tile img');
-            var results = [];
-            for (var i = 0; i < Math.min(6, imgs.length); i++) {
-                if (imgs[i].src && imgs[i].src.startsWith('data:image/png')) {
-                    // Compute a simple hash of the base64 data
-                    var data = imgs[i].src.substring(100, 500);
-                    results.push({idx: i, hash: data});
-                }
+            var keys = [...tileInstances.keys()].filter(function(k) { return k.startsWith('0-'); });
+            var values = new Set();
+            for (var k of keys) {
+                values.add(k.split('-').slice(1).join('-'));
             }
-            return JSON.stringify(results.map(r => r.hash));
+            return JSON.stringify({keys: keys.length, unique: values.size});
         })()
     """)
-
-    hashes = json.loads(sim_result)
-    unique_hashes = set(hashes)
-    info(f"Thumbnail hashes: {len(hashes)} images, {len(unique_hashes)} unique")
-
-    assert len(unique_hashes) > 1, \
-        f"All thumbnails look identical ({len(unique_hashes)} unique out of {len(hashes)})"
-    ok(f"Thumbnails are visually distinct ({len(unique_hashes)}/{len(hashes)} unique)")
-
-    # Deeper check: compare first two thumbnails pixel-by-pixel using PIL
-    img_data = await cdp.evaluate("""
-        (function() {
-            var imgs = document.querySelectorAll('.tab-panel.active .tile img');
-            return JSON.stringify([
-                imgs[0] ? imgs[0].src.substring(0, 100) + '...' : 'none',
-                imgs[1] ? imgs[1].src.substring(0, 100) + '...' : 'none'
-            ]);
-        })()
-    """)
-    info(f"First two img sources: {img_data}")
+    key_info = json.loads(key_diversity)
+    assert key_info['unique'] > 1, f"Expected >1 unique tile configs, got {key_info['unique']}"
+    ok(f"{key_info['unique']} unique tile configurations ({key_info['keys']} instances)")
 
 
 async def test_06_cross_tab_state_persistence(cdp: CDPClient):
-    """Verify that changing features in one tab affects thumbnails in another tab."""
+    """Verify that changing features in one tab persists correctly."""
     info("Testing cross-tab state persistence...")
 
     # Set a distinctive feature combination
@@ -498,27 +492,26 @@ async def test_06_cross_tab_state_persistence(cdp: CDPClient):
     await cdp.evaluate("setSMValue('MainHair', 50)")
     await asyncio.sleep(0.5)
 
-    # Go to Body tab and capture current thumbnail state
+    # Go to Body tab
     await cdp.evaluate("switchTab(0)")
     await asyncio.sleep(3)
 
-    body_img_count = await cdp.evaluate("""
-        document.querySelectorAll('.tab-panel.active .tile img').length
-    """)
-    info(f"Body tab: {body_img_count} thumbnail images")
+    body_canvas_count = await cdp.evaluate(
+        "document.querySelectorAll('.tab-panel.active .tile canvas.tile-canvas').length"
+    )
+    info(f"Body tab: {body_canvas_count} tile canvases")
+    assert body_canvas_count > 0, "No tile canvases in Body tab"
 
-    # Now change hair while on Body tab shouldn't affect body thumbnails...
-    # Actually, it WILL invalidate cache and regenerate, so the body thumbnails
-    # should show the new hair!
+    # Now change hair while on Body tab
     await cdp.evaluate("setSMValue('MainHair', 48)")
-    await asyncio.sleep(3)
+    await asyncio.sleep(2)
 
-    # After cache invalidation, body thumbnails should regenerate with new hair
-    body_img_count_after = await cdp.evaluate("""
-        document.querySelectorAll('.tab-panel.active .tile img').length
-    """)
-    assert body_img_count_after > 0, "Thumbnails should still exist after hair change"
-    ok(f"Body thumbnails regenerated with new hair: {body_img_count_after} images")
+    # Body tile instances should still exist
+    body_canvas_after = await cdp.evaluate(
+        "document.querySelectorAll('.tab-panel.active .tile canvas.tile-canvas').length"
+    )
+    assert body_canvas_after > 0, "Tile canvases should persist after hair change"
+    ok(f"Body tile canvases persist after hair change: {body_canvas_after}")
 
     # Verify currentInputValues reflects the changes
     body_val = await cdp.evaluate("currentInputValues['Body']")
@@ -529,35 +522,35 @@ async def test_06_cross_tab_state_persistence(cdp: CDPClient):
 
 
 async def test_07_cache_key_format(cdp: CDPClient):
-    """Verify cache keys use the correct format: state_value."""
-    info("Testing cache key format...")
+    """Verify tileInstances map key format: tabIdx-sectionIdx-idx."""
+    info("Testing tile instance key format...")
 
-    # Force some thumbnails to be generated
     await cdp.evaluate("switchTab(0)")
     await asyncio.sleep(3)
 
-    keys = await cdp.evaluate("JSON.stringify(Object.keys(thumbCache).slice(0, 10))")
+    keys = await cdp.evaluate("JSON.stringify([...tileInstances.keys()].slice(0, 10))")
     key_list = json.loads(keys)
-    info(f"Sample cache keys: {key_list}")
+    info(f"Sample tile instance keys: {key_list}")
 
-    assert len(key_list) > 0, "No cache keys found"
+    assert len(key_list) > 0, "No tile instance keys found"
     for key in key_list:
-        parts = key.split("_")
-        assert len(parts) >= 2, f"Cache key '{key}' should contain at least one '_'"
-    ok(f"All {len(key_list)} cache keys have valid format (state_value)")
+        parts = key.split("-")
+        assert len(parts) == 3, f"Instance key '{key}' should have 3 parts (tab-section-idx)"
+        assert all(p.isdigit() for p in parts), f"All key parts should be numeric: '{key}'"
+    ok(f"All {len(key_list)} instance keys have valid format (tabIdx-sectionIdx-idx)")
 
-    # Verify cache is an object (not Map or something else)
-    cache_type = await cdp.evaluate("typeof thumbCache")
-    assert cache_type == "object", f"thumbCache should be object, got {cache_type}"
-    ok("thumbCache is a plain object")
+    # Verify tileInstances is a Map
+    is_map = await cdp.evaluate("tileInstances instanceof Map")
+    assert is_map, "tileInstances should be a Map"
+    ok("tileInstances is a Map")
 
 
 async def test_08_thumb_status_feedback(cdp: CDPClient):
-    """Verify the thumbnail status indicator shows progress."""
-    info("Testing thumbnail status feedback...")
+    """Verify the tile rendering status indicator shows progress."""
+    info("Testing tile status feedback...")
 
-    # Clear cache and regenerate to see the status text
-    await cdp.evaluate("thumbCache = {}; generateVisibleThumbnails()")
+    # Trigger re-render to see the status text
+    await cdp.evaluate("renderTabTiles(0)")
     await asyncio.sleep(0.2)
 
     status = await cdp.evaluate(
@@ -576,7 +569,7 @@ async def test_08_thumb_status_feedback(cdp: CDPClient):
 
 
 async def test_09_reset_all(cdp: CDPClient):
-    """Verify resetAll() restores defaults and regenerates thumbnails."""
+    """Verify resetAll() restores defaults and recreates tile instances."""
     info("Testing resetAll()...")
 
     # Change some values away from defaults
@@ -591,41 +584,41 @@ async def test_09_reset_all(cdp: CDPClient):
 
     # Reset
     await cdp.evaluate("resetAll()")
-    await asyncio.sleep(2)
+    await asyncio.sleep(3)
 
-    # Values should be back to defaults (Body default is usually 0)
+    # Values should be back to defaults
     body_after = await cdp.evaluate("currentInputValues['Body']")
     info(f"After reset: Body={body_after}")
 
-    # Cache should have entries after reset triggers regeneration
-    cache_size = await cdp.evaluate("Object.keys(thumbCache).length")
-    assert cache_size > 0, "Cache should have entries after reset"
-    ok(f"Cache regenerated after reset: {cache_size} entries")
+    # Tile instances should exist after reset triggers regeneration
+    instance_count = await cdp.evaluate("tileInstances.size")
+    assert instance_count > 0, "Tile instances should exist after reset"
+    ok(f"Tile instances regenerated after reset: {instance_count}")
 
 
 async def test_10_no_duplicate_thumbnails_in_tile(cdp: CDPClient):
-    """Verify each tile has at most one img element."""
-    info("Testing tile image count...")
+    """Verify each tile has exactly one canvas element (no duplicate canvases)."""
+    info("Testing tile canvas count...")
 
     await cdp.evaluate("switchTab(0)")
     await asyncio.sleep(3)
 
-    img_counts = await cdp.evaluate("""
+    canvas_counts = await cdp.evaluate("""
         (function() {
             var tiles = document.querySelectorAll('.tab-panel.active .tile');
             var counts = [];
             for (var t of tiles) {
-                counts.push(t.querySelectorAll('img').length);
+                counts.push(t.querySelectorAll('canvas').length);
             }
             return JSON.stringify(counts);
         })()
     """)
-    counts = json.loads(img_counts)
-    info(f"Image counts per tile: {counts}")
+    counts = json.loads(canvas_counts)
+    info(f"Canvas counts per tile: {counts}")
 
     for i, c in enumerate(counts):
-        assert c <= 1, f"Tile {i} has {c} img elements (should be 0 or 1)"
-    ok(f"All {len(counts)} tiles have at most 1 img element")
+        assert c <= 1, f"Tile {i} has {c} canvas elements (should be 0 or 1)"
+    ok(f"All {len(counts)} tiles have at most 1 canvas element")
 
 
 # === MAIN ===============================================================

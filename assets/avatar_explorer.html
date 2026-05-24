@@ -25,7 +25,7 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 
 .main-layout { display: flex; flex: 1; overflow: hidden; padding: 20px; gap: 20px; background: #f0f0f0; }
 
-/* LEFT: Avatar preview — matches Duolingo: portrait canvas centered in white panel */
+/* LEFT: Avatar preview */
 .preview-panel { width: 50%; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
 .preview-panel canvas { max-width: 100%; max-height: 100%; background: transparent; }
 
@@ -63,7 +63,7 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .tile { width: 120px; height: 120px; border-radius: 14px; cursor: pointer; border: 3px solid #e5e5e5; background: #f7f7f7; transition: all 0.12s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .tile:hover { border-color: #a0a0a0; transform: scale(1.04); }
 .tile.selected { border-color: #1cb0f6; box-shadow: 0 0 0 3px rgba(28,176,246,0.25); }
-.tile img { width: 100%; height: 100%; object-fit: cover; border-radius: 11px; position: absolute; inset: 0; }
+.tile .tile-canvas { width: 100%; height: 100%; border-radius: 11px; position: absolute; inset: 0; }
 .tile .tile-placeholder { font-size: 36px; opacity: 0.15; z-index: 1; }
 .tile.loading .tile-placeholder { animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.3; } }
@@ -108,15 +108,13 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   </div>
 </div>
 
-<canvas id="thumbCanvas" width="252" height="252" style="visibility:hidden;position:absolute;pointer-events:none;"></canvas>
 <canvas id="exportCanvas" style="display:none;"></canvas>
 
 <script src="https://unpkg.com/@rive-app/canvas@2.37.8/rive.js"></script>
 <script>
 // ===================== STATE =====================
 let riveInst = null;
-let thumbRive = null;
-let thumbReady = false;
+let sharedRiveFile = null;
 let smNames = [];
 let currentSM = '';
 let triggerInput = null;
@@ -125,9 +123,7 @@ let builderConfig = null;
 let currentInputValues = {};
 let stateMachineInputs = {};
 let riveBuffer = null;
-let thumbRegenTimeout = null;
-let thumbCache = {};
-let thumbNameMap = null;
+let tileInstances = new Map();
 let dirtyTabs = new Set();
 let bgColorMap = {};
 
@@ -144,7 +140,6 @@ const TAB_DEFS = [
 
 const canvas = document.getElementById('riveCanvas');
 const previewPanel = document.getElementById('previewPanel');
-const thumbCanvas = document.getElementById('thumbCanvas');
 const exportCanvas = document.getElementById('exportCanvas');
 const tabBar = document.getElementById('tabBar');
 const tabContent = document.getElementById('tabContent');
@@ -159,13 +154,34 @@ function scheduleTrigger() {
   fireTimeout = setTimeout(() => { triggerInput.fire(); fireTimeout = null; }, 100);
 }
 
+// ===================== SHARED RIVEFILE =====================
+async function createSharedRiveFile(buffer) {
+  const ab = new Uint8Array(buffer);
+  const riveFile = new window.rive.RiveFile({
+    buffer: ab,
+    enableRiveAssetCDN: false,
+  });
+  await riveFile.init();
+  return riveFile;
+}
+
 // ===================== MAIN RIVE =====================
-function loadRiveFile(buffer) {
+async function loadRiveFile(buffer) {
   riveBuffer = buffer;
+
+  // Clean up old state
   if (riveInst) { try { riveInst.cleanup(); } catch(e) {} riveInst = null; }
-  if (thumbRive) { try { thumbRive.cleanup(); } catch(e) {} thumbRive = null; }
+  destroyAllTileInstances();
   smNames = []; currentSM = ''; stateMachineInputs = {}; currentInputValues = {};
-  thumbCache = {}; thumbReady = false;
+  sharedRiveFile = null;
+
+  try {
+    sharedRiveFile = await createSharedRiveFile(buffer);
+  } catch(e) {
+    console.error('RiveFile init error:', e);
+    loadingOverlay.classList.add('hidden');
+    return;
+  }
 
   const Rive = window.rive?.Rive;
   const Layout = window.rive?.Layout;
@@ -175,7 +191,7 @@ function loadRiveFile(buffer) {
 
   riveInst = new Rive({
     layout: Layout && Fit && Alignment ? new Layout({ fit: Fit.Cover, alignment: Alignment.Center }) : undefined,
-    canvas, buffer: new Uint8Array(buffer), autoplay: false,
+    canvas, riveFile: sharedRiveFile, autoplay: false,
     onLoad: () => onMainLoaded(),
     onLoadError: (err) => console.error('Rive error:', err),
   });
@@ -193,7 +209,6 @@ function onMainLoaded() {
     requestAnimationFrame(() => {
       selectStateMachine('SMAvatar');
       applyConfigDefaults();
-      initThumbnailRive();
       loadingOverlay.classList.add('hidden');
     });
   });
@@ -215,8 +230,186 @@ function selectStateMachine(name) {
   if (builderConfig) renderUI();
 }
 
+// ===================== TILE RIVE INSTANCES =====================
+function createTileInstance(canvas, fb) {
+  return new Promise((resolve) => {
+    const instance = new window.rive.Rive({
+      canvas: canvas,
+      riveFile: sharedRiveFile,
+      autoplay: false,
+      stateMachines: 'SMAvatar',
+      onLoad: () => {
+        const inputs = instance.stateMachineInputs('SMAvatar');
+        if (!inputs) { resolve(instance); return; }
+
+        // Set baseline: all currentInputValues
+        for (const inp of inputs) {
+          if ((inp.type === 56 || inp.type === 59) && currentInputValues[inp.name] !== undefined) {
+            if (inp.type === 56) inp.value = currentInputValues[inp.name];
+            else inp.value = !!currentInputValues[inp.name];
+          }
+        }
+
+        // Apply featureButton overrides (including zeros to match official behavior)
+        for (const [key, val] of Object.entries(fb.statesToOverride)) {
+          const inp = inputs.find(i => i.name === key);
+          if (!inp) continue;
+          if (inp.type === 56) inp.value = val;
+          else if (inp.type === 59) inp.value = !!val;
+        }
+
+        // Fire trigger + draw
+        const trig = inputs.find(i => i.type === 58 && i.name === 'bounce_trig');
+        if (trig) trig.fire();
+        instance.drawFrame();
+        resolve(instance);
+      },
+      onLoadError: () => resolve(null),
+    });
+  });
+}
+
+function destroyTabInstances(tabIdx) {
+  for (const [key, instance] of tileInstances) {
+    if (key.startsWith(`${tabIdx}-`)) {
+      try { instance.cleanup(); } catch(e) {}
+      tileInstances.delete(key);
+    }
+  }
+}
+
+function destroyAllTileInstances() {
+  for (const [, instance] of tileInstances) {
+    try { instance.cleanup(); } catch(e) {}
+  }
+  tileInstances.clear();
+}
+
+function updateTileInstancesForState(stateName, newValue) {
+  for (const [, instance] of tileInstances) {
+    const inputs = instance.stateMachineInputs('SMAvatar');
+    if (!inputs) continue;
+    const inp = inputs.find(i => i.name === stateName);
+    if (!inp) continue;
+    if (inp.type === 56) inp.value = newValue;
+    else if (inp.type === 59) inp.value = !!newValue;
+  }
+  requestAnimationFrame(() => {
+    for (const [, instance] of tileInstances) {
+      try { instance.drawFrame(); } catch(e) {}
+    }
+  });
+}
+
+async function renderTabTiles(tabIdx) {
+  if (!sharedRiveFile || !builderConfig) return;
+
+  // Destroy old instances for this tab
+  destroyTabInstances(tabIdx);
+
+  const panels = [...tabContent.querySelectorAll('.tab-panel')];
+  const panel = panels[tabIdx];
+  if (!panel) return;
+
+  const tabs = builderConfig.avatarBuilderConfig.stateChooserTabs;
+  const tab = tabs[tabIdx];
+  if (!tab) return;
+
+  const tileGrids = panel.querySelectorAll('.tile-grid');
+  let gridIdx = 0;
+  const workItems = [];
+
+  for (const section of tab.sections) {
+    if (section.buttonType !== 'FEATURE' || gridIdx >= tileGrids.length) continue;
+    const grid = tileGrids[gridIdx];
+    const tiles = grid.querySelectorAll('.tile');
+
+    for (let i = 0; i < section.featureButtons.length; i++) {
+      const tile = tiles[i];
+      if (!tile) continue;
+      const fb = section.featureButtons[i];
+
+      // Find or create tile canvas
+      let tileCanvas = tile.querySelector('canvas');
+      if (!tileCanvas) {
+        tileCanvas = document.createElement('canvas');
+        tileCanvas.width = 252;
+        tileCanvas.height = 252;
+        tileCanvas.className = 'tile-canvas';
+        tile.appendChild(tileCanvas);
+        const ph = tile.querySelector('.tile-placeholder');
+        if (ph) ph.style.display = 'none';
+      }
+
+      workItems.push({ key: `${tabIdx}-${gridIdx}-${i}`, tileCanvas, fb, tile });
+    }
+    gridIdx++;
+  }
+
+  if (workItems.length === 0) { thumbStatus.textContent = ''; return; }
+
+  thumbStatus.textContent = `Loading... 0/${workItems.length}`;
+  let done = 0;
+
+  // Create all instances in parallel
+  const results = await Promise.all(workItems.map(async (w) => {
+    const instance = await createTileInstance(w.tileCanvas, w.fb);
+    return { ...w, instance };
+  }));
+
+  for (const r of results) {
+    if (r.instance) {
+      tileInstances.set(r.key, r.instance);
+      r.tile.classList.remove('loading');
+    }
+    done++;
+    thumbStatus.textContent = `Loading... ${done}/${workItems.length}`;
+  }
+
+  thumbStatus.textContent = '';
+}
+
 // ===================== VALUE SETTING =====================
-// setSMValue defined below (after helper functions)
+function findTabForState(stateName) {
+  const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
+  if (!tabs) return -1;
+  for (let i = 0; i < TAB_DEFS.length; i++) {
+    const tab = tabs[i];
+    if (!tab) continue;
+    for (const section of tab.sections) {
+      if (section.buttonType === 'FEATURE') {
+        for (const fb of section.featureButtons) { if (fb.state === stateName) return i; }
+      }
+      if (section.buttonType === 'IMAGE') {
+        for (const ib of section.imageButtons) { if (ib.state === stateName) return i; }
+      }
+    }
+  }
+  return -1;
+}
+
+function invalidateThumbnails(stateName) {
+  if (!stateName) {
+    for (let i = 0; i < TAB_DEFS.length; i++) dirtyTabs.add(i);
+  } else {
+    const changedTab = findTabForState(stateName);
+    for (let i = 0; i < TAB_DEFS.length; i++) {
+      if (i !== changedTab) dirtyTabs.add(i);
+    }
+    // Update current tab's live tile instances
+    const val = currentInputValues[stateName];
+    if (val !== undefined) updateTileInstancesForState(stateName, val);
+  }
+}
+
+function setSMValue(name, value) {
+  const inp = stateMachineInputs[name];
+  if (!inp) return;
+  if (inp.type === 56) inp.value = value;
+  else if (inp.type === 59) inp.value = !!value;
+  currentInputValues[name] = value;
+  invalidateThumbnails(name);
+}
 
 function applyFeatureButton(fb) {
   const primaryState = fb.state;
@@ -259,216 +452,16 @@ function exportPNG() {
   const bgHex = getCurrentBgHex();
   const srcW = canvas.width;
   const srcH = canvas.height;
-  // Create export canvas matching the display aspect of the Rive canvas
   exportCanvas.width = srcW;
   exportCanvas.height = srcH;
   const ctx = exportCanvas.getContext('2d');
-  // Fill entire canvas with background color (covers the area outside the Rive artboard)
   ctx.fillStyle = bgHex;
   ctx.fillRect(0, 0, srcW, srcH);
-  // Draw Rive canvas content on top (avatar + artboard background strip)
   ctx.drawImage(canvas, 0, 0);
-  // Export
   const link = document.createElement('a');
   link.download = `avatar_${Date.now()}.png`;
   link.href = exportCanvas.toDataURL('image/png');
   link.click();
-}
-
-// ===================== THUMBNAIL RIVE =====================
-function initThumbnailRive() {
-  if (!riveBuffer) return;
-  const Rive = window.rive?.Rive;
-  const Layout = window.rive?.Layout;
-  const Fit = window.rive?.Fit;
-  const Alignment = window.rive?.Alignment;
-  if (!Rive) return;
-
-  thumbRive = new Rive({
-    canvas: thumbCanvas,
-    buffer: new Uint8Array(riveBuffer),
-    autoplay: false,
-    layout: Layout && Fit && Alignment ? new Layout({ fit: Fit.Cover, alignment: Alignment.Center }) : undefined,
-    onLoad: () => {
-      thumbRive.play(smNames);
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const inputs = thumbRive.stateMachineInputs('SMAvatar');
-          if (inputs) {
-            let trig = null;
-            for (const inp of inputs) {
-              if (inp.type === 58 && inp.name === 'bounce_trig') trig = inp;
-              else if (inp.type === 56 && currentInputValues[inp.name] !== undefined) {
-                inp.value = currentInputValues[inp.name];
-              }
-            }
-            if (trig) trig.fire();
-          }
-          thumbReady = true;
-          requestAnimationFrame(() => generateVisibleThumbnails());
-        });
-      });
-    },
-    onLoadError: () => console.warn('Thumb load error'),
-  });
-}
-
-function findTabForState(stateName) {
-  const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
-  if (!tabs) return -1;
-  for (let i = 0; i < TAB_DEFS.length; i++) {
-    const tab = tabs[i];
-    if (!tab) continue;
-    for (const section of tab.sections) {
-      if (section.buttonType === 'FEATURE') {
-        for (const fb of section.featureButtons) { if (fb.state === stateName) return i; }
-      }
-      if (section.buttonType === 'IMAGE') {
-        for (const ib of section.imageButtons) { if (ib.state === stateName) return i; }
-      }
-    }
-  }
-  return -1;
-}
-
-function getThumbNameMap() {
-  if (thumbNameMap) return thumbNameMap;
-  if (!thumbRive) return null;
-  const inputs = thumbRive.stateMachineInputs('SMAvatar');
-  if (!inputs) return null;
-  thumbNameMap = {};
-  for (const inp of inputs) { thumbNameMap[inp.name] = inp; }
-  return thumbNameMap;
-}
-
-function prepareThumbBase() {
-  const nm = getThumbNameMap();
-  if (!nm) return;
-  for (const [name, inp] of Object.entries(nm)) {
-    if ((inp.type === 56 || inp.type === 59) && currentInputValues[name] !== undefined) {
-      if (inp.type === 56) inp.value = currentInputValues[name];
-      else inp.value = !!currentInputValues[name];
-    }
-  }
-  if (nm['bounce_trig']) nm['bounce_trig'].fire();
-  if (thumbRive.draw) thumbRive.draw();
-}
-
-function clearTabCache(tabIdx) {
-  const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
-  if (!tabs || tabIdx < 0 || tabIdx >= tabs.length) return;
-  const tab = tabs[tabIdx];
-  if (!tab) return;
-  for (const section of tab.sections) {
-    if (section.buttonType === 'FEATURE') {
-      for (const fb of section.featureButtons) { delete thumbCache[`${fb.state}_${fb.value}`]; }
-    }
-  }
-}
-
-function updateCurrentTabTiles() {
-  const activePanel = tabContent.querySelector('.tab-panel.active');
-  if (!activePanel) return;
-  const tiles = activePanel.querySelectorAll('.tile');
-  for (const tile of tiles) {
-    const state = tile.dataset.state;
-    const value = parseInt(tile.dataset.value);
-    if (state && !isNaN(value)) {
-      tile.classList.toggle('selected', currentInputValues[state] === value);
-    }
-  }
-}
-
-function captureThumbFor(fb) {
-  return new Promise((resolve) => {
-    const key = `${fb.state}_${fb.value}`;
-    if (thumbCache[key]) { resolve(thumbCache[key]); return; }
-    if (!thumbReady || !thumbRive) { resolve(null); return; }
-
-    const nm = getThumbNameMap();
-    if (!nm) { resolve(null); return; }
-
-    const primaryState = fb.state;
-    for (const [key, val] of Object.entries(fb.statesToOverride)) {
-      if (val === 0 && key !== primaryState) continue;
-      if (!nm[key]) continue;
-      if (nm[key].type === 56) nm[key].value = val;
-      else if (nm[key].type === 59) nm[key].value = !!val;
-    }
-    if (thumbRive.draw) thumbRive.draw();
-
-    requestAnimationFrame(() => {
-      try {
-        const uri = thumbCanvas.toDataURL('image/png');
-        thumbCache[key] = uri;
-        resolve(uri);
-      } catch(e) { resolve(null); }
-    });
-  });
-}
-
-async function generateVisibleThumbnails() {
-  if (!thumbReady || !builderConfig) return;
-  const activePanel = tabContent.querySelector('.tab-panel.active');
-  if (!activePanel) return;
-
-  const panels = [...tabContent.querySelectorAll('.tab-panel')];
-  const activeIdx = panels.indexOf(activePanel);
-  const tabs = builderConfig.avatarBuilderConfig.stateChooserTabs;
-  if (activeIdx < 0 || activeIdx >= tabs.length) return;
-
-  // If this tab is not dirty, just update highlights
-  if (!dirtyTabs.has(activeIdx)) {
-    updateCurrentTabTiles();
-    thumbStatus.textContent = '';
-    return;
-  }
-  dirtyTabs.delete(activeIdx);
-  clearTabCache(activeIdx);
-
-  const tab = tabs[activeIdx];
-  const tileGrids = activePanel.querySelectorAll('.tile-grid');
-
-  // Set baseline state once for all thumbnails in this tab
-  prepareThumbBase();
-
-  let gridIdx = 0;
-  const workItems = [];
-  for (const section of tab.sections) {
-    if (section.buttonType === 'FEATURE' && gridIdx < tileGrids.length) {
-      const grid = tileGrids[gridIdx];
-      const tiles = grid.querySelectorAll('.tile');
-      for (let i = 0; i < section.featureButtons.length; i++) {
-        workItems.push({ fb: section.featureButtons[i], tile: tiles[i] || null });
-      }
-      gridIdx++;
-    }
-  }
-
-  let done = 0;
-  thumbStatus.textContent = `Rendering... 0/${workItems.length}`;
-  for (const w of workItems) {
-    const uri = await captureThumbFor(w.fb);
-    if (uri) updateTile(w.tile, w.fb);
-    done++;
-    thumbStatus.textContent = `Rendering... ${done}/${workItems.length}`;
-  }
-  thumbStatus.textContent = '';
-}
-
-function updateTile(tile, fb) {
-  if (!tile) return;
-  const key = `${fb.state}_${fb.value}`;
-  const uri = thumbCache[key];
-  if (!uri) return;
-  tile.classList.remove('loading');
-  const ph = tile.querySelector('.tile-placeholder');
-  if (ph) ph.style.display = 'none';
-  const old = tile.querySelector('img');
-  if (old) old.remove();
-  const img = document.createElement('img');
-  img.src = uri;
-  tile.appendChild(img);
 }
 
 // ===================== UI RENDER =====================
@@ -541,15 +534,6 @@ function renderUI() {
           ph.textContent = fb.value === 0 ? '✕' : '';
           tile.appendChild(ph);
 
-          const cachedUri = thumbCache[`${fb.state}_${fb.value}`];
-          if (cachedUri) {
-            tile.classList.remove('loading');
-            ph.style.display = 'none';
-            const img = document.createElement('img');
-            img.src = cachedUri;
-            tile.appendChild(img);
-          }
-
           tile.onclick = () => {
             applyFeatureButton(fb);
             updateBackground();
@@ -567,15 +551,26 @@ function renderUI() {
   });
 
   switchTab(0);
-  setTimeout(() => generateVisibleThumbnails(), 400);
+  setTimeout(() => renderTabTiles(0), 200);
 }
 
 function switchTab(idx) {
   tabBar.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
   tabContent.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
-  // Always regenerate on tab switch (state may have changed since last visit)
-  dirtyTabs.add(idx);
-  setTimeout(() => generateVisibleThumbnails(), 100);
+
+  if (dirtyTabs.has(idx) || !hasActiveTabInstances(idx)) {
+    dirtyTabs.delete(idx);
+    renderTabTiles(idx);
+  } else {
+    refreshAllHighlights();
+  }
+}
+
+function hasActiveTabInstances(tabIdx) {
+  for (const key of tileInstances.keys()) {
+    if (key.startsWith(`${tabIdx}-`)) return true;
+  }
+  return false;
 }
 
 function refreshAllHighlights() {
@@ -607,32 +602,6 @@ function refreshAllHighlights() {
   });
 }
 
-function invalidateThumbnails(stateName) {
-  thumbNameMap = null;  // force rebuild after state changes
-  if (!stateName) {
-    // Full reset: mark all tabs dirty and clear cache
-    thumbCache = {};
-    for (let i = 0; i < TAB_DEFS.length; i++) dirtyTabs.add(i);
-  } else {
-    // Mark all OTHER tabs as dirty (current tab's thumbnails stay valid)
-    const changedTab = findTabForState(stateName);
-    for (let i = 0; i < TAB_DEFS.length; i++) {
-      if (i !== changedTab) dirtyTabs.add(i);
-    }
-  }
-  clearTimeout(thumbRegenTimeout);
-  thumbRegenTimeout = setTimeout(() => generateVisibleThumbnails(), 150);
-}
-
-function setSMValue(name, value) {
-  const inp = stateMachineInputs[name];
-  if (!inp) return;
-  if (inp.type === 56) inp.value = value;
-  else if (inp.type === 59) inp.value = !!value;
-  currentInputValues[name] = value;
-  invalidateThumbnails(name);
-}
-
 function applyConfigDefaults() {
   if (!builderConfig || !currentSM) return;
   const defaults = builderConfig.avatarBuilderConfig.defaultBuiltAvatarState;
@@ -646,11 +615,8 @@ function applyConfigDefaults() {
   }
   scheduleTrigger();
   updateBackground();
-  // Mark all tabs dirty on init
-  thumbCache = {};
+  dirtyTabs.clear();
   for (let i = 0; i < TAB_DEFS.length; i++) dirtyTabs.add(i);
-  clearTimeout(thumbRegenTimeout);
-  thumbRegenTimeout = setTimeout(() => generateVisibleThumbnails(), 150);
 }
 
 // ===================== RESET =====================
@@ -667,11 +633,9 @@ function resetAll() {
   }
   scheduleTrigger();
   updateBackground();
-  thumbCache = {};
-  thumbNameMap = null;
+  destroyAllTileInstances();
+  dirtyTabs.clear();
   for (let i = 0; i < TAB_DEFS.length; i++) dirtyTabs.add(i);
-  clearTimeout(thumbRegenTimeout);
-  thumbRegenTimeout = setTimeout(() => generateVisibleThumbnails(), 150);
   if (builderConfig) renderUI();
 }
 
