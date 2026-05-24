@@ -1,6 +1,10 @@
 node_modules/
 .claude/
+.plans/
 *.pyc
 __pycache__/
 .DS_Store
 /tmp/
+*.egg-info/
+dist/
+build/

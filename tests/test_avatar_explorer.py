@@ -15,6 +15,10 @@ import asyncio, json, sys, os, time, signal, subprocess, base64, hashlib
 from pathlib import Path
 from io import BytesIO
 
+# Add project root to path so we can import src.cdp
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from src.cdp import CDPClient
+
 try:
     from PIL import Image
     HAS_PIL = True
@@ -56,68 +60,6 @@ def info(msg):
 
 def warn(msg):
     print(f"  {Colors.YELLOW}⚠{Colors.RESET} {msg}")
-
-
-class CDPClient:
-    """Minimal CDP client over a single WebSocket connection."""
-
-    def __init__(self, ws_url):
-        self.ws_url = ws_url
-        self.ws = None
-        self._req_id = 0
-        self._pending = {}
-
-    async def connect(self):
-        import websockets
-        self.ws = await websockets.connect(
-            self.ws_url, max_size=100 * 1024 * 1024,
-            ping_interval=30, ping_timeout=10,
-        )
-        # Drain init messages
-        await asyncio.sleep(0.3)
-        while True:
-            try:
-                raw = await asyncio.wait_for(self.ws.recv(), timeout=0.5)
-            except asyncio.TimeoutError:
-                break
-
-    async def close(self):
-        if self.ws:
-            await self.ws.close()
-
-    async def _recv_id(self, eid, timeout=TEST_TIMEOUT):
-        while True:
-            raw = await asyncio.wait_for(self.ws.recv(), timeout=timeout)
-            msg = json.loads(raw)
-            if msg.get("id") == eid:
-                if "error" in msg:
-                    raise RuntimeError(f"CDP error: {msg['error']}")
-                return msg
-
-    async def send(self, method, params=None):
-        self._req_id += 1
-        eid = self._req_id
-        payload = {"id": eid, "method": method}
-        if params:
-            payload["params"] = params
-        await self.ws.send(json.dumps(payload))
-        return await self._recv_id(eid)
-
-    async def evaluate(self, expression):
-        """Run JS in the page, return the result value."""
-        resp = await self.send("Runtime.evaluate", {
-            "expression": expression,
-            "returnByValue": True,
-        })
-        return resp.get("result", {}).get("result", {}).get("value")
-
-    async def screenshot(self):
-        """Capture a PNG screenshot, return raw bytes."""
-        resp = await self.send("Page.captureScreenshot", {"format": "png"})
-        data = resp.get("result", {}).get("data", "")
-        if data:
-            return base64.b64decode(data)
-        return None
 
 
 # === TEST RUNNER =======================================================
@@ -372,8 +314,8 @@ async def test_02_rive_loaded(cdp: CDPClient):
 
 
 async def test_03_cache_invalidation_on_set_sm_value(cdp: CDPClient):
-    """Verify that calling setSMValue clears the thumbnail cache."""
-    info("Testing cache invalidation...")
+    """Verify that setSMValue marks other tabs dirty without clearing current tab cache."""
+    info("Testing smart cache invalidation...")
 
     # First, ensure some thumbnails are cached
     await cdp.evaluate("generateVisibleThumbnails()")
@@ -382,34 +324,37 @@ async def test_03_cache_invalidation_on_set_sm_value(cdp: CDPClient):
     cache_size_before = await cdp.evaluate("Object.keys(thumbCache).length")
     info(f"Cache size before: {cache_size_before}")
 
-    # Now change a value via setSMValue
-    # Find the current Body value so we can toggle it
+    # Now change a value via setSMValue — should NOT clear current tab's cache
     body_val = await cdp.evaluate("currentInputValues['Body'] || 0")
     info(f"Current Body value: {body_val}")
-
-    # Pick a different body value
     new_body = 3 if body_val != 3 else 4
 
-    # Call setSMValue which should trigger invalidateThumbnails
     await cdp.evaluate(f"setSMValue('Body', {new_body})")
 
-    # Cache should be empty immediately after setSMValue
+    # Current tab's cache should be preserved (smart invalidation)
     cache_size_after = await cdp.evaluate("Object.keys(thumbCache).length")
     info(f"Cache size immediately after setSMValue: {cache_size_after}")
 
-    assert cache_size_after == 0, \
-        f"Cache should be empty after setSMValue, got {cache_size_after} entries"
-    ok("Cache cleared immediately after setSMValue")
+    assert cache_size_after >= cache_size_before, \
+        f"Cache should be preserved for current tab, was {cache_size_before}, got {cache_size_after}"
+    ok(f"Current tab cache preserved ({cache_size_before} -> {cache_size_after})")
 
-    # Wait for debounced regeneration (150ms debounce + rendering time)
+    # Other tabs should be marked dirty
+    dirty_count = await cdp.evaluate("dirtyTabs.size")
+    info(f"Tabs marked dirty: {dirty_count}")
+    assert dirty_count > 0, "At least some tabs should be marked dirty"
+    ok(f"{dirty_count} tabs marked dirty")
+
+    # Wait for regeneration and switch tab to verify dirty tabs get regenerated
     await asyncio.sleep(2)
+    await cdp.evaluate("switchTab(1)")  # Switch to Eyes tab
+    await asyncio.sleep(3)
 
-    cache_size_regen = await cdp.evaluate("Object.keys(thumbCache).length")
-    info(f"Cache size after regeneration: {cache_size_regen}")
-
-    assert cache_size_regen > 0, \
-        "Cache should have entries after regeneration"
-    ok(f"Cache regenerated with {cache_size_regen} entries")
+    cache_size_eyes = await cdp.evaluate("Object.keys(thumbCache).length")
+    info(f"Cache size after switching to Eyes tab: {cache_size_eyes}")
+    assert cache_size_eyes > cache_size_after, \
+        f"Cache should grow when switching to dirty tab, got {cache_size_eyes}"
+    ok(f"Cache grew when switching to dirty tab ({cache_size_after} -> {cache_size_eyes})")
 
 
 async def test_04_thumbnail_dynamic_composition(cdp: CDPClient):

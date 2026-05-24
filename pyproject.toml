@@ -1,0 +1,22 @@
+[project]
+name = "duolingo-avatar-crawler"
+version = "0.1.0"
+description = "Duolingo Avatar Crawler - Rive avatar reverse engineering toolkit"
+requires-python = ">=3.10"
+dependencies = [
+    "websockets>=16.0",
+    "Pillow>=12.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.24",
+]
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

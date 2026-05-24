@@ -127,6 +127,8 @@ let stateMachineInputs = {};
 let riveBuffer = null;
 let thumbRegenTimeout = null;
 let thumbCache = {};
+let thumbNameMap = null;
+let dirtyTabs = new Set();
 let bgColorMap = {};
 
 const TAB_DEFS = [
@@ -214,14 +216,7 @@ function selectStateMachine(name) {
 }
 
 // ===================== VALUE SETTING =====================
-function setSMValue(name, value) {
-  const inp = stateMachineInputs[name];
-  if (!inp) return;
-  if (inp.type === 56) inp.value = value;
-  else if (inp.type === 59) inp.value = !!value;
-  currentInputValues[name] = value;
-  invalidateThumbnails();
-}
+// setSMValue defined below (after helper functions)
 
 function applyFeatureButton(fb) {
   const primaryState = fb.state;
@@ -318,41 +313,96 @@ function initThumbnailRive() {
   });
 }
 
+function findTabForState(stateName) {
+  const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
+  if (!tabs) return -1;
+  for (let i = 0; i < TAB_DEFS.length; i++) {
+    const tab = tabs[i];
+    if (!tab) continue;
+    for (const section of tab.sections) {
+      if (section.buttonType === 'FEATURE') {
+        for (const fb of section.featureButtons) { if (fb.state === stateName) return i; }
+      }
+      if (section.buttonType === 'IMAGE') {
+        for (const ib of section.imageButtons) { if (ib.state === stateName) return i; }
+      }
+    }
+  }
+  return -1;
+}
+
+function getThumbNameMap() {
+  if (thumbNameMap) return thumbNameMap;
+  if (!thumbRive) return null;
+  const inputs = thumbRive.stateMachineInputs('SMAvatar');
+  if (!inputs) return null;
+  thumbNameMap = {};
+  for (const inp of inputs) { thumbNameMap[inp.name] = inp; }
+  return thumbNameMap;
+}
+
+function prepareThumbBase() {
+  const nm = getThumbNameMap();
+  if (!nm) return;
+  for (const [name, inp] of Object.entries(nm)) {
+    if ((inp.type === 56 || inp.type === 59) && currentInputValues[name] !== undefined) {
+      if (inp.type === 56) inp.value = currentInputValues[name];
+      else inp.value = !!currentInputValues[name];
+    }
+  }
+  if (nm['bounce_trig']) nm['bounce_trig'].fire();
+  if (thumbRive.draw) thumbRive.draw();
+}
+
+function clearTabCache(tabIdx) {
+  const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
+  if (!tabs || tabIdx < 0 || tabIdx >= tabs.length) return;
+  const tab = tabs[tabIdx];
+  if (!tab) return;
+  for (const section of tab.sections) {
+    if (section.buttonType === 'FEATURE') {
+      for (const fb of section.featureButtons) { delete thumbCache[`${fb.state}_${fb.value}`]; }
+    }
+  }
+}
+
+function updateCurrentTabTiles() {
+  const activePanel = tabContent.querySelector('.tab-panel.active');
+  if (!activePanel) return;
+  const tiles = activePanel.querySelectorAll('.tile');
+  for (const tile of tiles) {
+    const state = tile.dataset.state;
+    const value = parseInt(tile.dataset.value);
+    if (state && !isNaN(value)) {
+      tile.classList.toggle('selected', currentInputValues[state] === value);
+    }
+  }
+}
+
 function captureThumbFor(fb) {
   return new Promise((resolve) => {
     const key = `${fb.state}_${fb.value}`;
     if (thumbCache[key]) { resolve(thumbCache[key]); return; }
     if (!thumbReady || !thumbRive) { resolve(null); return; }
 
-    const inputs = thumbRive.stateMachineInputs('SMAvatar');
-    if (!inputs) { resolve(null); return; }
-
-    const nameMap = {}; let trig = null;
-    for (const inp of inputs) {
-      nameMap[inp.name] = inp;
-      if (inp.type === 58 && inp.name === 'bounce_trig') trig = inp;
-      else if ((inp.type === 56 || inp.type === 59) && currentInputValues[inp.name] !== undefined) {
-        if (inp.type === 56) inp.value = currentInputValues[inp.name];
-        else inp.value = !!currentInputValues[inp.name];
-      }
-    }
+    const nm = getThumbNameMap();
+    if (!nm) { resolve(null); return; }
 
     const primaryState = fb.state;
     for (const [key, val] of Object.entries(fb.statesToOverride)) {
       if (val === 0 && key !== primaryState) continue;
-      if (nameMap[key] && nameMap[key].type === 56) nameMap[key].value = val;
+      if (!nm[key]) continue;
+      if (nm[key].type === 56) nm[key].value = val;
+      else if (nm[key].type === 59) nm[key].value = !!val;
     }
-    if (trig) trig.fire();
     if (thumbRive.draw) thumbRive.draw();
 
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        try {
-          const uri = thumbCanvas.toDataURL('image/png');
-          thumbCache[key] = uri;
-          resolve(uri);
-        } catch(e) { resolve(null); }
-      });
+      try {
+        const uri = thumbCanvas.toDataURL('image/png');
+        thumbCache[key] = uri;
+        resolve(uri);
+      } catch(e) { resolve(null); }
     });
   });
 }
@@ -367,8 +417,21 @@ async function generateVisibleThumbnails() {
   const tabs = builderConfig.avatarBuilderConfig.stateChooserTabs;
   if (activeIdx < 0 || activeIdx >= tabs.length) return;
 
+  // If this tab is not dirty, just update highlights
+  if (!dirtyTabs.has(activeIdx)) {
+    updateCurrentTabTiles();
+    thumbStatus.textContent = '';
+    return;
+  }
+  dirtyTabs.delete(activeIdx);
+  clearTabCache(activeIdx);
+
   const tab = tabs[activeIdx];
   const tileGrids = activePanel.querySelectorAll('.tile-grid');
+
+  // Set baseline state once for all thumbnails in this tab
+  prepareThumbBase();
+
   let gridIdx = 0;
   const workItems = [];
   for (const section of tab.sections) {
@@ -382,20 +445,13 @@ async function generateVisibleThumbnails() {
     }
   }
 
-  const pending = workItems.filter(w => !thumbCache[`${w.fb.state}_${w.fb.value}`]);
-  if (pending.length === 0) {
-    for (const w of workItems) updateTile(w.tile, w.fb);
-    thumbStatus.textContent = '';
-    return;
-  }
-
   let done = 0;
-  thumbStatus.textContent = `Rendering... 0/${pending.length}`;
+  thumbStatus.textContent = `Rendering... 0/${workItems.length}`;
   for (const w of workItems) {
     const uri = await captureThumbFor(w.fb);
     if (uri) updateTile(w.tile, w.fb);
     done++;
-    thumbStatus.textContent = `Rendering... ${done}/${pending.length}`;
+    thumbStatus.textContent = `Rendering... ${done}/${workItems.length}`;
   }
   thumbStatus.textContent = '';
 }
@@ -517,7 +573,9 @@ function renderUI() {
 function switchTab(idx) {
   tabBar.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
   tabContent.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
-  setTimeout(() => generateVisibleThumbnails(), 150);
+  // Always regenerate on tab switch (state may have changed since last visit)
+  dirtyTabs.add(idx);
+  setTimeout(() => generateVisibleThumbnails(), 100);
 }
 
 function refreshAllHighlights() {
@@ -549,10 +607,30 @@ function refreshAllHighlights() {
   });
 }
 
-function invalidateThumbnails() {
-  thumbCache = {};
+function invalidateThumbnails(stateName) {
+  thumbNameMap = null;  // force rebuild after state changes
+  if (!stateName) {
+    // Full reset: mark all tabs dirty and clear cache
+    thumbCache = {};
+    for (let i = 0; i < TAB_DEFS.length; i++) dirtyTabs.add(i);
+  } else {
+    // Mark all OTHER tabs as dirty (current tab's thumbnails stay valid)
+    const changedTab = findTabForState(stateName);
+    for (let i = 0; i < TAB_DEFS.length; i++) {
+      if (i !== changedTab) dirtyTabs.add(i);
+    }
+  }
   clearTimeout(thumbRegenTimeout);
   thumbRegenTimeout = setTimeout(() => generateVisibleThumbnails(), 150);
+}
+
+function setSMValue(name, value) {
+  const inp = stateMachineInputs[name];
+  if (!inp) return;
+  if (inp.type === 56) inp.value = value;
+  else if (inp.type === 59) inp.value = !!value;
+  currentInputValues[name] = value;
+  invalidateThumbnails(name);
 }
 
 function applyConfigDefaults() {
@@ -560,11 +638,19 @@ function applyConfigDefaults() {
   const defaults = builderConfig.avatarBuilderConfig.defaultBuiltAvatarState;
   if (!defaults) return;
   for (const [name, value] of Object.entries(defaults)) {
-    setSMValue(name, value);
+    const inp = stateMachineInputs[name];
+    if (!inp) continue;
+    if (inp.type === 56) inp.value = value;
+    else if (inp.type === 59) inp.value = !!value;
+    currentInputValues[name] = value;
   }
   scheduleTrigger();
   updateBackground();
-  invalidateThumbnails();
+  // Mark all tabs dirty on init
+  thumbCache = {};
+  for (let i = 0; i < TAB_DEFS.length; i++) dirtyTabs.add(i);
+  clearTimeout(thumbRegenTimeout);
+  thumbRegenTimeout = setTimeout(() => generateVisibleThumbnails(), 150);
 }
 
 // ===================== RESET =====================
@@ -573,11 +659,19 @@ function resetAll() {
   const defaults = builderConfig.avatarBuilderConfig.defaultBuiltAvatarState;
   if (!defaults) return;
   for (const [name, value] of Object.entries(defaults)) {
-    setSMValue(name, value);
+    const inp = stateMachineInputs[name];
+    if (!inp) continue;
+    if (inp.type === 56) inp.value = value;
+    else if (inp.type === 59) inp.value = !!value;
+    currentInputValues[name] = value;
   }
   scheduleTrigger();
   updateBackground();
-  invalidateThumbnails();
+  thumbCache = {};
+  thumbNameMap = null;
+  for (let i = 0; i < TAB_DEFS.length; i++) dirtyTabs.add(i);
+  clearTimeout(thumbRegenTimeout);
+  thumbRegenTimeout = setTimeout(() => generateVisibleThumbnails(), 150);
   if (builderConfig) renderUI();
 }
 
