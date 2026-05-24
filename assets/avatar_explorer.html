@@ -28,7 +28,7 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 
 /* ---- LEFT: Preview ---- */
 .preview-panel { width: 50%; display: flex; align-items: center; justify-content: center; position: relative; transition: background-color 0.3s; }
-.preview-panel canvas { border-radius: 16px; max-width: 92%; max-height: 88%; }
+.preview-panel canvas { border-radius: 16px; max-width: 100%; max-height: 100%; background: transparent; }
 
 /* ---- RIGHT: Options ---- */
 .options-panel { width: 50%; display: flex; flex-direction: column; background: #1a2d3d; border-left: 1px solid #243647; }
@@ -37,8 +37,8 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .tab-bar { display: flex; background: #152536; border-bottom: 2px solid #243647; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; justify-content: center; }
 .tab-bar::-webkit-scrollbar { height: 0; }
 .tab-btn { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 16px 8px; cursor: pointer; border: none; background: none; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; min-width: 64px; }
-.tab-btn img { width: 28px; height: 28px; opacity: 0.45; transition: opacity 0.15s; }
-.tab-btn .tab-label { font-size: 11px; font-weight: 700; color: #52656D; transition: color 0.15s; }
+.tab-btn img { width: 34px; height: 34px; opacity: 0.45; transition: opacity 0.15s; }
+.tab-btn .tab-label { font-size: 12px; font-weight: 700; color: #52656D; transition: color 0.15s; }
 .tab-btn:hover img { opacity: 0.7; }
 .tab-btn:hover .tab-label { color: #8a9ba8; }
 .tab-btn.active { border-bottom-color: #58cc02; }
@@ -58,14 +58,14 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 
 /* Color swatches */
 .swatch-grid { display: flex; flex-wrap: wrap; gap: 11px; }
-.swatch { width: 52px; height: 52px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.12s, border-color 0.12s; position: relative; flex-shrink: 0; }
+.swatch { width: 56px; height: 56px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.12s, border-color 0.12s; position: relative; flex-shrink: 0; }
 .swatch:hover { transform: scale(1.15); }
 .swatch.selected { border-color: #58cc02; box-shadow: 0 0 0 4px rgba(88,204,2,0.25); }
 .swatch.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
 
 /* Feature tiles */
 .tile-grid { display: flex; flex-wrap: wrap; gap: 11px; }
-.tile { width: 110px; height: 110px; border-radius: 16px; cursor: pointer; border: 3px solid #2a4055; background: #1e3347; transition: all 0.12s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tile { width: 120px; height: 120px; border-radius: 16px; cursor: pointer; border: 3px solid #2a4055; background: #1e3347; transition: all 0.12s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .tile:hover { border-color: #58cc02; transform: scale(1.05); }
 .tile.selected { border-color: #58cc02; box-shadow: 0 0 0 4px rgba(88,204,2,0.3); }
 .tile img { width: 100%; height: 100%; object-fit: cover; border-radius: 13px; position: absolute; inset: 0; }
@@ -107,7 +107,7 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 <div class="main-layout">
   <!-- LEFT: Avatar preview -->
   <div class="preview-panel" id="previewPanel">
-    <canvas id="riveCanvas" width="600" height="600"></canvas>
+    <canvas id="riveCanvas" width="750" height="750"></canvas>
   </div>
 
   <!-- RIGHT: Options -->
@@ -119,7 +119,7 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 </div>
 
 <!-- Hidden thumbnail renderer -->
-<canvas id="thumbCanvas" width="200" height="200" style="display:none;"></canvas>
+<canvas id="thumbCanvas" width="250" height="250" style="display:none;"></canvas>
 
 <script src="https://unpkg.com/@rive-app/canvas@2.37.8/rive.js"></script>
 <script>
@@ -241,7 +241,10 @@ function updateBackground() {
   if (!bgColorMap) return;
   const bgVal = currentInputValues['BackgroundColor'];
   const hex = bgColorMap[bgVal];
-  if (hex) previewPanel.style.backgroundColor = hex;
+  if (hex) {
+    previewPanel.style.backgroundColor = hex;
+    canvas.style.backgroundColor = hex;
+  }
 }
 
 function buildBgColorMap() {
@@ -534,7 +537,19 @@ function refreshAllHighlights() {
 }
 
 // ===================== ACTIONS =====================
-function resetAll() { if (currentSM) selectStateMachine(currentSM); }
+function resetAll() {
+  if (!builderConfig || !currentSM) return;
+  const defaults = builderConfig.avatarBuilderConfig.defaultBuiltAvatarState;
+  if (!defaults) return;
+
+  for (const [name, value] of Object.entries(defaults)) {
+    setSMValue(name, value);
+  }
+  scheduleTrigger();
+  updateBackground();
+  // Re-render to show updated selection highlights
+  if (builderConfig) renderUI();
+}
 function exportPNG() {
   const link = document.createElement('a');
   link.download = `avatar_${Date.now()}.png`;
