@@ -125,6 +125,8 @@ let stateMachineInputs = {};
 let riveBuffer = null;
 let tileInstances = new Map();
 let dirtyTabs = new Set();
+let currentTabIdx = 0;
+let tileDrawPending = false;
 let bgColorMap = {};
 
 const TAB_DEFS = [
@@ -249,6 +251,7 @@ function createTileInstance(canvas, fb) {
       onLoad: () => {
         const inputs = instance.stateMachineInputs('SMAvatar');
         if (!inputs) { resolve(instance); return; }
+        instance._inputs = inputs;
 
         // Build lookup map in one pass, also find trigger
         const inputMap = Object.create(null);
@@ -301,8 +304,10 @@ function destroyAllTileInstances() {
 }
 
 function updateTileInstancesForState(stateName, newValue) {
-  for (const [, instance] of tileInstances) {
-    const inputs = instance.stateMachineInputs('SMAvatar');
+  for (const [key, instance] of tileInstances) {
+    // Only update instances on the visible tab; others will be rebuilt lazily
+    if (!key.startsWith(`${currentTabIdx}-`)) continue;
+    const inputs = instance._inputs;
     if (!inputs) continue;
     let inp = null;
     for (const x of inputs) { if (x.name === stateName) { inp = x; break; } }
@@ -310,8 +315,13 @@ function updateTileInstancesForState(stateName, newValue) {
     if (inp.type === 56) inp.value = newValue;
     else if (inp.type === 59) inp.value = !!newValue;
   }
+  // Deduplicate rAF — only schedule one draw pass per frame
+  if (tileDrawPending) return;
+  tileDrawPending = true;
   requestAnimationFrame(() => {
-    for (const [, instance] of tileInstances) {
+    tileDrawPending = false;
+    for (const [key, instance] of tileInstances) {
+      if (!key.startsWith(`${currentTabIdx}-`)) continue;
       try { instance.drawFrame(); } catch(e) {}
     }
   });
@@ -627,6 +637,7 @@ function renderUI() {
 }
 
 function switchTab(idx) {
+  currentTabIdx = idx;
   tabBar.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
   tabContent.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
 
