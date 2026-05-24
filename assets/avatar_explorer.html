@@ -6,81 +6,75 @@
 <title>Duolingo Avatar Explorer</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #131f2c; color: #e8e8e8; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: rgb(255,255,255); color: #3c3c3c; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-/* ---- Header ---- */
-.header { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 52px; background: #1a2d3d; border-bottom: 1px solid #243647; flex-shrink: 0; }
-.header-left { display: flex; align-items: center; gap: 12px; }
-.header-left h1 { font-size: 16px; font-weight: 800; color: #fff; }
-.header-left .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.header-left .dot.ok { background: #58cc02; }
-.header-left .dot.wait { background: #ffc107; }
+.header { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 48px; background: #fff; border-bottom: 2px solid #e5e5e5; flex-shrink: 0; }
+.header-left { display: flex; align-items: center; gap: 10px; }
+.header-left h1 { font-size: 16px; font-weight: 800; color: #3c3c3c; }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot.ok { background: #58cc02; }
+.dot.wait { background: #ffc107; }
 .header-right { display: flex; gap: 8px; align-items: center; }
-.header-right input[type="file"] { font-size: 11px; color: #6b8299; width: 180px; }
-.btn { padding: 8px 18px; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.12s; font-family: inherit; }
-.btn-primary { background: #58cc02; color: #fff; }
-.btn-primary:hover { background: #4cb000; }
-.btn-secondary { background: #2a4055; color: #b0c8d8; }
-.btn-secondary:hover { background: #354f6a; }
+.header-right input[type="file"] { font-size: 11px; color: #777; width: 180px; }
 
-/* ---- Main Split ---- */
+.btn { padding: 8px 20px; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.12s; font-family: inherit; }
+.btn-primary { background: #58cc02; color: #fff; border-bottom: 3px solid #46a302; }
+.btn-primary:hover { background: #4cb000; }
+.btn-secondary { background: #e5e5e5; color: #3c3c3c; border-bottom: 3px solid #d1d1d1; }
+.btn-secondary:hover { background: #dadada; }
+
 .main-layout { display: flex; flex: 1; overflow: hidden; }
 
-/* ---- LEFT: Preview ---- */
-.preview-panel { width: 50%; display: flex; align-items: center; justify-content: center; position: relative; transition: background-color 0.3s; }
-.preview-panel canvas { border-radius: 16px; max-width: 100%; max-height: 100%; background: transparent; }
+/* LEFT: Avatar preview — matches Duolingo: portrait canvas centered in white panel */
+.preview-panel { width: 50%; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s; }
+.preview-panel canvas { max-width: 100%; max-height: 100%; background: transparent; }
 
-/* ---- RIGHT: Options ---- */
-.options-panel { width: 50%; display: flex; flex-direction: column; background: #1a2d3d; border-left: 1px solid #243647; }
+/* RIGHT: Options */
+.options-panel { width: 50%; display: flex; flex-direction: column; background: #fff; border-left: 2px solid #e5e5e5; }
 
-/* Tab bar */
-.tab-bar { display: flex; background: #152536; border-bottom: 2px solid #243647; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; justify-content: center; }
+.tab-bar { display: flex; background: #fff; border-bottom: 2px solid #e5e5e5; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; justify-content: center; }
 .tab-bar::-webkit-scrollbar { height: 0; }
 .tab-btn { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 16px 8px; cursor: pointer; border: none; background: none; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; min-width: 64px; }
 .tab-btn img { width: 34px; height: 34px; opacity: 0.45; transition: opacity 0.15s; }
 .tab-btn .tab-label { font-size: 12px; font-weight: 700; color: #52656D; transition: color 0.15s; }
 .tab-btn:hover img { opacity: 0.7; }
 .tab-btn:hover .tab-label { color: #8a9ba8; }
-.tab-btn.active { border-bottom-color: #58cc02; }
+.tab-btn.active { border-bottom-color: #1cb0f6; }
 .tab-btn.active img { opacity: 1; }
-.tab-btn.active .tab-label { color: #58cc02; }
+.tab-btn.active .tab-label { color: #1cb0f6; }
 
-/* Scrollable sections */
 .options-scroll { flex: 1; overflow-y: auto; padding: 24px 28px; }
 .options-scroll::-webkit-scrollbar { width: 5px; }
-.options-scroll::-webkit-scrollbar-thumb { background: #2a4055; border-radius: 3px; }
+.options-scroll::-webkit-scrollbar-thumb { background: #d1d1d1; border-radius: 3px; }
 
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
 .section { margin-bottom: 28px; }
-.section-header { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 14px; }
+.section-header { font-size: 16px; font-weight: 800; color: #3c3c3c; margin-bottom: 14px; }
 
-/* Color swatches */
 .swatch-grid { display: flex; flex-wrap: wrap; gap: 11px; }
-.swatch { width: 56px; height: 56px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.12s, border-color 0.12s; position: relative; flex-shrink: 0; }
-.swatch:hover { transform: scale(1.15); }
-.swatch.selected { border-color: #58cc02; box-shadow: 0 0 0 4px rgba(88,204,2,0.25); }
-.swatch.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+.swatch { width: 56px; height: 56px; border-radius: 50%; cursor: pointer; border: 3px solid #e5e5e5; transition: transform 0.12s, border-color 0.12s; position: relative; flex-shrink: 0; }
+.swatch:hover { transform: scale(1.15); border-color: #a0a0a0; }
+.swatch.selected { border-color: #1cb0f6; box-shadow: 0 0 0 3px rgba(28,176,246,0.25); }
+.swatch.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
 
-/* Feature tiles */
 .tile-grid { display: flex; flex-wrap: wrap; gap: 11px; }
-.tile { width: 120px; height: 120px; border-radius: 16px; cursor: pointer; border: 3px solid #2a4055; background: #1e3347; transition: all 0.12s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.tile:hover { border-color: #58cc02; transform: scale(1.05); }
-.tile.selected { border-color: #58cc02; box-shadow: 0 0 0 4px rgba(88,204,2,0.3); }
-.tile img { width: 100%; height: 100%; object-fit: cover; border-radius: 13px; position: absolute; inset: 0; }
-.tile .tile-placeholder { font-size: 34px; opacity: 0.2; z-index: 1; }
+.tile { width: 120px; height: 120px; border-radius: 14px; cursor: pointer; border: 3px solid #e5e5e5; background: #f7f7f7; transition: all 0.12s; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tile:hover { border-color: #a0a0a0; transform: scale(1.04); }
+.tile.selected { border-color: #1cb0f6; box-shadow: 0 0 0 3px rgba(28,176,246,0.25); }
+.tile img { width: 100%; height: 100%; object-fit: cover; border-radius: 11px; position: absolute; inset: 0; }
+.tile .tile-placeholder { font-size: 36px; opacity: 0.15; z-index: 1; }
 .tile.loading .tile-placeholder { animation: pulse 1.2s ease-in-out infinite; }
-@keyframes pulse { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.35; } }
+@keyframes pulse { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.3; } }
 
-.thumb-status { font-size: 10px; color: #506070; text-align: center; padding: 2px; flex-shrink: 0; min-height: 18px; }
+.thumb-status { font-size: 10px; color: #aaa; text-align: center; padding: 2px; flex-shrink: 0; min-height: 18px; }
 
-/* Loading overlay */
-.loading-overlay { position: fixed; inset: 0; background: rgba(15,26,36,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+.loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
 .loading-overlay.hidden { display: none; }
-.spinner { width: 48px; height: 48px; border: 4px solid #2a4055; border-top-color: #58cc02; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
+.spinner { width: 48px; height: 48px; border: 4px solid #e5e5e5; border-top-color: #1cb0f6; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.loading-text { font-size: 14px; color: #b0c8d8; }
+.loading-text { font-size: 14px; color: #777; }
 </style>
 </head>
 <body>
@@ -90,27 +84,23 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   <div class="loading-text">Loading Avatar Builder...</div>
 </div>
 
-<!-- Header -->
 <div class="header">
   <div class="header-left">
     <h1>Avatar Builder</h1>
     <div class="dot wait" id="statusDot"></div>
   </div>
   <div class="header-right">
-    <input type="file" id="fileInput" accept=".riv" title="Load .riv file">
+    <input type="file" id="fileInput" accept=".riv">
     <button class="btn btn-secondary" onclick="resetAll()">Reset</button>
     <button class="btn btn-primary" onclick="exportPNG()">Export PNG</button>
   </div>
 </div>
 
-<!-- Main layout -->
 <div class="main-layout">
-  <!-- LEFT: Avatar preview -->
   <div class="preview-panel" id="previewPanel">
-    <canvas id="riveCanvas" width="750" height="750"></canvas>
+    <canvas id="riveCanvas" width="1000" height="1380"></canvas>
   </div>
 
-  <!-- RIGHT: Options -->
   <div class="options-panel">
     <div class="tab-bar" id="tabBar"></div>
     <div class="thumb-status" id="thumbStatus"></div>
@@ -118,8 +108,8 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   </div>
 </div>
 
-<!-- Hidden thumbnail renderer -->
-<canvas id="thumbCanvas" width="250" height="250" style="display:none;"></canvas>
+<canvas id="thumbCanvas" width="252" height="252" style="display:none;"></canvas>
+<canvas id="exportCanvas" style="display:none;"></canvas>
 
 <script src="https://unpkg.com/@rive-app/canvas@2.37.8/rive.js"></script>
 <script>
@@ -136,9 +126,8 @@ let currentInputValues = {};
 let stateMachineInputs = {};
 let riveBuffer = null;
 let thumbCache = {};
-let bgColorMap = {}; // BackgroundColor value → hex
+let bgColorMap = {};
 
-// Tab defs: [icon_file, label, config_tab_index]
 const TAB_DEFS = [
   { icon: 'avatar_builder_body_unselected_dark.svg', label: 'Body', idx: 0 },
   { icon: 'avatar_builder_face_unselected_dark.svg', label: 'Eyes', idx: 1 },
@@ -150,10 +139,10 @@ const TAB_DEFS = [
   { icon: 'avatar_builder_background_unselected_dark.svg', label: 'BG', idx: 7 },
 ];
 
-// ===================== DOM =====================
 const canvas = document.getElementById('riveCanvas');
 const previewPanel = document.getElementById('previewPanel');
 const thumbCanvas = document.getElementById('thumbCanvas');
+const exportCanvas = document.getElementById('exportCanvas');
 const tabBar = document.getElementById('tabBar');
 const tabContent = document.getElementById('tabContent');
 const loadingOverlay = document.getElementById('loadingOverlay');
@@ -176,12 +165,12 @@ function loadRiveFile(buffer) {
   thumbCache = {}; thumbReady = false;
 
   const Rive = window.rive?.Rive;
-  if (!Rive) { console.error('Rive SDK not loaded'); return; }
+  if (!Rive) return;
 
   riveInst = new Rive({
     canvas, buffer: new Uint8Array(buffer), autoplay: false,
     onLoad: () => onMainLoaded(),
-    onLoadError: (err) => console.error('Rive load error:', err),
+    onLoadError: (err) => console.error('Rive error:', err),
   });
 }
 
@@ -238,7 +227,6 @@ function applyFeatureButton(fb) {
 
 // ===================== BACKGROUND =====================
 function updateBackground() {
-  if (!bgColorMap) return;
   const bgVal = currentInputValues['BackgroundColor'];
   const hex = bgColorMap[bgVal];
   if (hex) {
@@ -254,13 +242,37 @@ function buildBgColorMap() {
     for (const section of tab.sections) {
       if (section.buttonType === 'IMAGE') {
         for (const ib of section.imageButtons) {
-          if (ib.state === 'BackgroundColor') {
-            bgColorMap[ib.value] = ib.color;
-          }
+          if (ib.state === 'BackgroundColor') bgColorMap[ib.value] = ib.color;
         }
       }
     }
   }
+}
+
+// ===================== EXPORT =====================
+function getCurrentBgHex() {
+  const bgVal = currentInputValues['BackgroundColor'];
+  return bgColorMap[bgVal] || '#E5E5E5';
+}
+
+function exportPNG() {
+  const bgHex = getCurrentBgHex();
+  const srcW = canvas.width;
+  const srcH = canvas.height;
+  // Create export canvas matching the display aspect of the Rive canvas
+  exportCanvas.width = srcW;
+  exportCanvas.height = srcH;
+  const ctx = exportCanvas.getContext('2d');
+  // Fill entire canvas with background color (covers the area outside the Rive artboard)
+  ctx.fillStyle = bgHex;
+  ctx.fillRect(0, 0, srcW, srcH);
+  // Draw Rive canvas content on top (avatar + artboard background strip)
+  ctx.drawImage(canvas, 0, 0);
+  // Export
+  const link = document.createElement('a');
+  link.download = `avatar_${Date.now()}.png`;
+  link.href = exportCanvas.toDataURL('image/png');
+  link.click();
 }
 
 // ===================== THUMBNAIL RIVE =====================
@@ -293,7 +305,7 @@ function initThumbnailRive() {
         });
       });
     },
-    onLoadError: () => console.warn('Thumbnail load error'),
+    onLoadError: () => console.warn('Thumb load error'),
   });
 }
 
@@ -306,8 +318,7 @@ function captureThumbFor(fb) {
     const inputs = thumbRive.stateMachineInputs('SMAvatar');
     if (!inputs) { resolve(null); return; }
 
-    const nameMap = {};
-    let trig = null;
+    const nameMap = {}; let trig = null;
     for (const inp of inputs) {
       nameMap[inp.name] = inp;
       if (inp.type === 58 && inp.name === 'bounce_trig') trig = inp;
@@ -321,7 +332,6 @@ function captureThumbFor(fb) {
       if (val === 0 && key !== primaryState) continue;
       if (nameMap[key] && nameMap[key].type === 56) nameMap[key].value = val;
     }
-
     if (trig) trig.fire();
 
     requestAnimationFrame(() => {
@@ -350,7 +360,6 @@ async function generateVisibleThumbnails() {
   const tileGrids = activePanel.querySelectorAll('.tile-grid');
   let gridIdx = 0;
   const workItems = [];
-
   for (const section of tab.sections) {
     if (section.buttonType === 'FEATURE' && gridIdx < tileGrids.length) {
       const grid = tileGrids[gridIdx];
@@ -370,15 +379,12 @@ async function generateVisibleThumbnails() {
   }
 
   let done = 0;
-  thumbStatus.textContent = `Rendering previews... 0/${pending.length}`;
-
+  thumbStatus.textContent = `Rendering... 0/${pending.length}`;
   for (const w of workItems) {
     const uri = await captureThumbFor(w.fb);
     if (uri) updateTile(w.tile, w.fb);
     done++;
-    if (thumbCache[`${w.fb.state}_${w.fb.value}`]) {
-      thumbStatus.textContent = `Rendering previews... ${done}/${pending.length}`;
-    }
+    thumbStatus.textContent = `Rendering... ${done}/${pending.length}`;
   }
   thumbStatus.textContent = '';
 }
@@ -407,14 +413,12 @@ function renderUI() {
   tabContent.innerHTML = '';
 
   TAB_DEFS.forEach((def) => {
-    // Tab button with official icon
     const btn = document.createElement('button');
     btn.className = 'tab-btn';
     btn.innerHTML = `<img src="${def.icon}" alt="${def.label}"><span class="tab-label">${def.label}</span>`;
     btn.onclick = () => switchTab(def.idx);
     tabBar.appendChild(btn);
 
-    // Tab panel
     const tab = tabs[def.idx];
     if (!tab) return;
     const panel = document.createElement('div');
@@ -508,7 +512,6 @@ function switchTab(idx) {
 function refreshAllHighlights() {
   const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
   if (!tabs) return;
-
   const panels = tabContent.querySelectorAll('.tab-panel');
   panels.forEach((panel, ti) => {
     const def = TAB_DEFS.find(d => d.idx === ti);
@@ -517,7 +520,6 @@ function refreshAllHighlights() {
     let si = 0, fi = 0;
     const swatchGrids = panel.querySelectorAll('.swatch-grid');
     const tileGrids = panel.querySelectorAll('.tile-grid');
-
     for (const section of tab.sections) {
       if (section.buttonType === 'IMAGE' && si < swatchGrids.length) {
         const cur = currentInputValues[section.imageButtons[0]?.state];
@@ -536,25 +538,17 @@ function refreshAllHighlights() {
   });
 }
 
-// ===================== ACTIONS =====================
+// ===================== RESET =====================
 function resetAll() {
   if (!builderConfig || !currentSM) return;
   const defaults = builderConfig.avatarBuilderConfig.defaultBuiltAvatarState;
   if (!defaults) return;
-
   for (const [name, value] of Object.entries(defaults)) {
     setSMValue(name, value);
   }
   scheduleTrigger();
   updateBackground();
-  // Re-render to show updated selection highlights
   if (builderConfig) renderUI();
-}
-function exportPNG() {
-  const link = document.createElement('a');
-  link.download = `avatar_${Date.now()}.png`;
-  link.href = canvas.toDataURL('image/png');
-  link.click();
 }
 
 // ===================== EVENTS =====================
@@ -568,22 +562,13 @@ document.getElementById('fileInput').addEventListener('change', async (e) => {
 async function init() {
   try {
     const resp = await fetch('avatar_builder_config.json');
-    if (resp.ok) {
-      builderConfig = await resp.json();
-      buildBgColorMap();
-    }
-  } catch(e) { console.warn('Config load error:', e.message); }
-
+    if (resp.ok) { builderConfig = await resp.json(); buildBgColorMap(); }
+  } catch(e) { console.warn('Config:', e.message); }
   try {
     const resp = await fetch('avatar_builder_25_sept2025.riv');
-    if (resp.ok) {
-      loadRiveFile(await resp.arrayBuffer());
-    } else {
-      loadingOverlay.classList.add('hidden');
-    }
-  } catch(e) {
-    loadingOverlay.classList.add('hidden');
-  }
+    if (resp.ok) { loadRiveFile(await resp.arrayBuffer()); }
+    else { loadingOverlay.classList.add('hidden'); }
+  } catch(e) { loadingOverlay.classList.add('hidden'); }
 }
 window.addEventListener('load', init);
 </script>
