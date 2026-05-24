@@ -6,9 +6,9 @@
 <title>Duolingo Avatar Explorer</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: rgb(255,255,255); color: #3c3c3c; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f0f0; color: #3c3c3c; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-.header { display: flex; align-items: center; justify-content: space-between; padding: 0 24px; height: 48px; background: #fff; border-bottom: 2px solid #e5e5e5; flex-shrink: 0; }
+.header { display: flex; align-items: center; justify-content: space-between; padding: 0 44px; height: 48px; background: #fff; border-bottom: 2px solid #e5e5e5; flex-shrink: 0; }
 .header-left { display: flex; align-items: center; gap: 10px; }
 .header-left h1 { font-size: 16px; font-weight: 800; color: #3c3c3c; }
 .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
@@ -23,14 +23,14 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .btn-secondary { background: #e5e5e5; color: #3c3c3c; border-bottom: 3px solid #d1d1d1; }
 .btn-secondary:hover { background: #dadada; }
 
-.main-layout { display: flex; flex: 1; overflow: hidden; }
+.main-layout { display: flex; flex: 1; overflow: hidden; padding: 20px; gap: 20px; background: #f0f0f0; }
 
 /* LEFT: Avatar preview — matches Duolingo: portrait canvas centered in white panel */
-.preview-panel { width: 50%; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s; }
+.preview-panel { width: 50%; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
 .preview-panel canvas { max-width: 100%; max-height: 100%; background: transparent; }
 
 /* RIGHT: Options */
-.options-panel { width: 50%; display: flex; flex-direction: column; background: #fff; border-left: 2px solid #e5e5e5; }
+.options-panel { width: 50%; display: flex; flex-direction: column; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
 
 .tab-bar { display: flex; background: #fff; border-bottom: 2px solid #e5e5e5; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; justify-content: center; }
 .tab-bar::-webkit-scrollbar { height: 0; }
@@ -108,7 +108,7 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   </div>
 </div>
 
-<canvas id="thumbCanvas" width="252" height="252" style="display:none;"></canvas>
+<canvas id="thumbCanvas" width="252" height="252" style="visibility:hidden;position:absolute;pointer-events:none;"></canvas>
 <canvas id="exportCanvas" style="display:none;"></canvas>
 
 <script src="https://unpkg.com/@rive-app/canvas@2.37.8/rive.js"></script>
@@ -125,6 +125,7 @@ let builderConfig = null;
 let currentInputValues = {};
 let stateMachineInputs = {};
 let riveBuffer = null;
+let thumbRegenTimeout = null;
 let thumbCache = {};
 let bgColorMap = {};
 
@@ -165,9 +166,13 @@ function loadRiveFile(buffer) {
   thumbCache = {}; thumbReady = false;
 
   const Rive = window.rive?.Rive;
+  const Layout = window.rive?.Layout;
+  const Fit = window.rive?.Fit;
+  const Alignment = window.rive?.Alignment;
   if (!Rive) return;
 
   riveInst = new Rive({
+    layout: Layout && Fit && Alignment ? new Layout({ fit: Fit.Cover, alignment: Alignment.Center }) : undefined,
     canvas, buffer: new Uint8Array(buffer), autoplay: false,
     onLoad: () => onMainLoaded(),
     onLoadError: (err) => console.error('Rive error:', err),
@@ -185,6 +190,7 @@ function onMainLoaded() {
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       selectStateMachine('SMAvatar');
+      applyConfigDefaults();
       initThumbnailRive();
       loadingOverlay.classList.add('hidden');
     });
@@ -214,6 +220,7 @@ function setSMValue(name, value) {
   if (inp.type === 56) inp.value = value;
   else if (inp.type === 59) inp.value = !!value;
   currentInputValues[name] = value;
+  invalidateThumbnails();
 }
 
 function applyFeatureButton(fb) {
@@ -228,11 +235,9 @@ function applyFeatureButton(fb) {
 // ===================== BACKGROUND =====================
 function updateBackground() {
   const bgVal = currentInputValues['BackgroundColor'];
-  const hex = bgColorMap[bgVal];
-  if (hex) {
-    previewPanel.style.backgroundColor = hex;
-    canvas.style.backgroundColor = hex;
-  }
+  const hex = bgColorMap[bgVal] || bgColorMap[1] || '#E5E5E5';
+  previewPanel.style.backgroundColor = hex;
+  canvas.style.backgroundColor = hex;
 }
 
 function buildBgColorMap() {
@@ -279,12 +284,16 @@ function exportPNG() {
 function initThumbnailRive() {
   if (!riveBuffer) return;
   const Rive = window.rive?.Rive;
+  const Layout = window.rive?.Layout;
+  const Fit = window.rive?.Fit;
+  const Alignment = window.rive?.Alignment;
   if (!Rive) return;
 
   thumbRive = new Rive({
     canvas: thumbCanvas,
     buffer: new Uint8Array(riveBuffer),
     autoplay: false,
+    layout: Layout && Fit && Alignment ? new Layout({ fit: Fit.Cover, alignment: Alignment.Center }) : undefined,
     onLoad: () => {
       thumbRive.play(smNames);
       requestAnimationFrame(() => {
@@ -322,8 +331,9 @@ function captureThumbFor(fb) {
     for (const inp of inputs) {
       nameMap[inp.name] = inp;
       if (inp.type === 58 && inp.name === 'bounce_trig') trig = inp;
-      else if (inp.type === 56 && currentInputValues[inp.name] !== undefined) {
-        inp.value = currentInputValues[inp.name];
+      else if ((inp.type === 56 || inp.type === 59) && currentInputValues[inp.name] !== undefined) {
+        if (inp.type === 56) inp.value = currentInputValues[inp.name];
+        else inp.value = !!currentInputValues[inp.name];
       }
     }
 
@@ -333,6 +343,7 @@ function captureThumbFor(fb) {
       if (nameMap[key] && nameMap[key].type === 56) nameMap[key].value = val;
     }
     if (trig) trig.fire();
+    if (thumbRive.draw) thumbRive.draw();
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -538,6 +549,24 @@ function refreshAllHighlights() {
   });
 }
 
+function invalidateThumbnails() {
+  thumbCache = {};
+  clearTimeout(thumbRegenTimeout);
+  thumbRegenTimeout = setTimeout(() => generateVisibleThumbnails(), 150);
+}
+
+function applyConfigDefaults() {
+  if (!builderConfig || !currentSM) return;
+  const defaults = builderConfig.avatarBuilderConfig.defaultBuiltAvatarState;
+  if (!defaults) return;
+  for (const [name, value] of Object.entries(defaults)) {
+    setSMValue(name, value);
+  }
+  scheduleTrigger();
+  updateBackground();
+  invalidateThumbnails();
+}
+
 // ===================== RESET =====================
 function resetAll() {
   if (!builderConfig || !currentSM) return;
@@ -548,6 +577,7 @@ function resetAll() {
   }
   scheduleTrigger();
   updateBackground();
+  invalidateThumbnails();
   if (builderConfig) renderUI();
 }
 
