@@ -6,111 +6,139 @@
 <title>Duolingo Avatar Explorer</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #1a1a2e; color: #eee; display: flex; height: 100vh; }
-.sidebar { width: 360px; background: #16213e; padding: 14px; overflow-y: auto; flex-shrink: 0; }
-.main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
-h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin: 14px 0 6px; color: #7b8bb3; }
-select, button, input { width: 100%; padding: 7px 10px; margin: 3px 0; background: #0f3460; color: #eee; border: 1px solid #1a5276; border-radius: 6px; font-size: 13px; cursor: pointer; }
-button { background: #1a8a5a; border-color: #20a86b; font-weight: 600; }
-button:hover { background: #20a86b; }
-canvas { border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.5); background: #0f3460; max-width: 100%; height: auto; }
-.status { font-size: 12px; color: #7b8bb3; margin-top: 6px; word-break: break-all; }
-.artboard-info { font-size: 11px; color: #7b8bb3; margin-top: 3px; }
-.log-box { margin-top: 12px; font-size: 11px; color: #5b7b93; max-height: 150px; overflow-y: auto; background: #0a0a1a; padding: 8px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; }
-.input-wrap { margin-bottom: 4px; background: #0a1525; padding: 4px 8px; border-radius: 4px; }
-.input-wrap label { font-size: 11px; color: #7b8bb3; display: block; }
-.input-wrap .input-row { display: flex; gap: 6px; align-items: center; }
-.input-wrap .input-row input[type="range"] { flex: 1; }
-.input-wrap .input-row .val-display { font-size: 10px; color: #5b7b93; min-width: 32px; text-align: right; }
-.category-header { background: #1a2a4a; padding: 6px 8px; margin: 4px 0; border-radius: 4px; font-size: 12px; color: #8bafff; cursor: pointer; user-select: none; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #131f2c; color: #e8e8e8; display: flex; height: 100vh; overflow: hidden; }
+
+/* ---- Sidebar ---- */
+.sidebar { width: 420px; background: #1a2d3d; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #243647; }
+.sidebar-header { padding: 16px 20px; border-bottom: 1px solid #243647; flex-shrink: 0; }
+.sidebar-header h1 { font-size: 18px; font-weight: 700; color: #fff; }
+.sidebar-header .subtitle { font-size: 11px; color: #6b8299; margin-top: 2px; }
+
+/* Tab bar */
+.tab-bar { display: flex; background: #152536; border-bottom: 2px solid #243647; flex-shrink: 0; overflow-x: auto; }
+.tab-bar::-webkit-scrollbar { height: 0; }
+.tab-btn { flex: 0 0 auto; padding: 12px 16px; font-size: 12px; font-weight: 600; color: #6b8299; cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
+.tab-btn:hover { color: #a0bcd0; }
+.tab-btn.active { color: #58cc02; border-bottom-color: #58cc02; }
+
+/* Scrollable content */
+.tab-content { flex: 1; overflow-y: auto; padding: 16px; }
+.tab-content::-webkit-scrollbar { width: 4px; }
+.tab-content::-webkit-scrollbar-thumb { background: #2a4055; border-radius: 2px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Section */
+.section { margin-bottom: 20px; }
+.section-header { font-size: 13px; font-weight: 700; color: #a0bcd0; margin-bottom: 10px; text-transform: none; letter-spacing: 0; }
+
+/* Color swatches */
+.swatch-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.swatch { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: transform 0.12s, border-color 0.12s; position: relative; }
+.swatch:hover { transform: scale(1.1); }
+.swatch.selected { border-color: #58cc02; box-shadow: 0 0 0 2px rgba(88,204,2,0.3); }
+.swatch.selected::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+
+/* Feature tiles */
+.tile-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.tile { width: 52px; height: 52px; border-radius: 10px; cursor: pointer; border: 2px solid #2a4055; background: #1e3347; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #a0bcd0; transition: all 0.12s; position: relative; }
+.tile:hover { border-color: #58cc02; background: #1a3a2a; color: #fff; transform: scale(1.05); }
+.tile.selected { border-color: #58cc02; background: #1a3a2a; color: #58cc02; box-shadow: 0 0 0 3px rgba(88,204,2,0.25); }
+.tile.selected::after { content: '✓'; position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; background: #58cc02; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; }
+.tile.zero-tile { border-style: dashed; }
+.tile.zero-tile::before { content: '✕'; font-size: 18px; color: #4a6075; }
+
+/* File picker */
+.file-area { padding: 12px 20px; border-top: 1px solid #243647; flex-shrink: 0; display: flex; gap: 8px; align-items: center; }
+.file-area input[type="file"] { flex: 1; font-size: 11px; color: #6b8299; }
+.file-area .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.file-area .status-dot.loaded { background: #58cc02; }
+.file-area .status-dot.waiting { background: #ffc107; }
+
+/* ---- Main canvas area ---- */
+.main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; background: #0f1a24; }
+.canvas-wrap { position: relative; }
+canvas { border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.5); background: #0f3460; max-width: 100%; height: auto; }
+.main-actions { margin-top: 16px; display: flex; gap: 10px; }
+.btn { padding: 10px 20px; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+.btn-primary { background: #58cc02; color: #fff; }
+.btn-primary:hover { background: #4cb000; }
+.btn-secondary { background: #2a4055; color: #a0bcd0; }
+.btn-secondary:hover { background: #354f6a; }
+
+/* Loading overlay */
+.loading-overlay { position: fixed; inset: 0; background: rgba(15,26,36,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+.loading-overlay.hidden { display: none; }
+.spinner { width: 48px; height: 48px; border: 4px solid #2a4055; border-top-color: #58cc02; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 14px; color: #a0bcd0; }
+
+.config-notice { font-size: 11px; color: #8b9f33; margin-top: 4px; }
 </style>
 </head>
 <body>
-<div class="sidebar">
-  <h2>Rive 文件</h2>
-  <input type="file" id="fileInput" accept=".riv" style="font-size:12px;">
-  <div id="statusDiv" class="status">等待加载...</div>
 
-  <div id="controlsDiv" style="display:none;">
-    <h2>状态机</h2>
-    <select id="smSelect"></select>
-    <div id="smInfo" class="artboard-info"></div>
-
-    <h2>状态输入</h2>
-    <div id="inputsDiv"></div>
-
-    <h2>操作</h2>
-    <button onclick="exportPNG()">导出 PNG</button>
-    <button onclick="resetAll()">重置默认</button>
-  </div>
-
-  <div class="log-box" id="logBox"></div>
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text">加载 Avatar Builder...</div>
 </div>
 
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h1>Avatar Builder</h1>
+    <div class="subtitle" id="fileStatus">等待加载 .riv 文件...</div>
+  </div>
+
+  <div class="tab-bar" id="tabBar"></div>
+  <div class="tab-content" id="tabContent"></div>
+
+  <div class="file-area">
+    <div class="status-dot waiting" id="statusDot"></div>
+    <input type="file" id="fileInput" accept=".riv" title="选择 .riv 文件">
+  </div>
+</div>
+
+<!-- Main -->
 <div class="main">
-  <canvas id="riveCanvas" width="500" height="500"></canvas>
-  <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-    <button onclick="exportPNG()" style="width:auto; background:#1a1a8a;">导出 PNG</button>
-    <button onclick="resetAll()" style="width:auto; background:#5a3a1a;">重置默认</button>
+  <div class="canvas-wrap">
+    <canvas id="riveCanvas" width="500" height="500"></canvas>
+  </div>
+  <div class="main-actions">
+    <button class="btn btn-primary" onclick="exportPNG()">导出 PNG</button>
+    <button class="btn btn-secondary" onclick="resetAll()">重置默认</button>
   </div>
 </div>
 
 <script src="https://unpkg.com/@rive-app/canvas@2.37.8/rive.js"></script>
 <script>
+// ---- State ----
 let riveInst = null;
 let smNames = [];
 let currentSM = '';
-let triggerInput = null;   // bounce_trig reference
+let triggerInput = null;   // bounce_trig ref
 let fireTimeout = null;    // debounce timer
+let builderConfig = null;  // avatar_builder_config.json
+let currentInputValues = {}; // track current values per input name
+let stateMachineInputs = {}; // name -> StateMachineInput object map
 
+// ---- DOM refs ----
 const canvas = document.getElementById('riveCanvas');
-const logEl = document.getElementById('logBox');
+const tabBar = document.getElementById('tabBar');
+const tabContent = document.getElementById('tabContent');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const fileStatus = document.getElementById('fileStatus');
+const statusDot = document.getElementById('statusDot');
 
-function log(msg) {
-  const div = document.createElement('div');
-  div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
-  logEl.appendChild(div);
-  logEl.scrollTop = logEl.scrollHeight;
-}
-
-// Debounced trigger fire after input changes
+// ---- Trigger scheduling ----
 function scheduleTrigger() {
   if (!triggerInput) return;
   if (fireTimeout) clearTimeout(fireTimeout);
   fireTimeout = setTimeout(() => {
     triggerInput.fire();
     fireTimeout = null;
-  }, 150);
-}
-
-// Slider ranges based on feature caps (from animation name analysis)
-function sliderRange(name) {
-  const ranges = {
-    'BackgroundColor': 24, 'SkinTone': 15, 'Body': 6,
-    'MainHair': 73, 'MainHairColor': 16, 'FacialHair': 6,
-    'FacialHairColor': 16, 'EyeColor': 14, 'Expression': 50,
-    'ClothingColor': 10, 'Headwear': 12, 'HeadwearColor': 9,
-    'Glasses': 6, 'GlassesColor': 8, 'Piercings': 6,
-    'Nose Piercing': 3, 'Headshape': 6, 'Headphones': 1,
-    'HeadphonesColour': 5, 'Wrinkles': 1,
-    'default_avatar_num': 4,
-    'ENG_ONLY_Zoom': 3, 'ENG_ONLY_Animation': 1, 'ENG_ONLY_XPBoost': 1,
-  };
-  return ranges[name] || 100;
-}
-
-// ---- Category mapping ----
-function catFor(name) {
-  if (name.startsWith('ENG_ONLY_')) return 'Engine';
-  if (['SkinTone','Body','Expression','Wrinkles','EyeColor'].includes(name)) return '外观';
-  if (['MainHair','MainHairColor','FacialHair','FacialHairColor'].includes(name)) return '毛发';
-  if (['Headwear','HeadwearColor','Glasses','GlassesColor'].includes(name)) return '配饰';
-  if (['Piercings','Nose Piercing'].includes(name)) return '穿孔';
-  if (['ClothingColor'].includes(name)) return '服装';
-  if (['BackgroundColor'].includes(name)) return '背景';
-  if (['Headshape','Headphones','HeadphonesColour'].includes(name)) return '其他';
-  if (['default_avatar_bool','default_avatar_num','bounce_trig'].includes(name)) return '默认';
-  return 'Other';
+  }, 120);
 }
 
 // ---- Loading ----
@@ -121,18 +149,19 @@ function loadRiveFile(buffer) {
   }
   smNames = [];
   currentSM = '';
-  document.getElementById('controlsDiv').style.display = 'none';
+  stateMachineInputs = {};
+  currentInputValues = {};
 
   const Rive = window.rive?.Rive;
-  if (!Rive) { log('错误: window.rive.Rive 不可用'); return; }
+  if (!Rive) { fileStatus.textContent = '错误: Rive SDK 未加载'; return; }
 
-  log('正在加载 Rive 文件...');
+  fileStatus.textContent = '加载中...';
   riveInst = new Rive({
     canvas: canvas,
     buffer: new Uint8Array(buffer),
     autoplay: false,
-    onLoad: () => { log('Rive 文件加载成功！'); onRiveLoaded(); },
-    onLoadError: (err) => log(`加载错误: ${err}`),
+    onLoad: () => onRiveLoaded(),
+    onLoadError: (err) => fileStatus.textContent = `加载错误: ${err}`,
   });
 }
 
@@ -144,31 +173,20 @@ function onRiveLoaded() {
   const smCount = ab.stateMachineCount();
 
   smNames = [];
-  const smSelect = document.getElementById('smSelect');
-  smSelect.innerHTML = '';
-
   for (let i = 0; i < smCount; i++) {
-    const sm = ab.stateMachineByIndex(i);
-    smNames.push(sm.name);
-    const opt = document.createElement('option');
-    opt.value = sm.name;
-    opt.textContent = sm.name;
-    smSelect.appendChild(opt);
+    smNames.push(ab.stateMachineByIndex(i).name);
   }
 
-  log(`找到 ${smCount} 个状态机: ${smNames.join(', ')}`);
-  document.getElementById('statusDiv').textContent =
-    `已加载: ${ab.name}, ${ab.animationCount()} 动画, ${smCount} 状态机`;
+  fileStatus.textContent = `${ab.name} · ${ab.animationCount()} 动画 · ${smCount} 状态机`;
+  statusDot.className = 'status-dot loaded';
 
-  // Start Animator with all state machines
   riveInst.play(smNames);
-  log('Animator 已启动');
 
-  document.getElementById('controlsDiv').style.display = 'block';
-  // Defer: Animator needs a frame to initialize state machines
+  // Defer: Animator needs frames to initialize
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       selectStateMachine('SMAvatar');
+      loadingOverlay.classList.add('hidden');
     });
   });
 }
@@ -176,141 +194,230 @@ function onRiveLoaded() {
 function selectStateMachine(name) {
   if (!riveInst || !name) return;
   currentSM = name;
-  document.getElementById('smSelect').value = name;
 
-  // Get inputs via official high-level API
   const inputs = riveInst.stateMachineInputs(name);
   if (!inputs) {
-    log(`stateMachineInputs('${name}') 返回 null`);
+    fileStatus.textContent = `stateMachineInputs('${name}') 返回 null`;
     return;
   }
 
-  log(`选中: ${name} (${inputs.length} 输入)`);
-  document.getElementById('smInfo').textContent = `输入: ${inputs.length}`;
-  triggerInput = null;  // reset
-  buildInputControls(inputs);
-}
+  // Build name -> input map
+  stateMachineInputs = {};
+  currentInputValues = {};
+  triggerInput = null;
 
-function buildInputControls(inputs) {
-  const div = document.getElementById('inputsDiv');
-  div.innerHTML = '';
-
-  // Group by category
-  const categories = {};
-  for (let i = 0; i < inputs.length; i++) {
-    const inp = inputs[i];
-    const cat = catFor(inp.name);
-    if (!categories[cat]) categories[cat] = [];
-    categories[cat].push(inp);
-  }
-
-  const catOrder = ['外观','毛发','配饰','穿孔','服装','背景','其他','Engine','默认'];
-
-  for (const cat of catOrder) {
-    if (!categories[cat] || categories[cat].length === 0) continue;
-
-    const catHeader = document.createElement('div');
-    catHeader.className = 'category-header';
-    catHeader.textContent = `▾ ${cat}`;
-    catHeader.onclick = function() {
-      const next = this.nextElementSibling;
-      if (next) next.style.display = next.style.display === 'none' ? 'block' : 'none';
-      this.textContent = (next && next.style.display === 'none' ? '▸ ' : '▾ ') + cat;
-    };
-    div.appendChild(catHeader);
-
-    const catDiv = document.createElement('div');
-    for (const inp of categories[cat]) {
-      const wrap = document.createElement('div');
-      wrap.className = 'input-wrap';
-      const label = document.createElement('label');
-      label.textContent = inp.name;
-      wrap.appendChild(label);
-
-      // StateMachineInput.type values: 56=Number, 59=Boolean, 58=Trigger
-      const inpType = inp.type;
-
-      if (inpType === 59) { // Boolean
-        const cb = document.createElement('input');
-        cb.type = 'checkbox';
-        cb.checked = !!inp.value;
-        cb.onchange = () => { inp.value = cb.checked; scheduleTrigger(); };
-        wrap.appendChild(cb);
-      } else if (inpType === 56) { // Number
-        const row = document.createElement('div');
-        row.className = 'input-row';
-        const slider = document.createElement('input');
-        slider.type = 'range';
-        slider.min = 0;
-        slider.max = sliderRange(inp.name);
-        slider.value = inp.value || 0;
-        slider.style.flex = '1';
-        const valDisp = document.createElement('span');
-        valDisp.className = 'val-display';
-        slider.oninput = () => {
-          inp.value = parseFloat(slider.value);
-          valDisp.textContent = slider.value;
-          scheduleTrigger();
-        };
-        valDisp.textContent = slider.value;
-        row.appendChild(slider);
-        row.appendChild(valDisp);
-        wrap.appendChild(row);
-      } else if (inpType === 58) { // Trigger
-        if (inp.name === 'bounce_trig') triggerInput = inp;
-        const btn = document.createElement('button');
-        btn.textContent = inp.name === 'bounce_trig' ? '应用 (bounce)' : '触发';
-        btn.style.cssText = 'width:auto;padding:3px 8px;font-size:11px;';
-        btn.onclick = () => { inp.fire(); };
-        wrap.appendChild(btn);
-      }
-      catDiv.appendChild(wrap);
+  for (const inp of inputs) {
+    stateMachineInputs[inp.name] = inp;
+    if (inp.type === 58) { // Trigger
+      if (inp.name === 'bounce_trig') triggerInput = inp;
+    } else {
+      currentInputValues[inp.name] = inp.value;
     }
-    div.appendChild(catDiv);
+  }
+
+  if (builderConfig) renderUI();
+}
+
+// ---- Apply state machine value ----
+function setSMValue(name, value) {
+  const inp = stateMachineInputs[name];
+  if (!inp) return;
+  if (inp.type === 56) { // Number
+    inp.value = value;
+  } else if (inp.type === 59) { // Boolean
+    inp.value = !!value;
+  }
+  currentInputValues[name] = value;
+  scheduleTrigger();
+}
+
+function applyStatesToOverride(overrides) {
+  for (const [name, value] of Object.entries(overrides)) {
+    setSMValue(name, value);
   }
 }
 
+// ---- Build UI from config ----
+function renderUI() {
+  if (!builderConfig) return;
+
+  const tabs = builderConfig.avatarBuilderConfig.stateChooserTabs;
+  tabBar.innerHTML = '';
+  tabContent.innerHTML = '';
+
+  tabs.forEach((tab, ti) => {
+    // Tab button
+    const firstSection = tab.sections[0];
+    const tabLabel = firstSection.header;
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn';
+    btn.textContent = tabLabel;
+    btn.onclick = () => switchTab(ti);
+    tabBar.appendChild(btn);
+
+    // Tab panel
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel';
+
+    for (const section of tab.sections) {
+      const secDiv = document.createElement('div');
+      secDiv.className = 'section';
+
+      const header = document.createElement('div');
+      header.className = 'section-header';
+      header.textContent = section.header;
+      secDiv.appendChild(header);
+
+      if (section.buttonType === 'IMAGE') {
+        // Color swatch grid
+        const grid = document.createElement('div');
+        grid.className = 'swatch-grid';
+        const stateName = section.imageButtons[0]?.state;
+        const currentVal = currentInputValues[stateName];
+
+        for (const btn of section.imageButtons) {
+          const swatch = document.createElement('div');
+          swatch.className = 'swatch';
+          if (btn.value === currentVal) swatch.classList.add('selected');
+          swatch.style.backgroundColor = btn.color;
+          swatch.title = `${stateName}: ${btn.value}`;
+          swatch.onclick = () => {
+            setSMValue(btn.state, btn.value);
+            // Update selection visual
+            grid.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+            swatch.classList.add('selected');
+          };
+          grid.appendChild(swatch);
+        }
+        secDiv.appendChild(grid);
+      } else if (section.buttonType === 'FEATURE') {
+        // Feature tile grid
+        const grid = document.createElement('div');
+        grid.className = 'tile-grid';
+        const stateName = section.featureButtons[0]?.state;
+        const currentVal = currentInputValues[stateName];
+
+        for (const btn of section.featureButtons) {
+          const tile = document.createElement('div');
+          tile.className = 'tile';
+          if (btn.value === 0) tile.classList.add('zero-tile');
+          if (btn.value === currentVal) tile.classList.add('selected');
+          if (btn.value > 0) tile.textContent = btn.value;
+          tile.title = `${stateName}: ${btn.value}`;
+          tile.onclick = () => {
+            applyStatesToOverride(btn.statesToOverride);
+            // Update selection visuals within this section
+            grid.querySelectorAll('.tile').forEach(t => t.classList.remove('selected'));
+            tile.classList.add('selected');
+            // Also refresh color swatch highlights in other sections
+            refreshAllHighlights();
+          };
+          grid.appendChild(tile);
+        }
+        secDiv.appendChild(grid);
+      }
+
+      panel.appendChild(secDiv);
+    }
+
+    tabContent.appendChild(panel);
+  });
+
+  // Activate first tab
+  switchTab(0);
+}
+
+function switchTab(idx) {
+  const btns = tabBar.querySelectorAll('.tab-btn');
+  const panels = tabContent.querySelectorAll('.tab-panel');
+  btns.forEach((b, i) => b.classList.toggle('active', i === idx));
+  panels.forEach((p, i) => p.classList.toggle('active', i === idx));
+}
+
+function refreshAllHighlights() {
+  // Re-render all swatch/tile highlights based on currentInputValues
+  const panels = tabContent.querySelectorAll('.tab-panel');
+  panels.forEach(panel => {
+    panel.querySelectorAll('.swatch-grid').forEach(grid => {
+      const swatches = grid.querySelectorAll('.swatch');
+      const firstSwatch = swatches[0];
+      if (!firstSwatch) return;
+      const stateName = firstSwatch.title?.split(':')[0]?.trim();
+      if (!stateName) return;
+      const currentVal = currentInputValues[stateName];
+      swatches.forEach(s => {
+        const match = s.title?.match(new RegExp(`${stateName}:\\s*(\\d+)`));
+        const val = match ? parseInt(match[1]) : null;
+        s.classList.toggle('selected', val === currentVal);
+      });
+    });
+
+    panel.querySelectorAll('.tile-grid').forEach(grid => {
+      const tiles = grid.querySelectorAll('.tile');
+      const firstTile = tiles[0];
+      if (!firstTile) return;
+      const stateName = firstTile.title?.split(':')[0]?.trim();
+      if (!stateName) return;
+      const currentVal = currentInputValues[stateName];
+      tiles.forEach(t => {
+        const match = t.title?.match(new RegExp(`${stateName}:\\s*(\\d+)`));
+        const val = match ? parseInt(match[1]) : null;
+        t.classList.toggle('selected', val === currentVal);
+      });
+    });
+  });
+}
+
+// ---- Actions ----
 function resetAll() {
   if (currentSM) selectStateMachine(currentSM);
 }
 
 function exportPNG() {
   const link = document.createElement('a');
-  link.download = `avatar_${currentSM || 'export'}.png`;
+  link.download = `avatar_${currentSM || 'export'}_${Date.now()}.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
-  log('已导出 PNG');
 }
 
 // ---- Events ----
 document.getElementById('fileInput').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
-  log(`已选择: ${file.name} (${(file.size/1024).toFixed(1)} KB)`);
   const buf = await file.arrayBuffer();
   loadRiveFile(buf);
 });
 
-document.getElementById('smSelect').addEventListener('change', (e) => {
-  selectStateMachine(e.target.value);
-});
+// ---- Initialization ----
+async function init() {
+  // Load config
+  try {
+    const resp = await fetch('avatar_builder_config.json');
+    if (resp.ok) {
+      builderConfig = await resp.json();
+      console.log('Config loaded:', builderConfig.avatarBuilderConfig.stateChooserTabs.length, 'tabs');
+    }
+  } catch(e) {
+    console.warn('Config load failed:', e.message);
+  }
 
-// ---- Auto-load ----
-window.addEventListener('load', async () => {
-  log('正在自动加载 avatar_builder_25_sept2025.riv ...');
+  // Load Rive file
   try {
     const resp = await fetch('avatar_builder_25_sept2025.riv');
     if (resp.ok) {
       const buf = await resp.arrayBuffer();
-      log(`下载完成 (${(buf.byteLength/1024).toFixed(1)} KB)`);
       loadRiveFile(buf);
     } else {
-      log(`HTTP ${resp.status}，请手动选择 .riv 文件`);
+      fileStatus.textContent = `HTTP ${resp.status}，请手动选择 .riv 文件`;
+      loadingOverlay.classList.add('hidden');
     }
   } catch(e) {
-    log(`请求失败: ${e.message}`);
+    fileStatus.textContent = `请求失败: ${e.message}`;
+    loadingOverlay.classList.add('hidden');
   }
-});
+}
+
+window.addEventListener('load', init);
 </script>
 </body>
 </html>
