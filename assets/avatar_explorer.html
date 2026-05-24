@@ -327,7 +327,7 @@ function updateTileInstancesForState(stateName, newValue) {
   });
 }
 
-async function renderTabTiles(tabIdx, isBackground = false) {
+async function renderTabTiles(tabIdx) {
   if (!sharedRiveFile || !builderConfig) return;
 
   // If tab already has live instances and isn't dirty, nothing to do
@@ -379,13 +379,11 @@ async function renderTabTiles(tabIdx, isBackground = false) {
 
   if (workItems.length === 0) {
     dirtyTabs.delete(tabIdx);
-    if (!isBackground) thumbStatus.textContent = '';
+    thumbStatus.textContent = '';
     return;
   }
 
-  if (!isBackground) {
-    thumbStatus.textContent = `Loading... 0/${workItems.length}`;
-  }
+  thumbStatus.textContent = `Loading... 0/${workItems.length}`;
   let done = 0;
 
   // Batch creation: 8 at a time, yield to browser between batches
@@ -402,9 +400,7 @@ async function renderTabTiles(tabIdx, isBackground = false) {
         r.tile.classList.remove('loading');
       }
       done++;
-      if (!isBackground) {
-        thumbStatus.textContent = `Loading... ${done}/${workItems.length}`;
-      }
+      thumbStatus.textContent = `Loading... ${done}/${workItems.length}`;
     }
     // Yield to browser between batches
     if (i + BATCH_SIZE < workItems.length) {
@@ -413,43 +409,7 @@ async function renderTabTiles(tabIdx, isBackground = false) {
   }
 
   dirtyTabs.delete(tabIdx);
-  if (!isBackground) {
-    thumbStatus.textContent = '';
-    scheduleBackgroundPreRender(tabIdx);
-  }
-}
-
-// ===================== BACKGROUND PRE-RENDERING =====================
-let bgPreRenderTimer = null;
-
-function scheduleBackgroundPreRender(excludeTabIdx) {
-  if (bgPreRenderTimer) clearTimeout(bgPreRenderTimer);
-  bgPreRenderTimer = setTimeout(() => doBackgroundPreRender(excludeTabIdx), 200);
-}
-
-async function doBackgroundPreRender(excludeTabIdx) {
-  const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
-  if (!tabs) return;
-
-  for (let i = 0; i < TAB_DEFS.length; i++) {
-    if (i === excludeTabIdx) continue;
-    const tab = tabs[i];
-    if (!tab) continue;
-
-    let hasFeatures = false;
-    for (const section of tab.sections) {
-      if (section.buttonType === 'FEATURE' && section.featureButtons.length > 0) {
-        hasFeatures = true;
-        break;
-      }
-    }
-    if (!hasFeatures) continue;
-
-    if (!hasActiveTabInstances(i) || dirtyTabs.has(i)) {
-      await new Promise(r => setTimeout(r, 50));
-      await renderTabTiles(i, true);
-    }
-  }
+  thumbStatus.textContent = '';
 }
 
 // ===================== VALUE SETTING =====================
@@ -483,7 +443,6 @@ function invalidateThumbnails(stateName) {
     const val = currentInputValues[stateName];
     if (val !== undefined) updateTileInstancesForState(stateName, val);
   }
-  scheduleBackgroundPreRender(-1);
 }
 
 function setSMValue(name, value) {
