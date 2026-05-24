@@ -1,6 +1,7 @@
 node_modules/
 .claude/
 .plans/
+.vscode/
 *.pyc
 __pycache__/
 .DS_Store
