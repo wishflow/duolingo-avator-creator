@@ -233,14 +233,30 @@ function selectStateMachine(name) {
 // ===================== TILE RIVE INSTANCES =====================
 function createTileInstance(canvas, fb) {
   return new Promise((resolve) => {
+    const Layout = window.rive?.Layout;
+    const Fit = window.rive?.Fit;
+    const Alignment = window.rive?.Alignment;
+    const layout = Layout && Fit && Alignment
+      ? new Layout({ fit: Fit.Cover, alignment: Alignment.Center })
+      : undefined;
+
     const instance = new window.rive.Rive({
       canvas: canvas,
       riveFile: sharedRiveFile,
+      layout: layout,
       autoplay: false,
       stateMachines: 'SMAvatar',
       onLoad: () => {
         const inputs = instance.stateMachineInputs('SMAvatar');
         if (!inputs) { resolve(instance); return; }
+
+        // Build lookup map in one pass, also find trigger
+        const inputMap = Object.create(null);
+        let trig = null;
+        for (const inp of inputs) {
+          inputMap[inp.name] = inp;
+          if (inp.type === 58 && inp.name === 'bounce_trig') trig = inp;
+        }
 
         // Set baseline: all currentInputValues
         for (const inp of inputs) {
@@ -250,16 +266,15 @@ function createTileInstance(canvas, fb) {
           }
         }
 
-        // Apply featureButton overrides (including zeros to match official behavior)
+        // Apply featureButton overrides (O(1) lookup via map)
         for (const [key, val] of Object.entries(fb.statesToOverride)) {
-          const inp = inputs.find(i => i.name === key);
+          const inp = inputMap[key];
           if (!inp) continue;
           if (inp.type === 56) inp.value = val;
           else if (inp.type === 59) inp.value = !!val;
         }
 
         // Fire trigger + draw
-        const trig = inputs.find(i => i.type === 58 && i.name === 'bounce_trig');
         if (trig) trig.fire();
         instance.drawFrame();
         resolve(instance);
@@ -301,11 +316,16 @@ function updateTileInstancesForState(stateName, newValue) {
   });
 }
 
-async function renderTabTiles(tabIdx) {
+async function renderTabTiles(tabIdx, isBackground = false) {
   if (!sharedRiveFile || !builderConfig) return;
 
-  // Destroy old instances for this tab
-  destroyTabInstances(tabIdx);
+  // If tab already has live instances and isn't dirty, nothing to do
+  if (hasActiveTabInstances(tabIdx) && !dirtyTabs.has(tabIdx)) return;
+
+  // Only destroy old instances if this tab is dirty (state changed)
+  if (dirtyTabs.has(tabIdx)) {
+    destroyTabInstances(tabIdx);
+  }
 
   const panels = [...tabContent.querySelectorAll('.tab-panel')];
   const panel = panels[tabIdx];
@@ -346,27 +366,79 @@ async function renderTabTiles(tabIdx) {
     gridIdx++;
   }
 
-  if (workItems.length === 0) { thumbStatus.textContent = ''; return; }
-
-  thumbStatus.textContent = `Loading... 0/${workItems.length}`;
-  let done = 0;
-
-  // Create all instances in parallel
-  const results = await Promise.all(workItems.map(async (w) => {
-    const instance = await createTileInstance(w.tileCanvas, w.fb);
-    return { ...w, instance };
-  }));
-
-  for (const r of results) {
-    if (r.instance) {
-      tileInstances.set(r.key, r.instance);
-      r.tile.classList.remove('loading');
-    }
-    done++;
-    thumbStatus.textContent = `Loading... ${done}/${workItems.length}`;
+  if (workItems.length === 0) {
+    dirtyTabs.delete(tabIdx);
+    if (!isBackground) thumbStatus.textContent = '';
+    return;
   }
 
-  thumbStatus.textContent = '';
+  if (!isBackground) {
+    thumbStatus.textContent = `Loading... 0/${workItems.length}`;
+  }
+  let done = 0;
+
+  // Batch creation: 8 at a time, yield to browser between batches
+  const BATCH_SIZE = 8;
+  for (let i = 0; i < workItems.length; i += BATCH_SIZE) {
+    const batch = workItems.slice(i, i + BATCH_SIZE);
+    const results = await Promise.all(batch.map(async (w) => {
+      const instance = await createTileInstance(w.tileCanvas, w.fb);
+      return { ...w, instance };
+    }));
+    for (const r of results) {
+      if (r.instance) {
+        tileInstances.set(r.key, r.instance);
+        r.tile.classList.remove('loading');
+      }
+      done++;
+      if (!isBackground) {
+        thumbStatus.textContent = `Loading... ${done}/${workItems.length}`;
+      }
+    }
+    // Yield to browser between batches
+    if (i + BATCH_SIZE < workItems.length) {
+      await new Promise(r => setTimeout(r, 0));
+    }
+  }
+
+  dirtyTabs.delete(tabIdx);
+  if (!isBackground) {
+    thumbStatus.textContent = '';
+    scheduleBackgroundPreRender(tabIdx);
+  }
+}
+
+// ===================== BACKGROUND PRE-RENDERING =====================
+let bgPreRenderTimer = null;
+
+function scheduleBackgroundPreRender(excludeTabIdx) {
+  if (bgPreRenderTimer) clearTimeout(bgPreRenderTimer);
+  bgPreRenderTimer = setTimeout(() => doBackgroundPreRender(excludeTabIdx), 200);
+}
+
+async function doBackgroundPreRender(excludeTabIdx) {
+  const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
+  if (!tabs) return;
+
+  for (let i = 0; i < TAB_DEFS.length; i++) {
+    if (i === excludeTabIdx) continue;
+    const tab = tabs[i];
+    if (!tab) continue;
+
+    let hasFeatures = false;
+    for (const section of tab.sections) {
+      if (section.buttonType === 'FEATURE' && section.featureButtons.length > 0) {
+        hasFeatures = true;
+        break;
+      }
+    }
+    if (!hasFeatures) continue;
+
+    if (!hasActiveTabInstances(i) || dirtyTabs.has(i)) {
+      await new Promise(r => setTimeout(r, 50));
+      await renderTabTiles(i, true);
+    }
+  }
 }
 
 // ===================== VALUE SETTING =====================
@@ -400,6 +472,7 @@ function invalidateThumbnails(stateName) {
     const val = currentInputValues[stateName];
     if (val !== undefined) updateTileInstancesForState(stateName, val);
   }
+  scheduleBackgroundPreRender(-1);
 }
 
 function setSMValue(name, value) {
@@ -559,7 +632,6 @@ function switchTab(idx) {
   tabContent.querySelectorAll('.tab-panel').forEach((p, i) => p.classList.toggle('active', i === idx));
 
   if (dirtyTabs.has(idx) || !hasActiveTabInstances(idx)) {
-    dirtyTabs.delete(idx);
     renderTabTiles(idx);
   } else {
     refreshAllHighlights();
