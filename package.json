@@ -1,0 +1,8 @@
+{
+  "name": "duolingo-avatar-extractor",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@rive-app/canvas": "^2.37.8"
+  }
+}

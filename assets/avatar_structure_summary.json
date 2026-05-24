@@ -1,0 +1,1383 @@
+{
+  "riveFile": "https://avatars.duolingo.com/avatar-builder/avatar_builder_25_sept2025.riv",
+  "riveServerRenderingFile": "https://avatars.duolingo.com/avatar-builder/avatar_v2_deliv_112.riv",
+  "tabs": [
+    {
+      "name": "Body",
+      "sections": [
+        {
+          "header": "Skin tone",
+          "buttonType": "IMAGE",
+          "imageButtons": [
+            {
+              "color": "#6E3D3A",
+              "state": "SkinTone",
+              "value": 15
+            },
+            {
+              "color": "#7D4A3F",
+              "state": "SkinTone",
+              "value": 14
+            },
+            {
+              "color": "#8C4A25",
+              "state": "SkinTone",
+              "value": 13
+            },
+            {
+              "color": "#97513F",
+              "state": "SkinTone",
+              "value": 12
+            },
+            {
+              "color": "#985C30",
+              "state": "SkinTone",
+              "value": 11
+            },
+            {
+              "color": "#A46648",
+              "state": "SkinTone",
+              "value": 10
+            },
+            {
+              "color": "#B76E45",
+              "state": "SkinTone",
+              "value": 9
+            },
+            {
+              "color": "#C6775C",
+              "state": "SkinTone",
+              "value": 8
+            },
+            {
+              "color": "#E18E70",
+              "state": "SkinTone",
+              "value": 7
+            },
+            {
+              "color": "#E59D65",
+              "state": "SkinTone",
+              "value": 6
+            },
+            {
+              "color": "#F2A07D",
+              "state": "SkinTone",
+              "value": 5
+            },
+            {
+              "color": "#FFB89D",
+              "state": "SkinTone",
+              "value": 4
+            },
+            {
+              "color": "#FFC6B7",
+              "state": "SkinTone",
+              "value": 3
+            },
+            {
+              "color": "#FFCBA3",
+              "state": "SkinTone",
+              "value": 2
+            },
+            {
+              "color": "#FFE2D6",
+              "state": "SkinTone",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "header": "Body",
+          "buttonType": "FEATURE",
+          "featureButtons": [
+            {
+              "state": "Body",
+              "value": 3
+            },
+            {
+              "state": "Body",
+              "value": 4
+            },
+            {
+              "state": "Body",
+              "value": 1
+            },
+            {
+              "state": "Body",
+              "value": 5
+            },
+            {
+              "state": "Body",
+              "value": 6
+            },
+            {
+              "state": "Body",
+              "value": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Expression",
+      "sections": [
+        {
+          "header": "Eye color",
+          "buttonType": "IMAGE",
+          "imageButtons": [
+            {
+              "color": "#3D3D3D",
+              "state": "EyeColor",
+              "value": 1
+            },
+            {
+              "color": "#A44407",
+              "state": "EyeColor",
+              "value": 2
+            },
+            {
+              "color": "#947300",
+              "state": "EyeColor",
+              "value": 3
+            },
+            {
+              "color": "#549002",
+              "state": "EyeColor",
+              "value": 4
+            },
+            {
+              "color": "#0B8890",
+              "state": "EyeColor",
+              "value": 5
+            },
+            {
+              "color": "#007FCF",
+              "state": "EyeColor",
+              "value": 6
+            },
+            {
+              "color": "#7386A1",
+              "state": "EyeColor",
+              "value": 7
+            },
+            {
+              "color": "#945EF0",
+              "state": "EyeColor",
+              "value": 8
+            },
+            {
+              "color": "#CE26D3",
+              "state": "EyeColor",
+              "value": 9
+            },
+            {
+              "color": "#FB4CB7",
+              "state": "EyeColor",
+              "value": 10
+            },
+            {
+              "color": "#F03535",
+              "state": "EyeColor",
+              "value": 11
+            },
+            {
+              "color": "#F28300",
+              "state": "EyeColor",
+              "value": 12
+            },
+            {
+              "color": "#F0AD00",
+              "state": "EyeColor",
+              "value": 13
+            }
+          ]
+        },
+        {
+          "header": "Expression",
+          "buttonType": "FEATURE",
+          "featureButtons": [
+            {
+              "state": "Expression",
+              "value": 17
+            },
+            {
+              "state": "Expression",
+              "value": 54
+            },
+            {
+              "state": "Expression",
+              "value": 55
+            },
+            {
+              "state": "Expression",
+              "value": 5
+            },
+            {
+              "state": "Expression",
+              "value": 31
+            },
+            {
+              "state": "Expression",
+              "value": 32
+            },
+            {
+              "state": "Expression",
+              "value": 1
+            },
+            {
+              "state": "Expression",
+              "value": 21
+            },
+            {
+              "state": "Expression",
+              "value": 20
+            },
+            {
+              "state": "Expression",
+              "value": 22
+            },
+            {
+              "state": "Expression",
+              "value": 23
+            },
+            {
+              "state": "Expression",
+              "value": 24
+            },
+            {
+              "state": "Expression",
+              "value": 11
+            },
+            {
+              "state": "Expression",
+              "value": 43
+            },
+            {
+              "state": "Expression",
+              "value": 44
+            },
+            {
+              "state": "Expression",
+              "value": 16
+            },
+            {
+              "state": "Expression",
+              "value": 18
+            },
+            {
+              "state": "Expression",
+              "value": 53
+            },
+            {
+              "state": "Expression",
+              "value": 8
+            },
+            {
+              "state": "Expression",
+              "value": 37
+            },
+            {
+              "state": "Expression",
+              "value": 38
+            },
+            {
+              "state": "Expression",
+              "value": 9
+            },
+            {
+              "state": "Expression",
+              "value": 39
+            },
+            {
+              "state": "Expression",
+              "value": 40
+            },
+            {
+              "state": "Expression",
+              "value": 3
+            },
+            {
+              "state": "Expression",
+              "value": 27
+            },
+            {
+              "state": "Expression",
+              "value": 28
+            },
+            {
+              "state": "Expression",
+              "value": 2
+            },
+            {
+              "state": "Expression",
+              "value": 25
+            },
+            {
+              "state": "Expression",
+              "value": 26
+            },
+            {
+              "state": "Expression",
+              "value": 4
+            },
+            {
+              "state": "Expression",
+              "value": 29
+            },
+            {
+              "state": "Expression",
+              "value": 30
+            },
+            {
+              "state": "Expression",
+              "value": 45
+            },
+            {
+              "state": "Expression",
+              "value": 46
+            },
+            {
+              "state": "Expression",
+              "value": 12
+            },
+            {
+              "state": "Expression",
+              "value": 10
+            },
+            {
+              "state": "Expression",
+              "value": 41
+            },
+            {
+              "state": "Expression",
+              "value": 42
+            },
+            {
+              "state": "Expression",
+              "value": 19
+            },
+            {
+              "state": "Expression",
+              "value": 56
+            },
+            {
+              "state": "Expression",
+              "value": 57
+            },
+            {
+              "state": "Expression",
+              "value": 6
+            },
+            {
+              "state": "Expression",
+              "value": 33
+            },
+            {
+              "state": "Expression",
+              "value": 34
+            },
+            {
+              "state": "Expression",
+              "value": 13
+            },
+            {
+              "state": "Expression",
+              "value": 47
+            },
+            {
+              "state": "Expression",
+              "value": 48
+            },
+            {
+              "state": "Expression",
+              "value": 14
+            },
+            {
+              "state": "Expression",
+              "value": 49
+            },
+            {
+              "state": "Expression",
+              "value": 50
+            },
+            {
+              "state": "Expression",
+              "value": 15
+            },
+            {
+              "state": "Expression",
+              "value": 51
+            },
+            {
+              "state": "Expression",
+              "value": 52
+            },
+            {
+              "state": "Expression",
+              "value": 7
+            },
+            {
+              "state": "Expression",
+              "value": 35
+            },
+            {
+              "state": "Expression",
+              "value": 36
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Hairstyle",
+      "sections": [
+        {
+          "header": "Main hair color",
+          "buttonType": "IMAGE",
+          "imageButtons": [
+            {
+              "color": "#3D3D3D",
+              "state": "MainHairColor",
+              "value": 1
+            },
+            {
+              "color": "#553629",
+              "state": "MainHairColor",
+              "value": 2
+            },
+            {
+              "color": "#662C2C",
+              "state": "MainHairColor",
+              "value": 3
+            },
+            {
+              "color": "#753A23",
+              "state": "MainHairColor",
+              "value": 4
+            },
+            {
+              "color": "#A34242",
+              "state": "MainHairColor",
+              "value": 5
+            },
+            {
+              "color": "#947872",
+              "state": "MainHairColor",
+              "value": 6
+            },
+            {
+              "color": "#BB6A20",
+              "state": "MainHairColor",
+              "value": 7
+            },
+            {
+              "color": "#CA6049",
+              "state": "MainHairColor",
+              "value": 8
+            },
+            {
+              "color": "#F5AF62",
+              "state": "MainHairColor",
+              "value": 9
+            },
+            {
+              "color": "#FFDEBB",
+              "state": "MainHairColor",
+              "value": 10
+            },
+            {
+              "color": "#E4DDD6",
+              "state": "MainHairColor",
+              "value": 11
+            },
+            {
+              "color": "#ECF0F1",
+              "state": "MainHairColor",
+              "value": 12
+            },
+            {
+              "color": "#FF97CF",
+              "state": "MainHairColor",
+              "value": 13
+            },
+            {
+              "color": "#9961FF",
+              "state": "MainHairColor",
+              "value": 14
+            },
+            {
+              "color": "#3F83D7",
+              "state": "MainHairColor",
+              "value": 15
+            },
+            {
+              "color": "#249472",
+              "state": "MainHairColor",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "header": "Hairstyle",
+          "buttonType": "FEATURE",
+          "featureButtons": [
+            {
+              "state": "MainHair",
+              "value": 58
+            },
+            {
+              "state": "MainHair",
+              "value": 59
+            },
+            {
+              "state": "MainHair",
+              "value": 60
+            },
+            {
+              "state": "MainHair",
+              "value": 55
+            },
+            {
+              "state": "MainHair",
+              "value": 56
+            },
+            {
+              "state": "MainHair",
+              "value": 57
+            },
+            {
+              "state": "MainHair",
+              "value": 50
+            },
+            {
+              "state": "MainHair",
+              "value": 53
+            },
+            {
+              "state": "MainHair",
+              "value": 54
+            },
+            {
+              "state": "MainHair",
+              "value": 52
+            },
+            {
+              "state": "MainHair",
+              "value": 49
+            },
+            {
+              "state": "MainHair",
+              "value": 51
+            },
+            {
+              "state": "MainHair",
+              "value": 46
+            },
+            {
+              "state": "MainHair",
+              "value": 47
+            },
+            {
+              "state": "MainHair",
+              "value": 48
+            },
+            {
+              "state": "MainHair",
+              "value": 63
+            },
+            {
+              "state": "MainHair",
+              "value": 61
+            },
+            {
+              "state": "MainHair",
+              "value": 64
+            },
+            {
+              "state": "MainHair",
+              "value": 66
+            },
+            {
+              "state": "MainHair",
+              "value": 62
+            },
+            {
+              "state": "MainHair",
+              "value": 65
+            },
+            {
+              "state": "MainHair",
+              "value": 43
+            },
+            {
+              "state": "MainHair",
+              "value": 44
+            },
+            {
+              "state": "MainHair",
+              "value": 45
+            },
+            {
+              "state": "MainHair",
+              "value": 7
+            },
+            {
+              "state": "MainHair",
+              "value": 8
+            },
+            {
+              "state": "MainHair",
+              "value": 9
+            },
+            {
+              "state": "MainHair",
+              "value": 10
+            },
+            {
+              "state": "MainHair",
+              "value": 11
+            },
+            {
+              "state": "MainHair",
+              "value": 12
+            },
+            {
+              "state": "MainHair",
+              "value": 1
+            },
+            {
+              "state": "MainHair",
+              "value": 68
+            },
+            {
+              "state": "MainHair",
+              "value": 69
+            },
+            {
+              "state": "MainHair",
+              "value": 5
+            },
+            {
+              "state": "MainHair",
+              "value": 70
+            },
+            {
+              "state": "MainHair",
+              "value": 2
+            },
+            {
+              "state": "MainHair",
+              "value": 34
+            },
+            {
+              "state": "MainHair",
+              "value": 4
+            },
+            {
+              "state": "MainHair",
+              "value": 6
+            },
+            {
+              "state": "MainHair",
+              "value": 3
+            },
+            {
+              "state": "MainHair",
+              "value": 29
+            },
+            {
+              "state": "MainHair",
+              "value": 30
+            },
+            {
+              "state": "MainHair",
+              "value": 37
+            },
+            {
+              "state": "MainHair",
+              "value": 38
+            },
+            {
+              "state": "MainHair",
+              "value": 39
+            },
+            {
+              "state": "MainHair",
+              "value": 32
+            },
+            {
+              "state": "MainHair",
+              "value": 33
+            },
+            {
+              "state": "MainHair",
+              "value": 31
+            },
+            {
+              "state": "MainHair",
+              "value": 71
+            },
+            {
+              "state": "MainHair",
+              "value": 72
+            },
+            {
+              "state": "MainHair",
+              "value": 73
+            },
+            {
+              "state": "MainHair",
+              "value": 40
+            },
+            {
+              "state": "MainHair",
+              "value": 41
+            },
+            {
+              "state": "MainHair",
+              "value": 42
+            },
+            {
+              "state": "MainHair",
+              "value": 35
+            },
+            {
+              "state": "MainHair",
+              "value": 36
+            },
+            {
+              "state": "MainHair",
+              "value": 28
+            },
+            {
+              "state": "MainHair",
+              "value": 25
+            },
+            {
+              "state": "MainHair",
+              "value": 26
+            },
+            {
+              "state": "MainHair",
+              "value": 27
+            },
+            {
+              "state": "MainHair",
+              "value": 19
+            },
+            {
+              "state": "MainHair",
+              "value": 20
+            },
+            {
+              "state": "MainHair",
+              "value": 21
+            },
+            {
+              "state": "MainHair",
+              "value": 22
+            },
+            {
+              "state": "MainHair",
+              "value": 23
+            },
+            {
+              "state": "MainHair",
+              "value": 24
+            },
+            {
+              "state": "MainHair",
+              "value": 13
+            },
+            {
+              "state": "MainHair",
+              "value": 14
+            },
+            {
+              "state": "MainHair",
+              "value": 15
+            },
+            {
+              "state": "MainHair",
+              "value": 16
+            },
+            {
+              "state": "MainHair",
+              "value": 17
+            },
+            {
+              "state": "MainHair",
+              "value": 18
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Accessories",
+      "sections": [
+        {
+          "header": "Glasses color",
+          "buttonType": "IMAGE",
+          "imageButtons": [
+            {
+              "color": "#9069CD",
+              "state": "GlassesColor",
+              "value": 2
+            },
+            {
+              "color": "#1453A3",
+              "state": "GlassesColor",
+              "value": 1
+            },
+            {
+              "color": "#5F8428",
+              "state": "GlassesColor",
+              "value": 3
+            },
+            {
+              "color": "#EA7E00",
+              "state": "GlassesColor",
+              "value": 4
+            },
+            {
+              "color": "#FF4B4B",
+              "state": "GlassesColor",
+              "value": 5
+            },
+            {
+              "color": "#FF9BD8",
+              "state": "GlassesColor",
+              "value": 6
+            },
+            {
+              "color": "#EAD5C6",
+              "state": "GlassesColor",
+              "value": 7
+            },
+            {
+              "color": "#434343",
+              "state": "GlassesColor",
+              "value": 8
+            }
+          ]
+        },
+        {
+          "header": "Glasses",
+          "buttonType": "FEATURE",
+          "featureButtons": [
+            {
+              "state": "Glasses",
+              "value": 0
+            },
+            {
+              "state": "Glasses",
+              "value": 1
+            },
+            {
+              "state": "Glasses",
+              "value": 2
+            },
+            {
+              "state": "Glasses",
+              "value": 3
+            },
+            {
+              "state": "Glasses",
+              "value": 4
+            },
+            {
+              "state": "Glasses",
+              "value": 5
+            },
+            {
+              "state": "Glasses",
+              "value": 6
+            }
+          ]
+        },
+        {
+          "header": "Face details",
+          "buttonType": "FEATURE",
+          "featureButtons": [
+            {
+              "state": "Wrinkles",
+              "value": 0
+            },
+            {
+              "state": "Wrinkles",
+              "value": 1
+            },
+            {
+              "state": "Wrinkles",
+              "value": 2
+            }
+          ]
+        },
+        {
+          "header": "Earrings",
+          "buttonType": "FEATURE",
+          "featureButtons": [
+            {
+              "state": "Piercings",
+              "value": 0
+            },
+            {
+              "state": "Piercings",
+              "value": 1
+            },
+            {
+              "state": "Piercings",
+              "value": 2
+            },
+            {
+              "state": "Piercings",
+              "value": 3
+            },
+            {
+              "state": "Piercings",
+              "value": 4
+            },
+            {
+              "state": "Piercings",
+              "value": 5
+            },
+            {
+              "state": "Piercings",
+              "value": 6
+            }
+          ]
+        },
+        {
+          "header": "Nose rings",
+          "buttonType": "FEATURE",
+          "featureButtons": [
+            {
+              "state": "Nose Piercing",
+              "value": 0
+            },
+            {
+              "state": "Nose Piercing",
+              "value": 1
+            },
+            {
+              "state": "Nose Piercing",
+              "value": 2
+            },
+            {
+              "state": "Nose Piercing",
+              "value": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Facial hair",
+      "sections": [
+        {
+          "header": "Facial hair color",
+          "buttonType": "IMAGE",
+          "imageButtons": [
+            {
+              "color": "#434343",
+              "state": "FacialHairColor",
+              "value": 1
+            },
+            {
+              "color": "#5D3B2D",
+              "state": "FacialHairColor",
+              "value": 2
+            },
+            {
+              "color": "#592615",
+              "state": "FacialHairColor",
+              "value": 3
+            },
+            {
+              "color": "#703030",
+              "state": "FacialHairColor",
+              "value": 4
+            },
+            {
+              "color": "#785B56",
+              "state": "FacialHairColor",
+              "value": 6
+            },
+            {
+              "color": "#A44D13",
+              "state": "FacialHairColor",
+              "value": 7
+            },
+            {
+              "color": "#F09647",
+              "state": "FacialHairColor",
+              "value": 9
+            },
+            {
+              "color": "#FFD1A4",
+              "state": "FacialHairColor",
+              "value": 10
+            },
+            {
+              "color": "#D9D0C7",
+              "state": "FacialHairColor",
+              "value": 11
+            },
+            {
+              "color": "#E4EAEB",
+              "state": "FacialHairColor",
+              "value": 12
+            },
+            {
+              "color": "#7D46FF",
+              "state": "FacialHairColor",
+              "value": 14
+            },
+            {
+              "color": "#2A66C8",
+              "state": "FacialHairColor",
+              "value": 15
+            },
+            {
+              "color": "#167856",
+              "state": "FacialHairColor",
+              "value": 16
+            }
+          ]
+        },
+        {
+          "header": "Facial hair",
+          "buttonType": "FEATURE",
+          "featureButtons": [
+            {
+              "state": "FacialHair",
+              "value": 0
+            },
+            {
+              "state": "FacialHair",
+              "value": 1
+            },
+            {
+              "state": "FacialHair",
+              "value": 2
+            },
+            {
+              "state": "FacialHair",
+              "value": 3
+            },
+            {
+              "state": "FacialHair",
+              "value": 4
+            },
+            {
+              "state": "FacialHair",
+              "value": 5
+            },
+            {
+              "state": "FacialHair",
+              "value": 6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Headwear",
+      "sections": [
+        {
+          "header": "Headwear color",
+          "buttonType": "IMAGE",
+          "imageButtons": [
+            {
+              "color": "#9069CD",
+              "state": "HeadwearColor",
+              "value": 1
+            },
+            {
+              "color": "#0084C2",
+              "state": "HeadwearColor",
+              "value": 2
+            },
+            {
+              "color": "#58A700",
+              "state": "HeadwearColor",
+              "value": 3
+            },
+            {
+              "color": "#FFC700",
+              "state": "HeadwearColor",
+              "value": 4
+            },
+            {
+              "color": "#FF9600",
+              "state": "HeadwearColor",
+              "value": 5
+            },
+            {
+              "color": "#BC0038",
+              "state": "HeadwearColor",
+              "value": 6
+            },
+            {
+              "color": "#FFB7E3",
+              "state": "HeadwearColor",
+              "value": 7
+            },
+            {
+              "color": "#ECF0F1",
+              "state": "HeadwearColor",
+              "value": 8
+            },
+            {
+              "color": "#575757",
+              "state": "HeadwearColor",
+              "value": 9
+            }
+          ]
+        },
+        {
+          "header": "Headwear",
+          "buttonType": "FEATURE",
+          "featureButtons": [
+            {
+              "state": "Headwear",
+              "value": 0
+            },
+            {
+              "state": "Headwear",
+              "value": 10
+            },
+            {
+              "state": "Headwear",
+              "value": 11
+            },
+            {
+              "state": "Headwear",
+              "value": 7
+            },
+            {
+              "state": "Headwear",
+              "value": 8
+            },
+            {
+              "state": "Headwear",
+              "value": 9
+            },
+            {
+              "state": "Headwear",
+              "value": 1
+            },
+            {
+              "state": "Headwear",
+              "value": 2
+            },
+            {
+              "state": "Headwear",
+              "value": 3
+            },
+            {
+              "state": "Headwear",
+              "value": 4
+            },
+            {
+              "state": "Headwear",
+              "value": 5
+            },
+            {
+              "state": "Headwear",
+              "value": 6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Clothing",
+      "sections": [
+        {
+          "header": "Clothing color",
+          "buttonType": "IMAGE",
+          "imageButtons": [
+            {
+              "color": "#B782C2",
+              "state": "ClothingColor",
+              "value": 1
+            },
+            {
+              "color": "#44A1CD",
+              "state": "ClothingColor",
+              "value": 2
+            },
+            {
+              "color": "#78B13B",
+              "state": "ClothingColor",
+              "value": 3
+            },
+            {
+              "color": "#F3CB3F",
+              "state": "ClothingColor",
+              "value": 4
+            },
+            {
+              "color": "#F3A13F",
+              "state": "ClothingColor",
+              "value": 5
+            },
+            {
+              "color": "#C03C64",
+              "state": "ClothingColor",
+              "value": 6
+            },
+            {
+              "color": "#FBC8DE",
+              "state": "ClothingColor",
+              "value": 7
+            },
+            {
+              "color": "#ECF0F1",
+              "state": "ClothingColor",
+              "value": 8
+            },
+            {
+              "color": "#424242",
+              "state": "ClothingColor",
+              "value": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Background",
+      "sections": [
+        {
+          "header": "Background color",
+          "buttonType": "IMAGE",
+          "imageButtons": [
+            {
+              "color": "#E5E5E5",
+              "state": "BackgroundColor",
+              "value": 1
+            },
+            {
+              "color": "#AFAFAF",
+              "state": "BackgroundColor",
+              "value": 2
+            },
+            {
+              "color": "#4B4B4B",
+              "state": "BackgroundColor",
+              "value": 3
+            },
+            {
+              "color": "#F3E0FF",
+              "state": "BackgroundColor",
+              "value": 4
+            },
+            {
+              "color": "#DDB1F9",
+              "state": "BackgroundColor",
+              "value": 5
+            },
+            {
+              "color": "#9069CD",
+              "state": "BackgroundColor",
+              "value": 6
+            },
+            {
+              "color": "#B9E8FF",
+              "state": "BackgroundColor",
+              "value": 7
+            },
+            {
+              "color": "#84D7FF",
+              "state": "BackgroundColor",
+              "value": 8
+            },
+            {
+              "color": "#2561AC",
+              "state": "BackgroundColor",
+              "value": 9
+            },
+            {
+              "color": "#C6FDE7",
+              "state": "BackgroundColor",
+              "value": 10
+            },
+            {
+              "color": "#5AEAB1",
+              "state": "BackgroundColor",
+              "value": 11
+            },
+            {
+              "color": "#43B487",
+              "state": "BackgroundColor",
+              "value": 12
+            },
+            {
+              "color": "#D7FFB8",
+              "state": "BackgroundColor",
+              "value": 13
+            },
+            {
+              "color": "#B8F28B",
+              "state": "BackgroundColor",
+              "value": 14
+            },
+            {
+              "color": "#7DB84F",
+              "state": "BackgroundColor",
+              "value": 15
+            },
+            {
+              "color": "#FFF1A7",
+              "state": "BackgroundColor",
+              "value": 16
+            },
+            {
+              "color": "#FFCB80",
+              "state": "BackgroundColor",
+              "value": 17
+            },
+            {
+              "color": "#E5A259",
+              "state": "BackgroundColor",
+              "value": 18
+            },
+            {
+              "color": "#FFDFE0",
+              "state": "BackgroundColor",
+              "value": 19
+            },
+            {
+              "color": "#FFB2B2",
+              "state": "BackgroundColor",
+              "value": 20
+            },
+            {
+              "color": "#E56464",
+              "state": "BackgroundColor",
+              "value": 21
+            },
+            {
+              "color": "#FFD0F2",
+              "state": "BackgroundColor",
+              "value": 22
+            },
+            {
+              "color": "#F9A3D7",
+              "state": "BackgroundColor",
+              "value": 23
+            },
+            {
+              "color": "#D45DA6",
+              "state": "BackgroundColor",
+              "value": 24
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

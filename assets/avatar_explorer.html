@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Duolingo Avatar Explorer</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #1a1a2e; color: #eee; display: flex; height: 100vh; }
+.sidebar { width: 360px; background: #16213e; padding: 14px; overflow-y: auto; flex-shrink: 0; }
+.main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin: 14px 0 6px; color: #7b8bb3; }
+select, button, input { width: 100%; padding: 7px 10px; margin: 3px 0; background: #0f3460; color: #eee; border: 1px solid #1a5276; border-radius: 6px; font-size: 13px; cursor: pointer; }
+button { background: #1a8a5a; border-color: #20a86b; font-weight: 600; }
+button:hover { background: #20a86b; }
+canvas { border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.5); background: #0f3460; max-width: 100%; height: auto; }
+.status { font-size: 12px; color: #7b8bb3; margin-top: 6px; word-break: break-all; }
+.artboard-info { font-size: 11px; color: #7b8bb3; margin-top: 3px; }
+.log-box { margin-top: 12px; font-size: 11px; color: #5b7b93; max-height: 150px; overflow-y: auto; background: #0a0a1a; padding: 8px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; }
+.input-wrap { margin-bottom: 4px; background: #0a1525; padding: 4px 8px; border-radius: 4px; }
+.input-wrap label { font-size: 11px; color: #7b8bb3; display: block; }
+.input-wrap .input-row { display: flex; gap: 6px; align-items: center; }
+.input-wrap .input-row input[type="range"] { flex: 1; }
+.input-wrap .input-row .val-display { font-size: 10px; color: #5b7b93; min-width: 32px; text-align: right; }
+.category-header { background: #1a2a4a; padding: 6px 8px; margin: 4px 0; border-radius: 4px; font-size: 12px; color: #8bafff; cursor: pointer; user-select: none; }
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <h2>Rive 文件</h2>
+  <input type="file" id="fileInput" accept=".riv" style="font-size:12px;">
+  <div id="statusDiv" class="status">等待加载...</div>
+
+  <div id="controlsDiv" style="display:none;">
+    <h2>状态机</h2>
+    <select id="smSelect"></select>
+    <div id="smInfo" class="artboard-info"></div>
+
+    <h2>状态输入</h2>
+    <div id="inputsDiv"></div>
+
+    <h2>操作</h2>
+    <button onclick="exportPNG()">导出 PNG</button>
+    <button onclick="resetAll()">重置默认</button>
+  </div>
+
+  <div class="log-box" id="logBox"></div>
+</div>
+
+<div class="main">
+  <canvas id="riveCanvas" width="500" height="500"></canvas>
+  <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+    <button onclick="exportPNG()" style="width:auto; background:#1a1a8a;">导出 PNG</button>
+    <button onclick="resetAll()" style="width:auto; background:#5a3a1a;">重置默认</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/@rive-app/canvas@2.37.8/rive.js"></script>
+<script>
+let riveInst = null;
+let smNames = [];
+let currentSM = '';
+let triggerInput = null;   // bounce_trig reference
+let fireTimeout = null;    // debounce timer
+
+const canvas = document.getElementById('riveCanvas');
+const logEl = document.getElementById('logBox');
+
+function log(msg) {
+  const div = document.createElement('div');
+  div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+  logEl.appendChild(div);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+// Debounced trigger fire after input changes
+function scheduleTrigger() {
+  if (!triggerInput) return;
+  if (fireTimeout) clearTimeout(fireTimeout);
+  fireTimeout = setTimeout(() => {
+    triggerInput.fire();
+    fireTimeout = null;
+  }, 150);
+}
+
+// Slider ranges based on feature caps (from animation name analysis)
+function sliderRange(name) {
+  const ranges = {
+    'BackgroundColor': 24, 'SkinTone': 15, 'Body': 6,
+    'MainHair': 73, 'MainHairColor': 16, 'FacialHair': 6,
+    'FacialHairColor': 16, 'EyeColor': 14, 'Expression': 50,
+    'ClothingColor': 10, 'Headwear': 12, 'HeadwearColor': 9,
+    'Glasses': 6, 'GlassesColor': 8, 'Piercings': 6,
+    'Nose Piercing': 3, 'Headshape': 6, 'Headphones': 1,
+    'HeadphonesColour': 5, 'Wrinkles': 1,
+    'default_avatar_num': 4,
+    'ENG_ONLY_Zoom': 3, 'ENG_ONLY_Animation': 1, 'ENG_ONLY_XPBoost': 1,
+  };
+  return ranges[name] || 100;
+}
+
+// ---- Category mapping ----
+function catFor(name) {
+  if (name.startsWith('ENG_ONLY_')) return 'Engine';
+  if (['SkinTone','Body','Expression','Wrinkles','EyeColor'].includes(name)) return '外观';
+  if (['MainHair','MainHairColor','FacialHair','FacialHairColor'].includes(name)) return '毛发';
+  if (['Headwear','HeadwearColor','Glasses','GlassesColor'].includes(name)) return '配饰';
+  if (['Piercings','Nose Piercing'].includes(name)) return '穿孔';
+  if (['ClothingColor'].includes(name)) return '服装';
+  if (['BackgroundColor'].includes(name)) return '背景';
+  if (['Headshape','Headphones','HeadphonesColour'].includes(name)) return '其他';
+  if (['default_avatar_bool','default_avatar_num','bounce_trig'].includes(name)) return '默认';
+  return 'Other';
+}
+
+// ---- Loading ----
+function loadRiveFile(buffer) {
+  if (riveInst) {
+    try { riveInst.cleanup(); } catch(e) {}
+    riveInst = null;
+  }
+  smNames = [];
+  currentSM = '';
+  document.getElementById('controlsDiv').style.display = 'none';
+
+  const Rive = window.rive?.Rive;
+  if (!Rive) { log('错误: window.rive.Rive 不可用'); return; }
+
+  log('正在加载 Rive 文件...');
+  riveInst = new Rive({
+    canvas: canvas,
+    buffer: new Uint8Array(buffer),
+    autoplay: false,
+    onLoad: () => { log('Rive 文件加载成功！'); onRiveLoaded(); },
+    onLoadError: (err) => log(`加载错误: ${err}`),
+  });
+}
+
+function onRiveLoaded() {
+  if (!riveInst) return;
+
+  const file = riveInst.riveFile.file;
+  const ab = file.defaultArtboard();
+  const smCount = ab.stateMachineCount();
+
+  smNames = [];
+  const smSelect = document.getElementById('smSelect');
+  smSelect.innerHTML = '';
+
+  for (let i = 0; i < smCount; i++) {
+    const sm = ab.stateMachineByIndex(i);
+    smNames.push(sm.name);
+    const opt = document.createElement('option');
+    opt.value = sm.name;
+    opt.textContent = sm.name;
+    smSelect.appendChild(opt);
+  }
+
+  log(`找到 ${smCount} 个状态机: ${smNames.join(', ')}`);
+  document.getElementById('statusDiv').textContent =
+    `已加载: ${ab.name}, ${ab.animationCount()} 动画, ${smCount} 状态机`;
+
+  // Start Animator with all state machines
+  riveInst.play(smNames);
+  log('Animator 已启动');
+
+  document.getElementById('controlsDiv').style.display = 'block';
+  // Defer: Animator needs a frame to initialize state machines
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      selectStateMachine('SMAvatar');
+    });
+  });
+}
+
+function selectStateMachine(name) {
+  if (!riveInst || !name) return;
+  currentSM = name;
+  document.getElementById('smSelect').value = name;
+
+  // Get inputs via official high-level API
+  const inputs = riveInst.stateMachineInputs(name);
+  if (!inputs) {
+    log(`stateMachineInputs('${name}') 返回 null`);
+    return;
+  }
+
+  log(`选中: ${name} (${inputs.length} 输入)`);
+  document.getElementById('smInfo').textContent = `输入: ${inputs.length}`;
+  triggerInput = null;  // reset
+  buildInputControls(inputs);
+}
+
+function buildInputControls(inputs) {
+  const div = document.getElementById('inputsDiv');
+  div.innerHTML = '';
+
+  // Group by category
+  const categories = {};
+  for (let i = 0; i < inputs.length; i++) {
+    const inp = inputs[i];
+    const cat = catFor(inp.name);
+    if (!categories[cat]) categories[cat] = [];
+    categories[cat].push(inp);
+  }
+
+  const catOrder = ['外观','毛发','配饰','穿孔','服装','背景','其他','Engine','默认'];
+
+  for (const cat of catOrder) {
+    if (!categories[cat] || categories[cat].length === 0) continue;
+
+    const catHeader = document.createElement('div');
+    catHeader.className = 'category-header';
+    catHeader.textContent = `▾ ${cat}`;
+    catHeader.onclick = function() {
+      const next = this.nextElementSibling;
+      if (next) next.style.display = next.style.display === 'none' ? 'block' : 'none';
+      this.textContent = (next && next.style.display === 'none' ? '▸ ' : '▾ ') + cat;
+    };
+    div.appendChild(catHeader);
+
+    const catDiv = document.createElement('div');
+    for (const inp of categories[cat]) {
+      const wrap = document.createElement('div');
+      wrap.className = 'input-wrap';
+      const label = document.createElement('label');
+      label.textContent = inp.name;
+      wrap.appendChild(label);
+
+      // StateMachineInput.type values: 56=Number, 59=Boolean, 58=Trigger
+      const inpType = inp.type;
+
+      if (inpType === 59) { // Boolean
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = !!inp.value;
+        cb.onchange = () => { inp.value = cb.checked; scheduleTrigger(); };
+        wrap.appendChild(cb);
+      } else if (inpType === 56) { // Number
+        const row = document.createElement('div');
+        row.className = 'input-row';
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.min = 0;
+        slider.max = sliderRange(inp.name);
+        slider.value = inp.value || 0;
+        slider.style.flex = '1';
+        const valDisp = document.createElement('span');
+        valDisp.className = 'val-display';
+        slider.oninput = () => {
+          inp.value = parseFloat(slider.value);
+          valDisp.textContent = slider.value;
+          scheduleTrigger();
+        };
+        valDisp.textContent = slider.value;
+        row.appendChild(slider);
+        row.appendChild(valDisp);
+        wrap.appendChild(row);
+      } else if (inpType === 58) { // Trigger
+        if (inp.name === 'bounce_trig') triggerInput = inp;
+        const btn = document.createElement('button');
+        btn.textContent = inp.name === 'bounce_trig' ? '应用 (bounce)' : '触发';
+        btn.style.cssText = 'width:auto;padding:3px 8px;font-size:11px;';
+        btn.onclick = () => { inp.fire(); };
+        wrap.appendChild(btn);
+      }
+      catDiv.appendChild(wrap);
+    }
+    div.appendChild(catDiv);
+  }
+}
+
+function resetAll() {
+  if (currentSM) selectStateMachine(currentSM);
+}
+
+function exportPNG() {
+  const link = document.createElement('a');
+  link.download = `avatar_${currentSM || 'export'}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  log('已导出 PNG');
+}
+
+// ---- Events ----
+document.getElementById('fileInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  log(`已选择: ${file.name} (${(file.size/1024).toFixed(1)} KB)`);
+  const buf = await file.arrayBuffer();
+  loadRiveFile(buf);
+});
+
+document.getElementById('smSelect').addEventListener('change', (e) => {
+  selectStateMachine(e.target.value);
+});
+
+// ---- Auto-load ----
+window.addEventListener('load', async () => {
+  log('正在自动加载 avatar_builder_25_sept2025.riv ...');
+  try {
+    const resp = await fetch('avatar_builder_25_sept2025.riv');
+    if (resp.ok) {
+      const buf = await resp.arrayBuffer();
+      log(`下载完成 (${(buf.byteLength/1024).toFixed(1)} KB)`);
+      loadRiveFile(buf);
+    } else {
+      log(`HTTP ${resp.status}，请手动选择 .riv 文件`);
+    }
+  } catch(e) {
+    log(`请求失败: ${e.message}`);
+  }
+});
+</script>
+</body>
+</html>

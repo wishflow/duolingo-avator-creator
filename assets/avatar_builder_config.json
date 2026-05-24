@@ -1,0 +1,3572 @@
+{
+  "avatarBuilderConfig": {
+    "avatarOnProfileDisplayOptions": {
+      "1": {
+        "backgroundColor": "#E5E5E5",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "2": {
+        "backgroundColor": "#AFAFAF",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "3": {
+        "backgroundColor": "#4B4B4B",
+        "learningAppIconColor": "#FFFFFD",
+        "systemIconDisplayOption": "LIGHT"
+      },
+      "4": {
+        "backgroundColor": "#F3E0FF",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "5": {
+        "backgroundColor": "#DDB1F9",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "6": {
+        "backgroundColor": "#9069CD",
+        "learningAppIconColor": "#FFFFFD",
+        "systemIconDisplayOption": "LIGHT"
+      },
+      "7": {
+        "backgroundColor": "#DDF4FF",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "8": {
+        "backgroundColor": "#84D7FF",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "9": {
+        "backgroundColor": "#2561AC",
+        "learningAppIconColor": "#FFFFFD",
+        "systemIconDisplayOption": "LIGHT"
+      },
+      "10": {
+        "backgroundColor": "#C6FDE7",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "11": {
+        "backgroundColor": "#5AEAB1",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "12": {
+        "backgroundColor": "#43B487",
+        "learningAppIconColor": "#FFFFFD",
+        "systemIconDisplayOption": "LIGHT"
+      },
+      "13": {
+        "backgroundColor": "#D7FFB8",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "14": {
+        "backgroundColor": "#B8F28B",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "15": {
+        "backgroundColor": "#7DB84F",
+        "learningAppIconColor": "#FFFFFD",
+        "systemIconDisplayOption": "LIGHT"
+      },
+      "16": {
+        "backgroundColor": "#FFF1A7",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "17": {
+        "backgroundColor": "#FFCB80",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "18": {
+        "backgroundColor": "#E5A259",
+        "learningAppIconColor": "#FFFFFD",
+        "systemIconDisplayOption": "LIGHT"
+      },
+      "19": {
+        "backgroundColor": "#FFDFE0",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "20": {
+        "backgroundColor": "#FFB2B2",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "21": {
+        "backgroundColor": "#E56464",
+        "learningAppIconColor": "#FFFFFD",
+        "systemIconDisplayOption": "LIGHT"
+      },
+      "22": {
+        "backgroundColor": "#FFD0F2",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "23": {
+        "backgroundColor": "#F9A3D7",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "24": {
+        "backgroundColor": "#D45DA6",
+        "learningAppIconColor": "#FFFFFD",
+        "systemIconDisplayOption": "LIGHT"
+      },
+      "25": {
+        "backgroundColor": "#8CE31B",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      },
+      "26": {
+        "backgroundColor": "#73D70E",
+        "learningAppIconColor": "#4B4B4B",
+        "systemIconDisplayOption": "DARK"
+      }
+    },
+    "defaultBuiltAvatarState": {
+      "BackgroundColor": 1,
+      "Body": 1,
+      "ClothingColor": 1,
+      "Expression": 1,
+      "FacialHair": 0,
+      "FacialHairColor": 1,
+      "Glasses": 0,
+      "GlassesColor": 1,
+      "Headwear": 0,
+      "HeadwearColor": 1,
+      "MainHair": 58,
+      "MainHairColor": 1,
+      "Nose Piercing": 0,
+      "Piercings": 0,
+      "SkinTone": 15,
+      "Wrinkles": 0
+    },
+    "riveFileUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_25_sept2025.riv",
+    "riveFileVersion": "avatar_builder_25_sept2025",
+    "riveServerRenderingFileUrl": "https://avatars.duolingo.com/avatar-builder/avatar_v2_deliv_112.riv",
+    "skinProperties": {},
+    "stateChooserTabs": [
+      {
+        "sections": [
+          {
+            "buttonType": "IMAGE",
+            "featureButtons": [],
+            "header": "Skin tone",
+            "imageButtons": [
+              {
+                "color": "#6E3D3A",
+                "state": "SkinTone",
+                "value": 15
+              },
+              {
+                "color": "#7D4A3F",
+                "state": "SkinTone",
+                "value": 14
+              },
+              {
+                "color": "#8C4A25",
+                "state": "SkinTone",
+                "value": 13
+              },
+              {
+                "color": "#97513F",
+                "state": "SkinTone",
+                "value": 12
+              },
+              {
+                "color": "#985C30",
+                "state": "SkinTone",
+                "value": 11
+              },
+              {
+                "color": "#A46648",
+                "state": "SkinTone",
+                "value": 10
+              },
+              {
+                "color": "#B76E45",
+                "state": "SkinTone",
+                "value": 9
+              },
+              {
+                "color": "#C6775C",
+                "state": "SkinTone",
+                "value": 8
+              },
+              {
+                "color": "#E18E70",
+                "state": "SkinTone",
+                "value": 7
+              },
+              {
+                "color": "#E59D65",
+                "state": "SkinTone",
+                "value": 6
+              },
+              {
+                "color": "#F2A07D",
+                "state": "SkinTone",
+                "value": 5
+              },
+              {
+                "color": "#FFB89D",
+                "state": "SkinTone",
+                "value": 4
+              },
+              {
+                "color": "#FFC6B7",
+                "state": "SkinTone",
+                "value": 3
+              },
+              {
+                "color": "#FFCBA3",
+                "state": "SkinTone",
+                "value": 2
+              },
+              {
+                "color": "#FFE2D6",
+                "state": "SkinTone",
+                "value": 1
+              }
+            ],
+            "layoutType": "LINEAR"
+          },
+          {
+            "buttonType": "FEATURE",
+            "featureButtons": [
+              {
+                "state": "Body",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 3,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 1,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 3
+              },
+              {
+                "state": "Body",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 4,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 1,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 4
+              },
+              {
+                "state": "Body",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 1,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 1,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 1
+              },
+              {
+                "state": "Body",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 5,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 1,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 5
+              },
+              {
+                "state": "Body",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 6,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 1,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 6
+              },
+              {
+                "state": "Body",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 2,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 1,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 2
+              }
+            ],
+            "header": "Body",
+            "imageButtons": [],
+            "layoutType": "GRID"
+          }
+        ],
+        "selectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_body_selected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_body_selected.svg"
+        },
+        "tabName": "Body",
+        "unselectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_body_unselected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_body_unselected.svg"
+        }
+      },
+      {
+        "sections": [
+          {
+            "buttonType": "IMAGE",
+            "featureButtons": [],
+            "header": "Eye color",
+            "imageButtons": [
+              {
+                "color": "#3D3D3D",
+                "state": "EyeColor",
+                "value": 1
+              },
+              {
+                "color": "#A44407",
+                "state": "EyeColor",
+                "value": 2
+              },
+              {
+                "color": "#947300",
+                "state": "EyeColor",
+                "value": 3
+              },
+              {
+                "color": "#549002",
+                "state": "EyeColor",
+                "value": 4
+              },
+              {
+                "color": "#0B8890",
+                "state": "EyeColor",
+                "value": 5
+              },
+              {
+                "color": "#007FCF",
+                "state": "EyeColor",
+                "value": 6
+              },
+              {
+                "color": "#7386A1",
+                "state": "EyeColor",
+                "value": 7
+              },
+              {
+                "color": "#945EF0",
+                "state": "EyeColor",
+                "value": 8
+              },
+              {
+                "color": "#CE26D3",
+                "state": "EyeColor",
+                "value": 9
+              },
+              {
+                "color": "#FB4CB7",
+                "state": "EyeColor",
+                "value": 10
+              },
+              {
+                "color": "#F03535",
+                "state": "EyeColor",
+                "value": 11
+              },
+              {
+                "color": "#F28300",
+                "state": "EyeColor",
+                "value": 12
+              },
+              {
+                "color": "#F0AD00",
+                "state": "EyeColor",
+                "value": 13
+              }
+            ],
+            "layoutType": "LINEAR"
+          },
+          {
+            "buttonType": "FEATURE",
+            "featureButtons": [
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 17
+                },
+                "value": 17
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 54
+                },
+                "value": 54
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 55
+                },
+                "value": 55
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 5
+                },
+                "value": 5
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 31
+                },
+                "value": 31
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 32
+                },
+                "value": 32
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 1
+                },
+                "value": 1
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 21
+                },
+                "value": 21
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 20
+                },
+                "value": 20
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 22
+                },
+                "value": 22
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 23
+                },
+                "value": 23
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 24
+                },
+                "value": 24
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 11
+                },
+                "value": 11
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 43
+                },
+                "value": 43
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 44
+                },
+                "value": 44
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 16
+                },
+                "value": 16
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 18
+                },
+                "value": 18
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 53
+                },
+                "value": 53
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 8
+                },
+                "value": 8
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 37
+                },
+                "value": 37
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 38
+                },
+                "value": 38
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 9
+                },
+                "value": 9
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 39
+                },
+                "value": 39
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 40
+                },
+                "value": 40
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 3
+                },
+                "value": 3
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 27
+                },
+                "value": 27
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 28
+                },
+                "value": 28
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 2
+                },
+                "value": 2
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 25
+                },
+                "value": 25
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 26
+                },
+                "value": 26
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 4
+                },
+                "value": 4
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 29
+                },
+                "value": 29
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 30
+                },
+                "value": 30
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 45
+                },
+                "value": 45
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 46
+                },
+                "value": 46
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 12
+                },
+                "value": 12
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 10
+                },
+                "value": 10
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 41
+                },
+                "value": 41
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 42
+                },
+                "value": 42
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 19
+                },
+                "value": 19
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 56
+                },
+                "value": 56
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 57
+                },
+                "value": 57
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 6
+                },
+                "value": 6
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 33
+                },
+                "value": 33
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 34
+                },
+                "value": 34
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 13
+                },
+                "value": 13
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 47
+                },
+                "value": 47
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 48
+                },
+                "value": 48
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 14
+                },
+                "value": 14
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 49
+                },
+                "value": 49
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 50
+                },
+                "value": 50
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 15
+                },
+                "value": 15
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 51
+                },
+                "value": 51
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 52
+                },
+                "value": 52
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 7
+                },
+                "value": 7
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 35
+                },
+                "value": 35
+              },
+              {
+                "state": "Expression",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 36
+                },
+                "value": 36
+              }
+            ],
+            "header": "Expression",
+            "imageButtons": [],
+            "layoutType": "GRID"
+          }
+        ],
+        "selectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_face_selected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_face_selected.svg"
+        },
+        "tabName": "Expression",
+        "unselectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_face_unselected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_face_unselected.svg"
+        }
+      },
+      {
+        "sections": [
+          {
+            "buttonType": "IMAGE",
+            "featureButtons": [],
+            "header": "Main hair color",
+            "imageButtons": [
+              {
+                "color": "#3D3D3D",
+                "state": "MainHairColor",
+                "value": 1
+              },
+              {
+                "color": "#553629",
+                "state": "MainHairColor",
+                "value": 2
+              },
+              {
+                "color": "#662C2C",
+                "state": "MainHairColor",
+                "value": 3
+              },
+              {
+                "color": "#753A23",
+                "state": "MainHairColor",
+                "value": 4
+              },
+              {
+                "color": "#A34242",
+                "state": "MainHairColor",
+                "value": 5
+              },
+              {
+                "color": "#947872",
+                "state": "MainHairColor",
+                "value": 6
+              },
+              {
+                "color": "#BB6A20",
+                "state": "MainHairColor",
+                "value": 7
+              },
+              {
+                "color": "#CA6049",
+                "state": "MainHairColor",
+                "value": 8
+              },
+              {
+                "color": "#F5AF62",
+                "state": "MainHairColor",
+                "value": 9
+              },
+              {
+                "color": "#FFDEBB",
+                "state": "MainHairColor",
+                "value": 10
+              },
+              {
+                "color": "#E4DDD6",
+                "state": "MainHairColor",
+                "value": 11
+              },
+              {
+                "color": "#ECF0F1",
+                "state": "MainHairColor",
+                "value": 12
+              },
+              {
+                "color": "#FF97CF",
+                "state": "MainHairColor",
+                "value": 13
+              },
+              {
+                "color": "#9961FF",
+                "state": "MainHairColor",
+                "value": 14
+              },
+              {
+                "color": "#3F83D7",
+                "state": "MainHairColor",
+                "value": 15
+              },
+              {
+                "color": "#249472",
+                "state": "MainHairColor",
+                "value": 16
+              }
+            ],
+            "layoutType": "LINEAR"
+          },
+          {
+            "buttonType": "FEATURE",
+            "featureButtons": [
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 58,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 58
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 59,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 59
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 60,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 60
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 55,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 55
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 56,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 56
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 57,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 57
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 50,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 50
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 53,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 53
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 54,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 54
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 52,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 52
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 49,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 49
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 51,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 51
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 46,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 46
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 47,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 47
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 48,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 48
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 63,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 63
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 61,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 61
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 64,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 64
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 66,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 66
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 62,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 62
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 65,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 65
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 43,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 43
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 44,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 44
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 45,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 45
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 7,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 7
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 8,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 8
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 9,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 9
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 10,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 10
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 11,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 11
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 12,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 12
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 1,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 1
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 68,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 68
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 69,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 69
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 5,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 5
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 70,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 70
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 2,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 2
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 34,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 34
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 4,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 4
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 6,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 6
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 3,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 3
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 29,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 29
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 30,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 30
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 37,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 37
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 38,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 38
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 39,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 39
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 32,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 32
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 33,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 33
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 31,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 31
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 71,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 71
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 72,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 72
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 73,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 73
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 40,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 40
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 41,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 41
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 42,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 42
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 35,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 35
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 36,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 36
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 28,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 28
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 25,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 25
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 26,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 26
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 27,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 27
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 19,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 19
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 20,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 20
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 21,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 21
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 22,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 22
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 23,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 23
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 24,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 24
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 13,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 13
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 14,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 14
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 15,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 15
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 16,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 16
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 17,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 17
+              },
+              {
+                "state": "MainHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "MainHair": 18,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 18
+              }
+            ],
+            "header": "Hairstyle",
+            "imageButtons": [],
+            "layoutType": "GRID"
+          }
+        ],
+        "selectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_hair_selected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_hair_selected.svg"
+        },
+        "tabName": "Hairstyle",
+        "unselectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_hair_unselected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_hair_unselected.svg"
+        }
+      },
+      {
+        "sections": [
+          {
+            "buttonType": "IMAGE",
+            "featureButtons": [],
+            "header": "Glasses color",
+            "imageButtons": [
+              {
+                "color": "#9069CD",
+                "state": "GlassesColor",
+                "value": 2
+              },
+              {
+                "color": "#1453A3",
+                "state": "GlassesColor",
+                "value": 1
+              },
+              {
+                "color": "#5F8428",
+                "state": "GlassesColor",
+                "value": 3
+              },
+              {
+                "color": "#EA7E00",
+                "state": "GlassesColor",
+                "value": 4
+              },
+              {
+                "color": "#FF4B4B",
+                "state": "GlassesColor",
+                "value": 5
+              },
+              {
+                "color": "#FF9BD8",
+                "state": "GlassesColor",
+                "value": 6
+              },
+              {
+                "color": "#EAD5C6",
+                "state": "GlassesColor",
+                "value": 7
+              },
+              {
+                "color": "#434343",
+                "state": "GlassesColor",
+                "value": 8
+              }
+            ],
+            "layoutType": "LINEAR"
+          },
+          {
+            "buttonType": "FEATURE",
+            "featureButtons": [
+              {
+                "state": "Glasses",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Glasses": 0
+                },
+                "value": 0
+              },
+              {
+                "state": "Glasses",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Glasses": 1
+                },
+                "value": 1
+              },
+              {
+                "state": "Glasses",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Glasses": 2
+                },
+                "value": 2
+              },
+              {
+                "state": "Glasses",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Glasses": 3
+                },
+                "value": 3
+              },
+              {
+                "state": "Glasses",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Glasses": 4
+                },
+                "value": 4
+              },
+              {
+                "state": "Glasses",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Glasses": 5
+                },
+                "value": 5
+              },
+              {
+                "state": "Glasses",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Glasses": 6
+                },
+                "value": 6
+              }
+            ],
+            "header": "Glasses",
+            "imageButtons": [],
+            "layoutType": "GRID"
+          },
+          {
+            "buttonType": "FEATURE",
+            "featureButtons": [
+              {
+                "state": "Wrinkles",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 0
+              },
+              {
+                "state": "Wrinkles",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 1
+                },
+                "value": 1
+              },
+              {
+                "state": "Wrinkles",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 2
+                },
+                "value": 2
+              }
+            ],
+            "header": "Face details",
+            "imageButtons": [],
+            "layoutType": "GRID"
+          },
+          {
+            "buttonType": "FEATURE",
+            "featureButtons": [
+              {
+                "state": "Piercings",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 0
+              },
+              {
+                "state": "Piercings",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 1,
+                  "Wrinkles": 0
+                },
+                "value": 1
+              },
+              {
+                "state": "Piercings",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 2,
+                  "Wrinkles": 0
+                },
+                "value": 2
+              },
+              {
+                "state": "Piercings",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 3,
+                  "Wrinkles": 0
+                },
+                "value": 3
+              },
+              {
+                "state": "Piercings",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 4,
+                  "Wrinkles": 0
+                },
+                "value": 4
+              },
+              {
+                "state": "Piercings",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 5,
+                  "Wrinkles": 0
+                },
+                "value": 5
+              },
+              {
+                "state": "Piercings",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 6,
+                  "Wrinkles": 0
+                },
+                "value": 6
+              }
+            ],
+            "header": "Earrings",
+            "imageButtons": [],
+            "layoutType": "GRID"
+          },
+          {
+            "buttonType": "FEATURE",
+            "featureButtons": [
+              {
+                "state": "Nose Piercing",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0
+                },
+                "value": 0
+              },
+              {
+                "state": "Nose Piercing",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Nose Piercing": 1,
+                  "Piercings": 0
+                },
+                "value": 1
+              },
+              {
+                "state": "Nose Piercing",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Nose Piercing": 2,
+                  "Piercings": 0
+                },
+                "value": 2
+              },
+              {
+                "state": "Nose Piercing",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Nose Piercing": 3,
+                  "Piercings": 0
+                },
+                "value": 3
+              }
+            ],
+            "header": "Nose rings",
+            "imageButtons": [],
+            "layoutType": "GRID"
+          }
+        ],
+        "selectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_face_details_selected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_face_details_selected.svg"
+        },
+        "tabName": "Accessories",
+        "unselectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_face_details_unselected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_face_details_unselected.svg"
+        }
+      },
+      {
+        "sections": [
+          {
+            "buttonType": "IMAGE",
+            "featureButtons": [],
+            "header": "Facial hair color",
+            "imageButtons": [
+              {
+                "color": "#434343",
+                "state": "FacialHairColor",
+                "value": 1
+              },
+              {
+                "color": "#5D3B2D",
+                "state": "FacialHairColor",
+                "value": 2
+              },
+              {
+                "color": "#592615",
+                "state": "FacialHairColor",
+                "value": 3
+              },
+              {
+                "color": "#703030",
+                "state": "FacialHairColor",
+                "value": 4
+              },
+              {
+                "color": "#785B56",
+                "state": "FacialHairColor",
+                "value": 6
+              },
+              {
+                "color": "#A44D13",
+                "state": "FacialHairColor",
+                "value": 7
+              },
+              {
+                "color": "#F09647",
+                "state": "FacialHairColor",
+                "value": 9
+              },
+              {
+                "color": "#FFD1A4",
+                "state": "FacialHairColor",
+                "value": 10
+              },
+              {
+                "color": "#D9D0C7",
+                "state": "FacialHairColor",
+                "value": 11
+              },
+              {
+                "color": "#E4EAEB",
+                "state": "FacialHairColor",
+                "value": 12
+              },
+              {
+                "color": "#7D46FF",
+                "state": "FacialHairColor",
+                "value": 14
+              },
+              {
+                "color": "#2A66C8",
+                "state": "FacialHairColor",
+                "value": 15
+              },
+              {
+                "color": "#167856",
+                "state": "FacialHairColor",
+                "value": 16
+              }
+            ],
+            "layoutType": "LINEAR"
+          },
+          {
+            "buttonType": "FEATURE",
+            "featureButtons": [
+              {
+                "state": "FacialHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 0
+              },
+              {
+                "state": "FacialHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 1,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 1
+              },
+              {
+                "state": "FacialHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 2,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 2
+              },
+              {
+                "state": "FacialHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 3,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 3
+              },
+              {
+                "state": "FacialHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 4,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 4
+              },
+              {
+                "state": "FacialHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 5,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 5
+              },
+              {
+                "state": "FacialHair",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 6,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 6
+              }
+            ],
+            "header": "Facial hair",
+            "imageButtons": [],
+            "layoutType": "GRID"
+          }
+        ],
+        "selectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_facial_hair_selected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_facial_hair_selected.svg"
+        },
+        "tabName": "Facial hair",
+        "unselectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_facial_hair_unselected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_facial_hair_unselected.svg"
+        }
+      },
+      {
+        "sections": [
+          {
+            "buttonType": "IMAGE",
+            "featureButtons": [],
+            "header": "Headwear color",
+            "imageButtons": [
+              {
+                "color": "#9069CD",
+                "state": "HeadwearColor",
+                "value": 1
+              },
+              {
+                "color": "#0084C2",
+                "state": "HeadwearColor",
+                "value": 2
+              },
+              {
+                "color": "#58A700",
+                "state": "HeadwearColor",
+                "value": 3
+              },
+              {
+                "color": "#FFC700",
+                "state": "HeadwearColor",
+                "value": 4
+              },
+              {
+                "color": "#FF9600",
+                "state": "HeadwearColor",
+                "value": 5
+              },
+              {
+                "color": "#BC0038",
+                "state": "HeadwearColor",
+                "value": 6
+              },
+              {
+                "color": "#FFB7E3",
+                "state": "HeadwearColor",
+                "value": 7
+              },
+              {
+                "color": "#ECF0F1",
+                "state": "HeadwearColor",
+                "value": 8
+              },
+              {
+                "color": "#575757",
+                "state": "HeadwearColor",
+                "value": 9
+              }
+            ],
+            "layoutType": "LINEAR"
+          },
+          {
+            "buttonType": "FEATURE",
+            "featureButtons": [
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 0,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 0
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 10,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 10
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 11,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 11
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 7,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 7
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 8,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 8
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 9,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 9
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 1,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 1
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 2,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 2
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 3,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 3
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 4,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 4
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 5,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 5
+              },
+              {
+                "state": "Headwear",
+                "statesToOverride": {
+                  "BackgroundColor": 0,
+                  "Body": 0,
+                  "ENG_ONLY_Animation": 0,
+                  "ENG_ONLY_Zoom": 0,
+                  "Expression": 0,
+                  "FacialHair": 0,
+                  "Glasses": 0,
+                  "Headwear": 6,
+                  "Nose Piercing": 0,
+                  "Piercings": 0,
+                  "Wrinkles": 0
+                },
+                "value": 6
+              }
+            ],
+            "header": "Headwear",
+            "imageButtons": [],
+            "layoutType": "GRID"
+          }
+        ],
+        "selectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_headwear_selected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_headwear_selected.svg"
+        },
+        "tabName": "Headwear",
+        "unselectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_headwear_unselected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_headwear_unselected.svg"
+        }
+      },
+      {
+        "sections": [
+          {
+            "buttonType": "IMAGE",
+            "featureButtons": [],
+            "header": "Clothing color",
+            "imageButtons": [
+              {
+                "color": "#B782C2",
+                "state": "ClothingColor",
+                "value": 1
+              },
+              {
+                "color": "#44A1CD",
+                "state": "ClothingColor",
+                "value": 2
+              },
+              {
+                "color": "#78B13B",
+                "state": "ClothingColor",
+                "value": 3
+              },
+              {
+                "color": "#F3CB3F",
+                "state": "ClothingColor",
+                "value": 4
+              },
+              {
+                "color": "#F3A13F",
+                "state": "ClothingColor",
+                "value": 5
+              },
+              {
+                "color": "#C03C64",
+                "state": "ClothingColor",
+                "value": 6
+              },
+              {
+                "color": "#FBC8DE",
+                "state": "ClothingColor",
+                "value": 7
+              },
+              {
+                "color": "#ECF0F1",
+                "state": "ClothingColor",
+                "value": 8
+              },
+              {
+                "color": "#424242",
+                "state": "ClothingColor",
+                "value": 9
+              }
+            ],
+            "layoutType": "GRID"
+          }
+        ],
+        "selectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_tshirt_selected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_tshirt_selected.svg"
+        },
+        "tabName": "Clothing",
+        "unselectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_tshirt_unselected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_tshirt_unselected.svg"
+        }
+      },
+      {
+        "sections": [
+          {
+            "buttonType": "IMAGE",
+            "featureButtons": [],
+            "header": "Background color",
+            "imageButtons": [
+              {
+                "color": "#E5E5E5",
+                "state": "BackgroundColor",
+                "value": 1
+              },
+              {
+                "color": "#AFAFAF",
+                "state": "BackgroundColor",
+                "value": 2
+              },
+              {
+                "color": "#4B4B4B",
+                "state": "BackgroundColor",
+                "value": 3
+              },
+              {
+                "color": "#F3E0FF",
+                "state": "BackgroundColor",
+                "value": 4
+              },
+              {
+                "color": "#DDB1F9",
+                "state": "BackgroundColor",
+                "value": 5
+              },
+              {
+                "color": "#9069CD",
+                "state": "BackgroundColor",
+                "value": 6
+              },
+              {
+                "color": "#B9E8FF",
+                "state": "BackgroundColor",
+                "value": 7
+              },
+              {
+                "color": "#84D7FF",
+                "state": "BackgroundColor",
+                "value": 8
+              },
+              {
+                "color": "#2561AC",
+                "state": "BackgroundColor",
+                "value": 9
+              },
+              {
+                "color": "#C6FDE7",
+                "state": "BackgroundColor",
+                "value": 10
+              },
+              {
+                "color": "#5AEAB1",
+                "state": "BackgroundColor",
+                "value": 11
+              },
+              {
+                "color": "#43B487",
+                "state": "BackgroundColor",
+                "value": 12
+              },
+              {
+                "color": "#D7FFB8",
+                "state": "BackgroundColor",
+                "value": 13
+              },
+              {
+                "color": "#B8F28B",
+                "state": "BackgroundColor",
+                "value": 14
+              },
+              {
+                "color": "#7DB84F",
+                "state": "BackgroundColor",
+                "value": 15
+              },
+              {
+                "color": "#FFF1A7",
+                "state": "BackgroundColor",
+                "value": 16
+              },
+              {
+                "color": "#FFCB80",
+                "state": "BackgroundColor",
+                "value": 17
+              },
+              {
+                "color": "#E5A259",
+                "state": "BackgroundColor",
+                "value": 18
+              },
+              {
+                "color": "#FFDFE0",
+                "state": "BackgroundColor",
+                "value": 19
+              },
+              {
+                "color": "#FFB2B2",
+                "state": "BackgroundColor",
+                "value": 20
+              },
+              {
+                "color": "#E56464",
+                "state": "BackgroundColor",
+                "value": 21
+              },
+              {
+                "color": "#FFD0F2",
+                "state": "BackgroundColor",
+                "value": 22
+              },
+              {
+                "color": "#F9A3D7",
+                "state": "BackgroundColor",
+                "value": 23
+              },
+              {
+                "color": "#D45DA6",
+                "state": "BackgroundColor",
+                "value": 24
+              }
+            ],
+            "layoutType": "GRID"
+          }
+        ],
+        "selectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_background_selected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_background_selected.svg"
+        },
+        "tabName": "Background",
+        "unselectedIcon": {
+          "darkUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_background_unselected_dark.svg",
+          "lightUrl": "https://avatars.duolingo.com/avatar-builder/avatar_builder_background_unselected.svg"
+        }
+      }
+    ]
+  }
+}
