@@ -6,6 +6,9 @@ node_modules/
 __pycache__/
 .DS_Store
 /tmp/
+.env
+.env.*
+!.env.example
 *.egg-info/
 dist/
 build/

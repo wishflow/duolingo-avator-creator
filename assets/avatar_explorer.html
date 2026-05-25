@@ -28,6 +28,7 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .btn-secondary:hover { background: #dadada; }
 .btn-danger { background: #ffdfdf; color: #b3261e; border-bottom: 3px solid #efc4c4; }
 .btn-danger:hover { background: #ffd2d2; }
+.btn:disabled { opacity: 0.48; cursor: not-allowed; transform: none; }
 
 .main-layout { display: grid; grid-template-columns: 92px minmax(360px, 1fr) minmax(420px, 50%); height: calc(100vh - 42px); overflow: hidden; padding: 16px; gap: 16px; background: #f0f0f0; }
 
@@ -38,7 +39,12 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 /* LEFT: Avatar preview */
 .preview-panel { position: relative; min-width: 0; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
 .preview-panel canvas { max-width: 100%; max-height: 100%; background: transparent; }
-.preview-status { position: absolute; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 7px; min-height: 28px; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.88); color: #52656D; font-size: 12px; font-weight: 800; box-shadow: 0 1px 8px rgba(0,0,0,0.08); pointer-events: none; }
+.preview-status { position: absolute; top: 12px; right: 12px; display: inline-flex; align-items: center; gap: 7px; min-height: 28px; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.88); color: #52656D; font-size: 12px; font-weight: 800; box-shadow: 0 1px 8px rgba(0,0,0,0.08); pointer-events: none; }
+.history-controls { position: absolute; top: 12px; left: 12px; z-index: 5; display: flex; gap: 8px; }
+.icon-btn { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 999px; background: rgba(255,255,255,0.9); color: #3c3c3c; box-shadow: 0 1px 8px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.12s, opacity 0.12s; }
+.icon-btn:hover { transform: translateY(-1px); }
+.icon-btn:disabled { opacity: 0.38; cursor: not-allowed; transform: none; }
+.icon-btn svg { width: 19px; height: 19px; }
 
 /* RIGHT: Options */
 .options-panel { min-width: 0; display: flex; flex-direction: column; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
@@ -60,6 +66,11 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .options-scroll { flex: 1; overflow-y: auto; padding: 24px 28px; }
 .options-scroll::-webkit-scrollbar { width: 5px; }
 .options-scroll::-webkit-scrollbar-thumb { background: #d1d1d1; border-radius: 3px; }
+.mode-generate .tab-bar,
+.mode-generate .thumb-status,
+.mode-generate #tabContent { display: none; }
+.generate-scroll { display: none; }
+.mode-generate .generate-scroll { display: block; }
 
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
@@ -91,6 +102,31 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .file-btn { display: inline-flex; align-items: center; justify-content: center; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .mobile-action-bar { display: none; }
+.generate-page { max-width: 680px; display: flex; flex-direction: column; gap: 16px; }
+.generate-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.generate-title { font-size: 18px; font-weight: 800; color: #3c3c3c; }
+.generate-mini { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; background: #f7f7f7; border: 2px solid #e5e5e5; }
+.generate-mini img { width: 58px; height: 58px; border-radius: 10px; object-fit: cover; background: #e5e5e5; }
+.generate-mini-text { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: #777; line-height: 1.35; }
+.generate-mini-text strong { font-size: 13px; color: #3c3c3c; }
+.prompt-wrap { position: relative; display: flex; flex-direction: column; gap: 8px; }
+.prompt-label { font-size: 13px; font-weight: 800; color: #52656D; }
+.prompt-input { width: 100%; min-height: 118px; resize: vertical; border: 2px solid #e5e5e5; border-radius: 12px; padding: 12px; color: #3c3c3c; font: 600 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; outline: none; }
+.prompt-input:focus { border-color: #1cb0f6; box-shadow: 0 0 0 3px rgba(28,176,246,0.16); }
+.mention-menu { position: absolute; left: 0; top: calc(100% - 2px); z-index: 15; min-width: 220px; display: none; flex-direction: column; gap: 4px; padding: 8px; border-radius: 12px; background: #fff; border: 2px solid #e5e5e5; box-shadow: 0 8px 22px rgba(0,0,0,0.14); }
+.mention-menu.open { display: flex; }
+.mention-option { border: 0; border-radius: 9px; background: #f7f7f7; color: #3c3c3c; padding: 9px 10px; text-align: left; font: 700 13px/1.25 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; cursor: pointer; }
+.mention-option:hover { background: #eaf7ff; }
+.prompt-tools { display: flex; flex-wrap: wrap; gap: 8px; }
+.turnstile-box { min-height: 66px; display: flex; align-items: center; }
+.ai-status { min-height: 20px; color: #52656D; font-size: 12px; font-weight: 700; line-height: 1.45; }
+.ai-stream { min-height: 92px; padding: 12px; border-radius: 12px; background: #f7f7f7; border: 2px solid #e5e5e5; color: #3c3c3c; font: 600 13px/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; white-space: pre-wrap; }
+.ai-result { display: none; flex-direction: column; gap: 10px; }
+.ai-result.ready { display: flex; }
+.ai-result h3 { font-size: 15px; color: #3c3c3c; }
+.ai-result ol { padding-left: 20px; font: 600 13px/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.ai-warnings { display: none; padding: 10px; border-radius: 10px; background: #fff6df; color: #725000; font-size: 12px; line-height: 1.45; }
+.ai-warnings.ready { display: block; }
 .more-sheet { position: fixed; inset: 0; z-index: 120; display: none; }
 .more-sheet.open { display: block; }
 .more-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.28); }
@@ -98,6 +134,10 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .more-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 .more-title { font-size: 16px; font-weight: 800; }
 .more-close { width: 34px; height: 34px; border-radius: 50%; border: 0; background: #e5e5e5; color: #3c3c3c; font-size: 18px; font-weight: 800; cursor: pointer; }
+.legal-footer { position: fixed; right: 14px; bottom: 10px; z-index: 62; }
+.legal-link { border: 0; background: rgba(255,255,255,0.85); color: #52656D; border-radius: 999px; padding: 6px 10px; font: 800 11px/1 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; cursor: pointer; box-shadow: 0 1px 8px rgba(0,0,0,0.08); }
+.legal-text { display: flex; flex-direction: column; gap: 10px; color: #52656D; font: 600 13px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.legal-text ul { padding-left: 20px; }
 
 .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
 .loading-overlay.hidden { display: none; }
@@ -114,7 +154,9 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   .main-layout { display: grid; grid-template-columns: 1fr; grid-template-rows: clamp(238px, 38vh, 360px) minmax(0, 1fr); grid-template-rows: clamp(238px, 38dvh, 360px) minmax(0, 1fr); height: calc(100vh - 38px - 64px); height: calc(100dvh - 38px - 64px - env(safe-area-inset-bottom)); padding: 0; gap: 0; overflow: hidden; }
   .tool-rail { display: none; }
   .preview-panel { width: 100%; min-height: 0; border-radius: 0; box-shadow: none; }
-  .preview-status { top: 10px; left: 10px; min-height: 26px; padding: 5px 9px; font-size: 11px; }
+  .preview-status { top: 10px; right: 10px; min-height: 26px; padding: 5px 9px; font-size: 11px; }
+  .history-controls { top: 10px; left: 10px; gap: 7px; }
+  .icon-btn { width: 32px; height: 32px; }
   .options-panel { width: 100%; min-height: 0; height: 100%; border-radius: 0; box-shadow: none; overflow: hidden; }
   .tab-bar { position: static; justify-content: flex-start; height: 58px; border-top: 0; border-bottom: 2px solid #e5e5e5; box-shadow: none; }
   .tab-btn { min-width: 64px; height: 58px; padding: 7px 8px 6px; border-top: 0; border-bottom: 3px solid transparent; margin-bottom: -2px; }
@@ -130,8 +172,14 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   .tile { width: 100%; height: auto; min-height: 104px; aspect-ratio: 1; border-radius: 12px; }
   .swatch { width: 50px; height: 50px; }
   .action-list { max-width: none; }
-  .mobile-action-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; height: calc(64px + env(safe-area-inset-bottom)); padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); background: #fff; border-top: 2px solid #e5e5e5; box-shadow: 0 -2px 14px rgba(0,0,0,0.08); }
+  .generate-scroll { padding: 14px 12px 20px; }
+  .generate-page { max-width: none; gap: 12px; }
+  .generate-head { align-items: flex-start; }
+  .generate-title { font-size: 16px; }
+  .prompt-input { min-height: 112px; }
+  .mobile-action-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; height: calc(64px + env(safe-area-inset-bottom)); padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); background: #fff; border-top: 2px solid #e5e5e5; box-shadow: 0 -2px 14px rgba(0,0,0,0.08); }
   .mobile-action-bar .btn { width: 100%; }
+  .legal-footer { right: 10px; bottom: calc(72px + env(safe-area-inset-bottom)); }
   .more-panel { left: 0; right: 0; top: auto; bottom: 0; width: 100%; max-height: min(72dvh, 520px); transform: none; border-radius: 18px 18px 0 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); overflow-y: auto; }
 }
 </style>
@@ -149,6 +197,7 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 
 <div class="main-layout">
   <aside class="tool-rail" aria-label="Avatar actions">
+    <button class="btn btn-primary" onclick="openGeneratePage()">Generate</button>
     <button class="btn btn-primary" onclick="exportPNG()">Export</button>
     <button class="btn btn-secondary" onclick="confirmResetAll()">Reset</button>
     <button class="btn btn-secondary" onclick="openFilePicker()">Upload</button>
@@ -158,6 +207,14 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   </aside>
 
   <div class="preview-panel" id="previewPanel">
+    <div class="history-controls" aria-label="Avatar history">
+      <button class="icon-btn" id="undoBtn" onclick="undoAvatarChange()" aria-label="Undo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7H5v4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 11c2.1-3.8 6.4-5.2 10-3.6 3.8 1.6 5.4 6.1 3.6 9.7-1 2-2.8 3.4-4.9 3.9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn" id="redoBtn" onclick="redoAvatarChange()" aria-label="Redo">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7h4v4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 11c-2.1-3.8-6.4-5.2-10-3.6-3.8 1.6-5.4 6.1-3.6 9.7 1 2 2.8 3.4 4.9 3.9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
     <div class="preview-status">
       <div class="dot wait" id="statusDot"></div>
       <span id="statusText">Loading</span>
@@ -169,10 +226,44 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
     <div class="tab-bar" id="tabBar"></div>
     <div class="thumb-status" id="thumbStatus"></div>
     <div class="options-scroll" id="tabContent"></div>
+    <div class="options-scroll generate-scroll" id="generateContent" hidden>
+      <div class="generate-page">
+        <div class="generate-head">
+          <div class="generate-title">Generate Avatar</div>
+          <button class="btn btn-secondary" onclick="showEditorPage()">Back</button>
+        </div>
+        <div class="generate-mini">
+          <img id="aiMiniPreview" alt="Current avatar preview">
+          <div class="generate-mini-text">
+            <strong>Current preview</strong>
+            <span>Use @current to modify this avatar, or @default to start from the default.</span>
+          </div>
+        </div>
+        <div class="prompt-wrap">
+          <label class="prompt-label" for="aiPrompt">Describe the avatar</label>
+          <textarea class="prompt-input" id="aiPrompt" maxlength="800" placeholder="Try: @current make a confident avatar with dark clothes, round eyes, earrings, and a bright background"></textarea>
+          <div class="mention-menu" id="mentionMenu" aria-label="Mention context"></div>
+          <div class="prompt-tools">
+            <button class="btn btn-secondary" onclick="insertMention('current')">@current</button>
+            <button class="btn btn-secondary" onclick="insertMention('default')">@default</button>
+          </div>
+        </div>
+        <div class="turnstile-box" id="turnstileContainer"></div>
+        <div class="ai-status" id="aiStatus">AI backend is loading.</div>
+        <button class="btn btn-primary" id="generateBtn" onclick="startAvatarGeneration()" disabled>Generate editable avatar</button>
+        <div class="ai-stream" id="aiStream">Generation plan will appear here.</div>
+        <div class="ai-result" id="aiResult">
+          <h3>Manual guide</h3>
+          <ol id="aiSteps"></ol>
+          <div class="ai-warnings" id="aiWarnings"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="mobile-action-bar" aria-label="Avatar actions">
+  <button class="btn btn-primary" onclick="openGeneratePage()">Generate</button>
   <button class="btn btn-primary" onclick="exportPNG()">Export</button>
   <button class="btn btn-secondary" onclick="confirmResetAll()">Reset</button>
   <button class="btn btn-secondary" onclick="openMoreSheet()">More</button>
@@ -193,6 +284,30 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
       <div class="save-status" data-save-status></div>
       <div class="action-note">Avatar choices are saved locally on this device. Uploaded .riv files are not saved after refresh.</div>
       <div class="action-note">Unofficial fan-made avatar editor. Runs locally in your browser; no files are uploaded by this page.</div>
+      <button class="btn btn-secondary" onclick="openTermsSheet()">Privacy & Terms</button>
+    </div>
+  </div>
+</div>
+
+<footer class="legal-footer">
+  <button class="legal-link" onclick="openTermsSheet()">Privacy & Terms</button>
+</footer>
+
+<div class="more-sheet" id="termsSheet" aria-hidden="true">
+  <div class="more-backdrop" onclick="closeTermsSheet()"></div>
+  <div class="more-panel" role="dialog" aria-modal="true" aria-labelledby="termsTitle">
+    <div class="more-head">
+      <div class="more-title" id="termsTitle">Privacy & Terms</div>
+      <button class="more-close" onclick="closeTermsSheet()" aria-label="Close">x</button>
+    </div>
+    <div class="legal-text">
+      <p>This is an unofficial fan-made avatar editor.</p>
+      <ul>
+        <li>AI prompts and selected context are sent to Cloudflare Worker and Workers AI.</li>
+        <li>Avatar editing state and undo history are stored only in this browser.</li>
+        <li>This version does not save AI generation history or upload local files.</li>
+        <li>Cloudflare Turnstile is used to reduce automated abuse of the AI endpoint.</li>
+      </ul>
     </div>
   </div>
 </div>
@@ -201,6 +316,7 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 <canvas id="exportCanvas" style="display:none;"></canvas>
 
 <script src="https://unpkg.com/@rive-app/canvas@2.37.8/rive.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 <script>
 // ===================== STATE =====================
 let riveInst = null;
@@ -221,9 +337,19 @@ let bgColorMap = {};
 let defaultInputValues = {};
 let hasAvatarChanges = false;
 let statusTimer = null;
+let historyReady = false;
+let historyApplying = false;
+let avatarHistory = { past: [], future: [] };
+let aiGenerating = false;
+let turnstileWidgetId = null;
+let turnstileToken = '';
+let mentionRange = null;
 
 const STORAGE_KEY = 'duolingoAvatarCreator.avatarState.v1';
+const HISTORY_KEY = 'duolingoAvatarCreator.avatarHistory.v1';
+const HISTORY_LIMIT = 30;
 const API_BASE_URL = 'https://duolingo-avator-creator.wei-shi-ws.workers.dev';
+const SUPPORTED_MENTIONS = ['current', 'default'];
 let backendConfig = {
   baseUrl: API_BASE_URL,
   available: false,
@@ -251,6 +377,19 @@ const loadingOverlay = document.getElementById('loadingOverlay');
 const statusDot = document.getElementById('statusDot');
 const statusText = document.getElementById('statusText');
 const thumbStatus = document.getElementById('thumbStatus');
+const generateContent = document.getElementById('generateContent');
+const aiPrompt = document.getElementById('aiPrompt');
+const mentionMenu = document.getElementById('mentionMenu');
+const aiStatus = document.getElementById('aiStatus');
+const aiStream = document.getElementById('aiStream');
+const aiResult = document.getElementById('aiResult');
+const aiSteps = document.getElementById('aiSteps');
+const aiWarnings = document.getElementById('aiWarnings');
+const generateBtn = document.getElementById('generateBtn');
+const aiMiniPreview = document.getElementById('aiMiniPreview');
+const turnstileContainer = document.getElementById('turnstileContainer');
+const undoBtn = document.getElementById('undoBtn');
+const redoBtn = document.getElementById('redoBtn');
 
 // ===================== TRIGGER =====================
 function scheduleTrigger() {
@@ -279,6 +418,7 @@ async function loadRiveFile(buffer) {
   destroyAllTileInstances();
   smNames = []; currentSM = ''; stateMachineInputs = {}; currentInputValues = {};
   defaultInputValues = {}; hasAvatarChanges = false;
+  historyReady = false; historyApplying = false; avatarHistory = { past: [], future: [] };
   sharedRiveFile = null;
 
   try {
@@ -316,7 +456,11 @@ function onMainLoaded() {
       selectStateMachine('SMAvatar');
       applyConfigDefaults();
       applySavedAvatarState();
+      loadAvatarHistory();
+      historyReady = true;
+      updateHistoryButtons();
       renderUI();
+      handleRoute();
       loadingOverlay.classList.add('hidden');
     });
   });
@@ -618,6 +762,117 @@ function applyInputValue(name, value) {
   return false;
 }
 
+function cleanAvatarStateSnapshot(state) {
+  const clean = {};
+  if (!state || typeof state !== 'object') return clean;
+  for (const [key, value] of Object.entries(state)) {
+    if (!stateMachineInputs[key]) continue;
+    if (typeof value === 'number' || typeof value === 'boolean') clean[key] = value;
+  }
+  return clean;
+}
+
+function cloneAvatarState(state) {
+  return { ...cleanAvatarStateSnapshot(state) };
+}
+
+function loadAvatarHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    const past = Array.isArray(parsed?.past) ? parsed.past : [];
+    const future = Array.isArray(parsed?.future) ? parsed.future : [];
+    avatarHistory = {
+      past: past.map(cleanAvatarStateSnapshot).filter(s => Object.keys(s).length).slice(-HISTORY_LIMIT),
+      future: future.map(cleanAvatarStateSnapshot).filter(s => Object.keys(s).length).slice(0, HISTORY_LIMIT),
+    };
+  } catch(e) {
+    avatarHistory = { past: [], future: [] };
+  }
+}
+
+function persistAvatarHistory() {
+  if (!historyReady || historyApplying) return;
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify({
+      version: 1,
+      past: avatarHistory.past.slice(-HISTORY_LIMIT),
+      future: avatarHistory.future.slice(0, HISTORY_LIMIT),
+    }));
+  } catch(e) {}
+  updateHistoryButtons();
+}
+
+function clearAvatarHistory() {
+  avatarHistory = { past: [], future: [] };
+  try { localStorage.removeItem(HISTORY_KEY); } catch(e) {}
+  updateHistoryButtons();
+}
+
+function recordHistoryBeforeChange() {
+  if (!historyReady || historyApplying) return;
+  const current = cloneAvatarState(getSerializableAvatarState());
+  const last = avatarHistory.past[avatarHistory.past.length - 1];
+  if (last && statesMatch(last, current)) return;
+  avatarHistory.past.push(current);
+  if (avatarHistory.past.length > HISTORY_LIMIT) avatarHistory.past.shift();
+  avatarHistory.future = [];
+}
+
+function commitAvatarMutation() {
+  saveAvatarState();
+  persistAvatarHistory();
+  updateHistoryButtons();
+}
+
+function applyAvatarSnapshot(state, options = {}) {
+  const clean = cleanAvatarStateSnapshot(state);
+  let applied = false;
+  historyApplying = true;
+  for (const [name, value] of Object.entries(clean)) {
+    if (applyInputValue(name, value)) applied = true;
+  }
+  historyApplying = false;
+  if (!applied) return false;
+  scheduleTrigger();
+  updateBackground();
+  destroyAllTileInstances();
+  dirtyTabs.clear();
+  markAllTabsDirty();
+  refreshAllHighlights();
+  if (!document.body.classList.contains('mode-generate')) renderTabTiles(currentTabIdx);
+  if (options.save !== false) saveAvatarState();
+  updateHistoryButtons();
+  setTimeout(updateAiPreviewSnapshot, 180);
+  return true;
+}
+
+function undoAvatarChange() {
+  if (!avatarHistory.past.length) return;
+  const current = cloneAvatarState(getSerializableAvatarState());
+  const previous = avatarHistory.past.pop();
+  avatarHistory.future.unshift(current);
+  if (avatarHistory.future.length > HISTORY_LIMIT) avatarHistory.future.pop();
+  applyAvatarSnapshot(previous);
+  persistAvatarHistory();
+}
+
+function redoAvatarChange() {
+  if (!avatarHistory.future.length) return;
+  const current = cloneAvatarState(getSerializableAvatarState());
+  const next = avatarHistory.future.shift();
+  avatarHistory.past.push(current);
+  if (avatarHistory.past.length > HISTORY_LIMIT) avatarHistory.past.shift();
+  applyAvatarSnapshot(next);
+  persistAvatarHistory();
+}
+
+function updateHistoryButtons() {
+  if (undoBtn) undoBtn.disabled = avatarHistory.past.length === 0;
+  if (redoBtn) redoBtn.disabled = avatarHistory.future.length === 0;
+}
+
 function applySavedAvatarState() {
   const saved = loadSavedAvatarState();
   if (!saved) {
@@ -641,8 +896,10 @@ function applySavedAvatarState() {
 
 function clearSavedAvatar() {
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-  resetAll();
+  clearAvatarHistory();
+  resetAll({ record: false });
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  clearAvatarHistory();
   updateSaveStatus();
 }
 
@@ -669,6 +926,120 @@ function closeMoreSheet() {
   sheet.setAttribute('aria-hidden', 'true');
 }
 
+function openTermsSheet() {
+  const sheet = document.getElementById('termsSheet');
+  if (!sheet) return;
+  sheet.classList.add('open');
+  sheet.setAttribute('aria-hidden', 'false');
+}
+
+function closeTermsSheet() {
+  const sheet = document.getElementById('termsSheet');
+  if (!sheet) return;
+  sheet.classList.remove('open');
+  sheet.setAttribute('aria-hidden', 'true');
+}
+
+function openGeneratePage() {
+  if (window.location.hash !== '#generate') window.location.hash = 'generate';
+  else showGeneratePage();
+}
+
+function showGeneratePage() {
+  document.body.classList.add('mode-generate');
+  if (generateContent) generateContent.hidden = false;
+  updateAiPreviewSnapshot();
+  updateAiControls();
+  renderTurnstileIfNeeded();
+}
+
+function showEditorPage() {
+  if (window.location.hash === '#generate') {
+    history.pushState('', document.title, window.location.pathname + window.location.search);
+  }
+  document.body.classList.remove('mode-generate');
+  if (generateContent) generateContent.hidden = true;
+  switchTab(currentTabIdx || 0);
+}
+
+function handleRoute() {
+  if (window.location.hash === '#generate') showGeneratePage();
+  else showEditorPage();
+}
+
+function getGenerationConfig() {
+  return backendConfig?.config?.generation || {};
+}
+
+function isAiConfigured() {
+  return !!(
+    backendConfig?.available
+    && backendConfig?.config?.features?.avatarGeneration
+    && getGenerationConfig().turnstileSiteKey
+  );
+}
+
+function updateAiControls(message) {
+  if (!generateBtn || !aiStatus) return;
+  const configured = isAiConfigured();
+  const promptReady = !!aiPrompt?.value.trim();
+  const tokenReady = !!(turnstileToken || window.__TEST_TURNSTILE_TOKEN__);
+  generateBtn.disabled = aiGenerating || !configured || !promptReady || !tokenReady;
+  if (message) {
+    aiStatus.textContent = message;
+  } else if (!configured) {
+    aiStatus.textContent = 'AI generation is unavailable until the backend and Turnstile are configured.';
+  } else if (!tokenReady) {
+    aiStatus.textContent = 'Complete the Turnstile check to generate.';
+  } else {
+    aiStatus.textContent = aiGenerating ? 'Generating editable avatar...' : 'Ready to generate.';
+  }
+}
+
+function updateAiPreviewSnapshot() {
+  if (!aiMiniPreview || !canvas) return;
+  try {
+    aiMiniPreview.src = canvas.toDataURL('image/png');
+  } catch(e) {}
+}
+
+function renderTurnstileIfNeeded() {
+  if (!document.body.classList.contains('mode-generate')) return;
+  if (window.__TEST_TURNSTILE_TOKEN__) {
+    turnstileToken = window.__TEST_TURNSTILE_TOKEN__;
+    if (turnstileContainer) turnstileContainer.textContent = 'Turnstile verified for test.';
+    updateAiControls();
+    return;
+  }
+  const siteKey = getGenerationConfig().turnstileSiteKey;
+  if (!siteKey || !turnstileContainer) {
+    updateAiControls();
+    return;
+  }
+  if (!window.turnstile) {
+    turnstileContainer.textContent = 'Loading verification...';
+    setTimeout(renderTurnstileIfNeeded, 500);
+    return;
+  }
+  if (turnstileWidgetId !== null) return;
+  turnstileContainer.textContent = '';
+  turnstileWidgetId = window.turnstile.render(turnstileContainer, {
+    sitekey: siteKey,
+    callback: (token) => {
+      turnstileToken = token;
+      updateAiControls();
+    },
+    'expired-callback': () => {
+      turnstileToken = '';
+      updateAiControls('Turnstile expired. Please verify again.');
+    },
+    'error-callback': () => {
+      turnstileToken = '';
+      updateAiControls('Turnstile failed. Please try again.');
+    },
+  });
+}
+
 async function loadBackendConfig() {
   try {
     const resp = await fetch(`${API_BASE_URL}/api/config`, {
@@ -681,8 +1052,11 @@ async function loadBackendConfig() {
       config: await resp.json(),
     };
     window.avatarBackend = backendConfig;
+    updateAiControls();
+    renderTurnstileIfNeeded();
   } catch(e) {
     window.avatarBackend = backendConfig;
+    updateAiControls();
   }
 }
 
@@ -725,9 +1099,10 @@ function invalidateThumbnails(stateName) {
   }
 }
 
-function setSMValue(name, value) {
+function setSMValue(name, value, options = {}) {
   const inp = stateMachineInputs[name];
   if (!inp) return;
+  if (options.record !== false) recordHistoryBeforeChange();
   if (inp.type === 56) {
     inp.value = value;
     currentInputValues[name] = value;
@@ -737,15 +1112,17 @@ function setSMValue(name, value) {
     currentInputValues[name] = boolValue;
   }
   invalidateThumbnails(name);
-  saveAvatarState();
+  if (options.save !== false) commitAvatarMutation();
 }
 
 function applyFeatureButton(fb) {
   const primaryState = fb.state;
+  recordHistoryBeforeChange();
   for (const [key, val] of Object.entries(fb.statesToOverride)) {
     if (val === 0 && key !== primaryState) continue;
-    setSMValue(key, val);
+    setSMValue(key, val, { record: false, save: false });
   }
+  commitAvatarMutation();
 }
 
 // ===================== BACKGROUND =====================
@@ -768,6 +1145,261 @@ function buildBgColorMap() {
       }
     }
   }
+}
+
+// ===================== AI GENERATION =====================
+function buildAvatarCatalog() {
+  const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs || [];
+  const states = {};
+  for (let tabIdx = 0; tabIdx < tabs.length; tabIdx++) {
+    const tab = tabs[tabIdx];
+    const tabLabel = TAB_DEFS.find(d => d.idx === tabIdx)?.label || `Tab ${tabIdx + 1}`;
+    for (const section of tab.sections || []) {
+      const sectionLabel = section.header || tabLabel;
+      if (section.buttonType === 'IMAGE') {
+        section.imageButtons.forEach((ib, index) => {
+          if (!states[ib.state]) states[ib.state] = [];
+          states[ib.state].push({
+            value: ib.value,
+            tab: tabLabel,
+            section: sectionLabel,
+            kind: 'color',
+            color: ib.color,
+            index,
+          });
+        });
+      } else if (section.buttonType === 'FEATURE') {
+        section.featureButtons.forEach((fb, index) => {
+          if (!states[fb.state]) states[fb.state] = [];
+          states[fb.state].push({
+            value: fb.value,
+            tab: tabLabel,
+            section: sectionLabel,
+            kind: 'feature',
+            index,
+          });
+        });
+      }
+    }
+  }
+  return { states };
+}
+
+function detectContextMode(prompt) {
+  if (/\B@current\b/.test(prompt)) return 'current';
+  if (/\B@default\b/.test(prompt)) return 'default';
+  return 'default';
+}
+
+function getGenerationBaselineState(contextMode) {
+  return contextMode === 'current'
+    ? getSerializableAvatarState()
+    : cloneAvatarState(defaultInputValues);
+}
+
+function resetAiOutput() {
+  if (aiStream) aiStream.textContent = 'Generation plan will appear here.';
+  if (aiResult) aiResult.classList.remove('ready');
+  if (aiSteps) aiSteps.innerHTML = '';
+  if (aiWarnings) {
+    aiWarnings.classList.remove('ready');
+    aiWarnings.textContent = '';
+  }
+}
+
+function appendAiStreamText(text) {
+  if (!aiStream || !text) return;
+  if (aiStream.textContent === 'Generation plan will appear here.') aiStream.textContent = '';
+  aiStream.textContent += text;
+}
+
+function renderAiResult(result) {
+  if (!aiResult || !aiSteps) return;
+  aiSteps.innerHTML = '';
+  for (const step of result.steps || []) {
+    const li = document.createElement('li');
+    li.textContent = step;
+    aiSteps.appendChild(li);
+  }
+  if (aiWarnings) {
+    const warnings = result.warnings || [];
+    aiWarnings.textContent = warnings.length ? warnings.join(' ') : '';
+    aiWarnings.classList.toggle('ready', warnings.length > 0);
+  }
+  aiResult.classList.add('ready');
+}
+
+function applyGeneratedAvatarState(state) {
+  if (!state || typeof state !== 'object') return false;
+  recordHistoryBeforeChange();
+  let applied = false;
+  for (const [name, value] of Object.entries(state)) {
+    if (applyInputValue(name, value)) applied = true;
+  }
+  if (!applied) return false;
+  scheduleTrigger();
+  updateBackground();
+  destroyAllTileInstances();
+  dirtyTabs.clear();
+  markAllTabsDirty();
+  refreshAllHighlights();
+  commitAvatarMutation();
+  setTimeout(updateAiPreviewSnapshot, 180);
+  return true;
+}
+
+function parseSseFrame(frame) {
+  let event = 'message';
+  const data = [];
+  for (const line of frame.split('\n')) {
+    if (line.startsWith('event:')) event = line.slice(6).trim();
+    if (line.startsWith('data:')) data.push(line.slice(5).trim());
+  }
+  if (!data.length) return null;
+  try {
+    return { event, data: JSON.parse(data.join('\n')) };
+  } catch(e) {
+    return { event, data: { text: data.join('\n') } };
+  }
+}
+
+async function readGenerationStream(response) {
+  if (!response.body?.getReader) {
+    const text = await response.text();
+    for (const frame of text.trim().split('\n\n')) handleGenerationEvent(parseSseFrame(frame));
+    return;
+  }
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const frames = buffer.split('\n\n');
+    buffer = frames.pop() || '';
+    for (const frame of frames) handleGenerationEvent(parseSseFrame(frame));
+  }
+  if (buffer.trim()) handleGenerationEvent(parseSseFrame(buffer.trim()));
+}
+
+function handleGenerationEvent(payload) {
+  if (!payload) return;
+  const { event, data } = payload;
+  if (event === 'status') updateAiControls(data.message);
+  if (event === 'plan_delta') appendAiStreamText(data.text || '');
+  if (event === 'final') {
+    const applied = applyGeneratedAvatarState(data.avatarState);
+    renderAiResult(data);
+    updateAiControls(applied ? 'Generated avatar applied. You can keep editing.' : 'Generated result had no applicable changes.');
+  }
+  if (event === 'error') {
+    throw new Error(data.message || data.error || 'Generation failed.');
+  }
+}
+
+async function startAvatarGeneration() {
+  if (aiGenerating || !aiPrompt) return;
+  const prompt = aiPrompt.value.trim();
+  if (!prompt) {
+    updateAiControls('Describe the avatar first.');
+    return;
+  }
+  if (!isAiConfigured()) {
+    updateAiControls('AI generation is unavailable until the backend is configured.');
+    return;
+  }
+  const token = turnstileToken || window.__TEST_TURNSTILE_TOKEN__;
+  if (!token) {
+    updateAiControls('Complete the Turnstile check first.');
+    return;
+  }
+
+  const contextMode = detectContextMode(prompt);
+  aiGenerating = true;
+  resetAiOutput();
+  updateAiControls('Starting generation...');
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/avatar/generate`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'text/event-stream',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt,
+        contextMode,
+        baselineState: getGenerationBaselineState(contextMode),
+        catalog: buildAvatarCatalog(),
+        turnstileToken: token,
+      }),
+    });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new Error(body.message || body.error || `Generation failed with ${response.status}.`);
+    }
+    await readGenerationStream(response);
+  } catch(e) {
+    updateAiControls(e.message || 'Generation failed. Please try again later.');
+  } finally {
+    aiGenerating = false;
+    if (window.turnstile && turnstileWidgetId !== null) {
+      try { window.turnstile.reset(turnstileWidgetId); } catch(e) {}
+      turnstileToken = window.__TEST_TURNSTILE_TOKEN__ || '';
+    }
+    updateAiControls();
+  }
+}
+
+function getMentionRange(text, cursor) {
+  const before = text.slice(0, cursor);
+  const match = before.match(/(^|\s)@([a-zA-Z]*)$/);
+  if (!match) return null;
+  const start = cursor - match[0].trimStart().length;
+  return { start, end: cursor, query: match[2].toLowerCase() };
+}
+
+function renderMentionMenu() {
+  if (!aiPrompt || !mentionMenu) return;
+  mentionRange = getMentionRange(aiPrompt.value, aiPrompt.selectionStart || 0);
+  if (!mentionRange) {
+    mentionMenu.classList.remove('open');
+    return;
+  }
+  const options = SUPPORTED_MENTIONS.filter(name => name.startsWith(mentionRange.query));
+  if (!options.length) {
+    mentionMenu.classList.remove('open');
+    return;
+  }
+  mentionMenu.innerHTML = '';
+  for (const name of options) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'mention-option';
+    btn.textContent = `@${name}`;
+    btn.onclick = () => insertMention(name);
+    mentionMenu.appendChild(btn);
+  }
+  mentionMenu.classList.add('open');
+}
+
+function insertMention(name) {
+  if (!aiPrompt) return;
+  const mention = `@${name}`;
+  const start = mentionRange?.start ?? aiPrompt.selectionStart ?? aiPrompt.value.length;
+  const end = mentionRange?.end ?? aiPrompt.selectionEnd ?? start;
+  const before = aiPrompt.value.slice(0, start);
+  const after = aiPrompt.value.slice(end);
+  const prefix = before && !/\s$/.test(before) ? ' ' : '';
+  const value = `${before}${prefix}${mention} ${after.replace(/^\s*/, '')}`;
+  const cursor = (before + prefix + mention + ' ').length;
+  aiPrompt.value = value;
+  aiPrompt.focus();
+  aiPrompt.setSelectionRange(cursor, cursor);
+  mentionRange = null;
+  mentionMenu?.classList.remove('open');
+  updateAiControls();
 }
 
 // ===================== EXPORT =====================
@@ -959,12 +1591,13 @@ function applyConfigDefaults() {
 }
 
 // ===================== RESET =====================
-function resetAll() {
+function resetAll(options = {}) {
   if (!builderConfig || !currentSM) return;
   const defaults = Object.keys(defaultInputValues).length
     ? defaultInputValues
     : builderConfig.avatarBuilderConfig.defaultBuiltAvatarState;
   if (!defaults) return;
+  if (options.record !== false) recordHistoryBeforeChange();
   for (const [name, value] of Object.entries(defaults)) {
     applyInputValue(name, value);
   }
@@ -973,8 +1606,9 @@ function resetAll() {
   destroyAllTileInstances();
   dirtyTabs.clear();
   markAllTabsDirty();
-  saveAvatarState();
+  commitAvatarMutation();
   if (builderConfig) renderUI();
+  setTimeout(updateAiPreviewSnapshot, 180);
 }
 
 // ===================== EVENTS =====================
@@ -983,6 +1617,33 @@ document.addEventListener('change', async (e) => {
   const file = e.target.files?.[0];
   if (!file) return;
   loadRiveFile(await file.arrayBuffer());
+});
+
+if (aiPrompt) {
+  aiPrompt.addEventListener('input', () => {
+    renderMentionMenu();
+    updateAiControls();
+  });
+  aiPrompt.addEventListener('keyup', renderMentionMenu);
+  aiPrompt.addEventListener('click', renderMentionMenu);
+  aiPrompt.addEventListener('blur', () => setTimeout(() => mentionMenu?.classList.remove('open'), 120));
+}
+
+window.addEventListener('hashchange', handleRoute);
+
+document.addEventListener('keydown', (e) => {
+  const target = e.target;
+  const tag = target?.tagName?.toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select' || target?.isContentEditable) return;
+  const isUndo = (e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'z' && !e.shiftKey;
+  const isRedo = (e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'z' && e.shiftKey;
+  if (isUndo) {
+    e.preventDefault();
+    undoAvatarChange();
+  } else if (isRedo) {
+    e.preventDefault();
+    redoAvatarChange();
+  }
 });
 
 // ===================== INIT =====================

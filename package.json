@@ -8,6 +8,7 @@
     "test:worker": "node --test tests/worker.test.mjs",
     "test:e2e": "python3 tests/test_avatar_explorer.py --port 8775 --debug-port 9228",
     "test:ci": "npm run test:static && npm run test:worker && python3 tests/test_avatar_explorer.py --port 8775 --debug-port 9228 --require-browser",
+    "check:cloudflare-config": "node scripts/check_cloudflare_config.mjs",
     "deploy:cf:pages": "wrangler pages deploy _site --project-name=duolingo-avator-creator --branch=master",
     "deploy:cf:worker": "wrangler deploy"
   },

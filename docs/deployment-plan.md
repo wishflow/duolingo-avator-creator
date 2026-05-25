@@ -1,257 +1,245 @@
-# Duolingo Avatar Creator 双前端 + Worker API 部署计划
+# Duolingo Avatar Creator 部署与 AI 生成实施文档
 
-## 1. 目标与结论
+## 1. 当前架构
 
-本项目采用“三端发布”架构：
+项目采用“双静态前端 + Cloudflare Worker API”的三端发布架构。
 
 | 端 | 平台 | URL | 职责 |
 | --- | --- | --- | --- |
-| 前端 A | GitHub Pages | `https://wishflow.github.io/duolingo-avator-creator/` | 当前主入口，继续作为稳定公开访问地址 |
-| 前端 B | Cloudflare Pages | `https://duolingo-avator-creator.pages.dev/` | 同一份静态产物的 Cloudflare 镜像 |
-| 后端 API | Cloudflare Worker | `https://duolingo-avator-creator.wei-shi-ws.workers.dev/` | API 骨架，未来承载 LLM/工具调用代理 |
+| 前端 A | GitHub Pages | `https://wishflow.github.io/duolingo-avator-creator/` | 主公开入口 |
+| 前端 B | Cloudflare Pages | `https://duolingo-avator-creator.pages.dev/` | 同一静态产物的 Cloudflare 镜像 |
+| 后端 API | Cloudflare Worker | `https://duolingo-avator-creator.wei-shi-ws.workers.dev/` | 配置读取、Turnstile 校验、Workers AI 代理 |
 
-一次 `push` 到 `master` 后，GitHub Actions 负责：
+一次 `push master` 的发布链路：
 
 ```mermaid
 flowchart TD
-  A[push master] --> B[test job]
+  A[push master] --> B[test]
   B --> C{测试通过?}
-  C -- 否 --> X[停止所有部署]
-  C -- 是 --> D1[Deploy GitHub Pages]
-  C -- 是 --> D2[Deploy Cloudflare Pages]
-  C -- 是 --> D3[Deploy Cloudflare Worker]
+  C -- 否 --> X[停止部署]
+  C -- 是 --> D[validate-cloudflare-config]
+  D --> E{AI binding 和 Turnstile secrets 存在?}
+  E -- 否 --> X
+  E -- 是 --> G[Deploy GitHub Pages]
+  E -- 是 --> P[Deploy Cloudflare Pages]
+  E -- 是 --> W[Deploy Cloudflare Worker]
 ```
 
-核心原则：
+关键原则：
 
-- 前端仍是静态站点，可在 GitHub Pages 和 Cloudflare Pages 双部署。
-- 后端只放在 Cloudflare Worker，未来的 LLM API key 只放 Worker secret。
-- GitHub Actions 是唯一自动发布入口，不启用 Cloudflare Pages 的 Git 自动构建，避免双重部署来源。
-- 测试失败时不部署，保证线上版本来自已验证产物。
+- 前端仍是静态站点，不保存任何 LLM key。
+- AI 能力只通过 Cloudflare Worker 调用 Workers AI。
+- Turnstile `secret key` 只存在 Worker secrets，不写入仓库。
+- 缺少 AI binding 或 Turnstile secrets 时，阻断全部部署，避免上线不可用的 Generate 入口。
 
-## 2. 当前状态
+## 2. AI 生成功能
 
-| 项 | 当前状态 | 说明 |
+v1 不生成静态 AI 图片，而是生成“可编辑头像配置”。
+
+```mermaid
+sequenceDiagram
+  participant U as Browser
+  participant W as Cloudflare Worker
+  participant T as Turnstile
+  participant A as Workers AI
+
+  U->>W: POST /api/avatar/generate
+  W->>T: 校验 turnstileToken
+  T-->>W: success/failure
+  W->>A: streaming 调用，生成用户可读计划
+  W-->>U: SSE plan_delta
+  W->>A: JSON Mode 调用，生成结构化 avatarState
+  W->>W: 白名单校验 state/value
+  W-->>U: SSE final
+  U->>U: 应用到 Rive 预览并保存本地状态
+```
+
+Worker API：
+
+| 路径 | 方法 | 行为 |
 | --- | --- | --- |
-| GitHub Pages | 已可用 | 现有 workflow 会把 `assets/` 打包为 `_site/` 并发布 |
-| Cloudflare Pages project | 已创建 | project 名称：`duolingo-avator-creator`；首次静态部署需要 GitHub Actions secrets |
-| Cloudflare Worker script | 已存在 | script 名称：`duolingo-avator-creator` |
-| Worker `workers.dev` | 已开启 | URL 使用账户子域名 `wei-shi-ws` |
-| Worker API | 已通过 Cloudflare API 验证 | CI 后续会用仓库代码继续发布，不接真实 LLM |
-| GitHub Actions secrets | 需要配置 | CI 部署 Cloudflare 必须有 `CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID` |
+| `/health` | `GET` | 服务健康检查 |
+| `/api/config` | `GET` | 返回公开功能开关、Turnstile sitekey、prompt 长度等 |
+| `/api/avatar/generate` | `POST` | SSE 流式返回生成计划和最终头像配置 |
+| `OPTIONS *` | `OPTIONS` | CORS preflight |
 
-Cloudflare 访问地址规则：
+`/api/avatar/generate` 请求体：
 
-```text
-Cloudflare Pages:
-https://duolingo-avator-creator.pages.dev/
-
-Cloudflare Worker:
-https://duolingo-avator-creator.wei-shi-ws.workers.dev/
-```
-
-> 注意：Worker URL 不是 `https://duolingo-avator-creator.workers.dev/`，而是 `https://<script-name>.<account-subdomain>.workers.dev/`。
-
-## 3. 分阶段实施步骤
-
-### 阶段 1：保持 GitHub Pages 稳定
-
-目标：不破坏当前公网前端。
-
-实施内容：
-
-- 保留现有 GitHub Pages 发布逻辑。
-- 继续使用 `_site/` 作为静态发布目录。
-- 继续把 `assets/avatar_explorer.html` 复制为 `_site/index.html`。
-- 保持测试门禁：`test` job 通过后才进入部署。
-
-验收：
-
-```bash
-npm run test:static
-npm run test:e2e
-```
-
-线上验收：
-
-```text
-https://wishflow.github.io/duolingo-avator-creator/
-```
-
-### 阶段 2：新增 Cloudflare Worker API 骨架
-
-目标：先建立安全后端边界，不接真实 LLM。
-
-Worker 名称：
-
-```text
-duolingo-avator-creator
-```
-
-Worker API v1：
-
-| 路径 | 方法 | 状态码 | 行为 |
-| --- | --- | --- | --- |
-| `/health` | `GET` | 200 | 返回服务健康状态 |
-| `/api/config` | `GET` | 200 | 返回公开 API 配置和功能开关 |
-| `/api/avatar/generate` | `POST` | 501 | 明确返回未实现，预留未来 LLM 入口 |
-| 任意路径 | `OPTIONS` | 204 | 返回 CORS preflight |
-| 未知路径 | 任意 | 404 | 返回 JSON 错误 |
-
-示例响应：
-
-```json
-{
-  "ok": true,
-  "service": "duolingo-avator-creator",
-  "version": "0.1.0"
-}
-```
-
-CORS 允许来源：
-
-| 来源 | 用途 |
+| 字段 | 说明 |
 | --- | --- |
-| `https://wishflow.github.io` | GitHub Pages 前端 |
-| `https://duolingo-avator-creator.pages.dev` | Cloudflare Pages 前端 |
-| `http://127.0.0.1:*` | 本地测试 |
-| `http://localhost:*` | 本地开发 |
+| `prompt` | 用户描述，默认上限 800 字符 |
+| `contextMode` | `default` 或 `current` |
+| `baselineState` | 默认头像或当前头像的 state 快照 |
+| `catalog` | 前端从 `avatar_builder_config.json` 生成的精简组件目录 |
+| `turnstileToken` | 前端 Turnstile 校验得到的 token |
 
-安全边界：
+SSE 事件：
 
-- 当前 Worker 不保存用户图片。
-- 当前 Worker 不接 LLM provider。
-- 当前 Worker 不需要数据库。
-- 未来 LLM API key 只通过 `wrangler secret put ...` 或 Cloudflare dashboard 配置，不写入仓库。
-
-### 阶段 3：新增 Cloudflare Pages 前端镜像
-
-目标：Cloudflare Pages 发布与 GitHub Pages 完全一致的静态产物。
-
-产物生成方式：
-
-```bash
-npm run build:site
-```
-
-产物结构：
-
-```text
-_site/
-  index.html                         # 来自 assets/avatar_explorer.html
-  avatar_builder_config.json
-  avatar_builder_25_sept2025.riv
-  manifest.webmanifest
-  avatar-icon-192.png
-  avatar-icon-512.png
-  *.svg
-  .nojekyll
-```
-
-Cloudflare Pages 发布命令：
-
-```bash
-npm run deploy:cf:pages
-```
-
-等价 Wrangler 命令：
-
-```bash
-wrangler pages deploy _site --project-name=duolingo-avator-creator --branch=master
-```
-
-验收：
-
-```text
-https://duolingo-avator-creator.pages.dev/
-```
-
-并确认这些资源返回 200：
-
-```text
-/manifest.webmanifest
-/avatar-icon-192.png
-/avatar_builder_config.json
-/avatar_builder_25_sept2025.riv
-```
-
-### 阶段 4：GitHub Actions 三端部署
-
-目标：同一条流水线发布三端。
-
-流水线结构：
-
-```mermaid
-flowchart TD
-  T[test] --> G[deploy-github-pages]
-  T --> CP[deploy-cloudflare-pages]
-  T --> W[deploy-cloudflare-worker]
-```
-
-必需 GitHub repository secrets：
-
-| Secret | 用途 |
+| event | data |
 | --- | --- |
-| `CLOUDFLARE_API_TOKEN` | Wrangler 部署 Pages/Worker |
-| `CLOUDFLARE_ACCOUNT_ID` | 指定 Cloudflare account |
+| `status` | 当前阶段文案 |
+| `plan_delta` | 用户可读的流式生成计划 |
+| `final` | `{ ok, avatarState, steps, warnings, confidence }` |
+| `error` | 生成失败原因 |
 
-`CLOUDFLARE_API_TOKEN` 最小建议权限：
-
-| 权限 | 级别 |
-| --- | --- |
-| Account / Cloudflare Pages / Edit | Account |
-| Account / Workers Scripts / Edit | Account |
-| Account / Account Settings / Read | Account |
-
-如果需要后续由 CI 写入 secret，再额外授权 Worker secret 相关权限；当前阶段不需要。
-
-### 阶段 5：前端接入 Worker 基础配置
-
-目标：前端知道 Worker API base URL，但不依赖后端才能启动。
-
-当前默认 API base：
+默认模型：
 
 ```text
-https://duolingo-avator-creator.wei-shi-ws.workers.dev
+@cf/meta/llama-3.1-8b-instruct-fast
 ```
 
-前端加载策略：
+可通过 Worker env `AI_TEXT_MODEL` 覆盖。
 
-```mermaid
-flowchart LR
-  A[页面初始化] --> B[非阻塞请求 /api/config]
-  A --> C[继续加载 Rive 资源]
-  B -- 成功 --> D[window.avatarBackend.available = true]
-  B -- 失败 --> E[静默降级，不影响编辑器]
+## 3. 前端交互
+
+### 3.1 Generate 页面
+
+前端只新增同页路由，不新增独立 HTML：
+
+```text
+/#generate
 ```
 
-关键约束：
+入口：
 
-- API 不可用时，头像编辑器仍能编辑和导出 PNG。
-- 不在前端保存任何 LLM key。
-- 未来接入生成头像功能时，前端只调用 Worker；Worker 再调用 LLM provider。
+| 场景 | 入口 |
+| --- | --- |
+| 桌面端 | 左侧工具栏顶部 `Generate` |
+| 移动端 | 底部四按钮工具栏 `Generate / Export / Reset / More` |
 
-## 4. 本地命令
+Generate 页面包含：
+
+- 当前头像小预览。
+- prompt 输入框。
+- `@` 弹窗，支持 `@current` 和 `@default`。
+- 手动插入 `@current` / `@default` 的按钮。
+- Turnstile 校验区域。
+- 流式生成计划。
+- 最终复刻步骤、warnings、confidence。
+
+上下文规则：
+
+| 输入 | 行为 |
+| --- | --- |
+| 无 mention | 从默认头像生成 |
+| `@default` | 显式从默认头像生成 |
+| `@current` | 基于当前头像修改 |
+
+AI 返回结果后，前端直接应用到当前 Rive 预览；用户可以继续手动编辑，也可以导出 PNG。
+
+### 3.2 Undo/Redo
+
+本地持久历史覆盖所有头像改动：
+
+- 手动选择 tile / 颜色。
+- AI 生成结果。
+- Reset。
+
+保存策略：
+
+| 项 | 是否保存 |
+| --- | --- |
+| 当前头像 state | 保存 |
+| Undo past/future 栈 | 保存，最多 30 步 |
+| prompt | 不保存 |
+| AI 流式文字 | 不保存 |
+| AI 生成结果文本 | 不保存 |
+
+操作入口：
+
+- 预览区左上角悬浮 Undo / Redo 图标。
+- `Ctrl/Cmd + Z`
+- `Ctrl/Cmd + Shift + Z`
+
+当焦点在输入框或 textarea 内时，不拦截文本编辑快捷键。
+
+## 4. Turnstile 与密钥配置
+
+Turnstile widget 只允许公网双前端：
+
+| Hostname |
+| --- |
+| `wishflow.github.io` |
+| `duolingo-avator-creator.pages.dev` |
+
+Worker secrets：
+
+| Secret | 说明 |
+| --- | --- |
+| `TURNSTILE_SITE_KEY` | 前端可公开使用，但通过 `/api/config` 返回，避免静态站硬编码 |
+| `TURNSTILE_SECRET_KEY` | Worker 调用 Turnstile `siteverify` 使用，必须保密 |
+
+本地开发使用 `.env` 保存 Turnstile 配置，`.env` 不提交仓库，仓库只提交 `.env.example`：
+
+```text
+TURNSTILE_SITE_KEY=...
+TURNSTILE_SECRET_KEY=...
+CLOUDFLARE_API_TOKEN=...
+CLOUDFLARE_ACCOUNT_ID=...
+```
+
+写入 Worker secrets 时，从 `.env` 读取 `TURNSTILE_SITE_KEY` 和 `TURNSTILE_SECRET_KEY`；不要把 secret key 写进源码、文档正文或静态前端。`CLOUDFLARE_API_TOKEN` 和 `CLOUDFLARE_ACCOUNT_ID` 只用于本地 Wrangler 操作或 GitHub Secrets。
+
+## 5. GitHub Actions 门禁
+
+workflow 包含四类 job：
+
+| Job | 作用 |
+| --- | --- |
+| `test` | 安装 Chrome，运行 `npm run test:ci` |
+| `validate-cloudflare-config` | 检查 Cloudflare API token、AI binding、Turnstile secrets |
+| `deploy-github-pages` | 发布 GitHub Pages |
+| `deploy-cloudflare-pages` | 发布 Cloudflare Pages |
+| `deploy-cloudflare-worker` | 发布 Cloudflare Worker |
+
+`validate-cloudflare-config` 执行：
+
+```bash
+npm run check:cloudflare-config
+```
+
+该脚本在本地会自动读取 `.env`；在 GitHub Actions 中使用 repository secrets。
+
+检查内容：
+
+- `CLOUDFLARE_API_TOKEN` 存在。
+- `CLOUDFLARE_ACCOUNT_ID` 存在。
+- `wrangler.toml` 包含 `[ai] binding = "AI"`。
+- `wrangler secret list --format=json` 能看到：
+  - `TURNSTILE_SITE_KEY`
+  - `TURNSTILE_SECRET_KEY`
+
+只检查 secret 名称，不读取 secret 值。
+
+## 6. 本地命令
 
 | 命令 | 用途 |
 | --- | --- |
-| `npm run build:site` | 生成 GitHub Pages / Cloudflare Pages 共用静态产物 |
+| `npm run build:site` | 构建 GitHub Pages / Cloudflare Pages 共用静态产物 |
 | `npm run test:static` | 静态资源、HTML 引用、JS 语法检查 |
-| `npm run test:worker` | Worker API 单元测试 |
+| `npm run test:worker` | Worker 单元测试，mock AI 与 Turnstile |
 | `npm run test:e2e` | 本地有 Chrome 时跑浏览器 E2E；无 Chrome 时跳过 |
 | `npm run test:ci` | CI 强制跑静态、Worker、浏览器 E2E |
+| `npm run check:cloudflare-config` | 部署前 Cloudflare AI/secret 门禁 |
 | `npm run deploy:cf:pages` | 部署 Cloudflare Pages |
 | `npm run deploy:cf:worker` | 部署 Cloudflare Worker |
 
-本地完整静态验证：
+本地快速验证：
 
 ```bash
 npm run test:static
 npm run test:worker
-npm run build:site
+npm run test:e2e
 ```
 
-本地 Worker 验证：
+首次本地配置 Turnstile：
+
+```bash
+cp .env.example .env
+# 填入 TURNSTILE_SITE_KEY 和 TURNSTILE_SECRET_KEY
+```
+
+本地 Worker 调试：
 
 ```bash
 npx wrangler dev
@@ -264,60 +252,37 @@ http://127.0.0.1:8787/health
 http://127.0.0.1:8787/api/config
 ```
 
-## 5. 部署验收清单
+## 7. 部署验收
 
-### GitHub Pages
+### GitHub Pages / Cloudflare Pages
 
 | 检查项 | 预期 |
 | --- | --- |
 | 根路径 | 打开头像编辑器 |
-| `manifest.webmanifest` | 200 |
-| `avatar-icon-192.png` | 200 |
-| `.riv` 文件 | 200 |
-| 编辑/导出 | 可选择头像元素并导出 PNG |
-
-### Cloudflare Pages
-
-| 检查项 | 预期 |
-| --- | --- |
-| 根路径 | 打开同一头像编辑器 |
-| 静态资源 | 与 GitHub Pages 同样返回 200 |
-| 移动端布局 | 固定预览、底部全局操作栏 |
-| 浏览器控制台 | 无静态资源 404 |
+| 静态资源 | `.riv`、JSON、manifest、icon、SVG 均为 200 |
+| 移动端 | 预览固定在上方，底部四按钮可用 |
+| Generate | 未配置时禁用并提示；配置后显示 Turnstile |
+| Undo/Redo | 图标和快捷键可用 |
+| Export | 当前头像可导出 PNG |
 
 ### Cloudflare Worker
 
 | 请求 | 预期 |
 | --- | --- |
 | `GET /health` | 200，`ok: true` |
-| `GET /api/config` | 200，包含 `apiVersion` 和 `features` |
-| `POST /api/avatar/generate` | 501，`error: not_implemented` |
-| GitHub Pages Origin | 返回 `Access-Control-Allow-Origin` |
-| Cloudflare Pages Origin | 返回 `Access-Control-Allow-Origin` |
+| `GET /api/config` | 200，包含 `features.avatarGeneration` 和 `generation.turnstileSiteKey` |
+| `POST /api/avatar/generate` 无 token | 400/403，不调用 AI |
+| `POST /api/avatar/generate` 有效 token | SSE 返回 `plan_delta` 和 `final` |
 | 未授权 Origin | 不返回 `Access-Control-Allow-Origin` |
 
-## 6. 未来接入 LLM 的部署边界
+CI 不会真调用 generate，避免消耗 Workers AI 额度，也避免自动化绕过 Turnstile。
 
-未来目标是：用户上传图片或输入文字后，由后端调用 LLM/API/图像工具生成可复刻的 Duolingo 风格头像说明。
+## 8. 后续路线
 
-推荐演进：
-
-```mermaid
-sequenceDiagram
-  participant U as User Browser
-  participant W as Cloudflare Worker
-  participant L as LLM Provider
-
-  U->>W: POST /api/avatar/generate
-  W->>W: 校验输入、限流、裁剪请求体
-  W->>L: 使用 Worker Secret 调用 LLM
-  L-->>W: 返回结构化头像建议
-  W-->>U: 返回可复刻步骤和状态配置
-```
-
-必须坚持：
-
-- LLM key 不进入 GitHub Pages 或 Cloudflare Pages。
-- Worker 对请求体大小、MIME、频率做限制后再转发。
-- 生成结果使用结构化 JSON，前端再转换为头像编辑器状态或步骤说明。
-- 若需要保存用户历史，再单独引入账号体系和数据库；当前阶段不保存。
+| 阶段 | 内容 |
+| --- | --- |
+| 组件语义 catalog | 为发型、衣服、帽子等补人工/半自动语义标签，提高匹配准确度 |
+| Vision 增强 | 可选接入视觉模型，让模型分析生成图或用户上传图 |
+| 图片输入 | 支持用户上传参考图，经 Worker 做安全校验后再调用模型 |
+| 账号与历史 | 引入登录、云端历史、配额控制和用户数据删除能力 |
+| 计费控制 | 增加更严格的速率限制、用量日志和管理员开关 |

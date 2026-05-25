@@ -715,7 +715,7 @@ async def test_11_mobile_shell_layout(cdp: CDPClient):
     assert layout["actionsDisplay"] != "none", "Mobile action bar should be visible"
     assert layout["toolRailDisplay"] == "none", "Desktop action rail should be hidden on mobile"
     assert layout["tabCount"] == 8, f"Category tabs should contain 8 avatar groups, got {layout['tabCount']}"
-    assert layout["actionLabels"] == ["Export", "Reset", "More"], \
+    assert layout["actionLabels"] == ["Generate", "Export", "Reset", "More"], \
         f"Mobile action bar should only contain global actions, got {layout['actionLabels']}"
     assert layout["tabsPosition"] == "static", f"Category tabs should not be fixed, got {layout['tabsPosition']}"
     assert layout["previewHeight"] >= 220, f"Preview should remain visible, got height {layout['previewHeight']}"
@@ -731,6 +731,100 @@ async def test_11_mobile_shell_layout(cdp: CDPClient):
     ok("Mobile shell keeps preview fixed and actions separate")
 
     await cdp.send("Emulation.clearDeviceMetricsOverride")
+
+
+async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
+    """Verify AI route, streamed result application, and undo/redo history with a mocked backend."""
+    info("Testing mocked AI generation and history...")
+
+    result_json = await cdp.evaluate_async("""
+        (async function() {
+            var before = currentInputValues['Body'];
+            var target = before === 5 ? 1 : 5;
+            var originalFetch = window.fetch.bind(window);
+
+            window.__TEST_TURNSTILE_TOKEN__ = 'test-token';
+            backendConfig = {
+                baseUrl: API_BASE_URL,
+                available: true,
+                config: {
+                    ok: true,
+                    features: { avatarGeneration: true },
+                    generation: {
+                        turnstileSiteKey: 'test-site-key',
+                        maxPromptLength: 800,
+                        supportedMentions: ['current', 'default']
+                    }
+                }
+            };
+            window.avatarBackend = backendConfig;
+            window.fetch = function(url, init) {
+                if (String(url).indexOf('/api/avatar/generate') !== -1) {
+                    var final = {
+                        ok: true,
+                        contextMode: 'current',
+                        avatarState: { Body: target },
+                        steps: ['Open Body and choose the generated body tile.'],
+                        warnings: [],
+                        confidence: 0.8
+                    };
+                    var body = ''
+                        + 'event: plan_delta\\n'
+                        + 'data: {"text":"Choose a stronger body shape."}\\n\\n'
+                        + 'event: final\\n'
+                        + 'data: ' + JSON.stringify(final) + '\\n\\n';
+                    return Promise.resolve(new Response(body, {
+                        status: 200,
+                        headers: { 'Content-Type': 'text/event-stream' }
+                    }));
+                }
+                return originalFetch(url, init);
+            };
+
+            openGeneratePage();
+            await new Promise(function(resolve) { setTimeout(resolve, 100); });
+            aiPrompt.value = '@current make it bold';
+            aiPrompt.dispatchEvent(new Event('input', { bubbles: true }));
+            await startAvatarGeneration();
+            await new Promise(function(resolve) { setTimeout(resolve, 300); });
+            var after = currentInputValues['Body'];
+            var streamText = document.getElementById('aiStream').textContent;
+            var stepCount = document.querySelectorAll('#aiSteps li').length;
+
+            undoAvatarChange();
+            await new Promise(function(resolve) { setTimeout(resolve, 200); });
+            var undone = currentInputValues['Body'];
+
+            redoAvatarChange();
+            await new Promise(function(resolve) { setTimeout(resolve, 200); });
+            var redone = currentInputValues['Body'];
+
+            window.fetch = originalFetch;
+            return JSON.stringify({
+                before: before,
+                target: target,
+                after: after,
+                undone: undone,
+                redone: redone,
+                streamText: streamText,
+                stepCount: stepCount,
+                modeGenerate: document.body.classList.contains('mode-generate'),
+                actionLabels: Array.from(document.querySelectorAll('.mobile-action-bar .btn'))
+                    .map(function(btn) { return btn.textContent.trim(); })
+            });
+        })()
+    """)
+    result = json.loads(result_json)
+    info(f"Mocked AI result: {result}")
+
+    assert result["modeGenerate"], "Generate route should activate mode-generate"
+    assert result["after"] == result["target"], "AI final state should apply to current avatar"
+    assert result["undone"] == result["before"], "Undo should restore the pre-AI avatar state"
+    assert result["redone"] == result["target"], "Redo should restore the AI avatar state"
+    assert "stronger body" in result["streamText"], "Streamed planning text should be visible"
+    assert result["stepCount"] == 1, "Final manual guide should render one mocked step"
+    assert result["actionLabels"] == ["Generate", "Export", "Reset", "More"], \
+        f"Mobile action bar should include Generate, got {result['actionLabels']}"
 
 
 # === MAIN ===============================================================
@@ -788,6 +882,7 @@ async def main():
     runner.register("Reset restores defaults", test_09_reset_all)
     runner.register("No duplicate images in tiles", test_10_no_duplicate_thumbnails_in_tile)
     runner.register("Mobile shell layout", test_11_mobile_shell_layout)
+    runner.register("Mocked AI generation and history", test_12_ai_generate_mock_and_history)
 
     exit_code = await runner.run(only_test=args.test)
     sys.exit(exit_code)
