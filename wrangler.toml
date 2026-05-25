@@ -8,5 +8,5 @@ binding = "AI"
 
 [vars]
 SERVICE_NAME = "duolingo-avator-creator"
-SERVICE_VERSION = "0.2.0"
+SERVICE_VERSION = "0.3.0"
 AI_TEXT_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast"
