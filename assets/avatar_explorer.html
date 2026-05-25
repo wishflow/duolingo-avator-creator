@@ -8,20 +8,20 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f0f0; color: #3c3c3c; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-.header { display: flex; align-items: center; justify-content: space-between; padding: 0 44px; height: 48px; background: #fff; border-bottom: 2px solid #e5e5e5; flex-shrink: 0; }
+.header { display: flex; align-items: center; padding: 0 44px; height: 44px; background: #fff; border-bottom: 2px solid #e5e5e5; flex-shrink: 0; }
 .header-left { display: flex; align-items: center; gap: 10px; }
 .header-left h1 { font-size: 16px; font-weight: 800; color: #3c3c3c; }
 .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .dot.ok { background: #58cc02; }
 .dot.wait { background: #ffc107; }
-.header-right { display: flex; gap: 8px; align-items: center; }
-.header-right input[type="file"] { font-size: 11px; color: #777; width: 180px; }
 
 .btn { padding: 8px 20px; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.12s; font-family: inherit; }
 .btn-primary { background: #58cc02; color: #fff; border-bottom: 3px solid #46a302; }
 .btn-primary:hover { background: #4cb000; }
 .btn-secondary { background: #e5e5e5; color: #3c3c3c; border-bottom: 3px solid #d1d1d1; }
 .btn-secondary:hover { background: #dadada; }
+.btn-danger { background: #ffdfdf; color: #b3261e; border-bottom: 3px solid #efc4c4; }
+.btn-danger:hover { background: #ffd2d2; }
 
 .main-layout { display: flex; flex: 1; overflow: hidden; padding: 20px; gap: 20px; background: #f0f0f0; }
 
@@ -36,11 +36,14 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .tab-bar::-webkit-scrollbar { height: 0; }
 .tab-btn { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 16px 8px; cursor: pointer; border: none; background: none; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; min-width: 64px; }
 .tab-btn img { width: 34px; height: 34px; opacity: 0.45; transition: opacity 0.15s; }
+.tab-btn .tab-icon-text { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #52656D; opacity: 0.45; transition: opacity 0.15s, color 0.15s; }
 .tab-btn .tab-label { font-size: 12px; font-weight: 700; color: #52656D; transition: color 0.15s; }
 .tab-btn:hover img { opacity: 0.7; }
+.tab-btn:hover .tab-icon-text { opacity: 0.7; color: #8a9ba8; }
 .tab-btn:hover .tab-label { color: #8a9ba8; }
 .tab-btn.active { border-bottom-color: #1cb0f6; }
 .tab-btn.active img { opacity: 1; }
+.tab-btn.active .tab-icon-text { opacity: 1; color: #1cb0f6; }
 .tab-btn.active .tab-label { color: #1cb0f6; }
 
 .options-scroll { flex: 1; overflow-y: auto; padding: 24px 28px; }
@@ -70,6 +73,13 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 
 .thumb-status { font-size: 10px; color: #aaa; text-align: center; padding: 2px; flex-shrink: 0; min-height: 18px; }
 
+.action-list { display: flex; flex-direction: column; gap: 12px; max-width: 420px; }
+.action-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.action-note { color: #777; font-size: 12px; line-height: 1.45; }
+.save-status { color: #52656D; font-size: 13px; font-weight: 700; line-height: 1.45; }
+.file-btn { display: inline-flex; align-items: center; justify-content: center; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
 .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
 .loading-overlay.hidden { display: none; }
 .spinner { width: 48px; height: 48px; border: 4px solid #e5e5e5; border-top-color: #1cb0f6; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 16px; }
@@ -79,22 +89,27 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .site-footer { flex-shrink: 0; padding: 6px 16px 8px; background: #f0f0f0; color: #777; font-size: 11px; line-height: 1.4; text-align: center; border-top: 1px solid #e1e1e1; }
 
 @media (max-width: 760px) {
-  body { height: auto; min-height: 100dvh; overflow-y: auto; }
-  .header { height: auto; min-height: 48px; padding: 10px 12px; gap: 8px; flex-wrap: wrap; }
+  body { height: auto; min-height: 100dvh; overflow-y: auto; padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+  .header { height: 44px; min-height: 44px; padding: 0 14px; gap: 8px; }
   .header-left { min-width: 140px; }
-  .header-right { flex: 1 1 220px; justify-content: flex-end; flex-wrap: wrap; gap: 6px; }
-  .header-right input[type="file"] { flex: 1 1 132px; min-width: 132px; max-width: 180px; width: auto; }
   .btn { padding: 8px 12px; font-size: 12px; border-radius: 9px; white-space: nowrap; }
 
   .main-layout { flex: none; flex-direction: column; overflow: visible; padding: 12px; gap: 12px; }
   .preview-panel { width: 100%; height: clamp(260px, 46vh, 420px); min-height: 260px; border-radius: 16px; }
-  .options-panel { width: 100%; min-height: 360px; flex: none; border-radius: 16px; }
-  .tab-bar { justify-content: flex-start; }
-  .tab-btn { min-width: 58px; padding: 9px 12px 7px; }
-  .tab-btn img { width: 30px; height: 30px; }
-  .options-scroll { max-height: min(66vh, 620px); padding: 18px 16px; }
-  .tile { width: 104px; height: 104px; border-radius: 12px; }
+  .options-panel { width: 100%; min-height: 360px; flex: none; border-radius: 16px; overflow: visible; }
+  .tab-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; justify-content: flex-start; padding: 0 8px env(safe-area-inset-bottom); height: calc(64px + env(safe-area-inset-bottom)); border-top: 2px solid #e5e5e5; border-bottom: 0; box-shadow: 0 -2px 14px rgba(0,0,0,0.08); }
+  .tab-btn { min-width: 64px; height: 64px; padding: 8px 8px 6px; border-bottom: 0; border-top: 3px solid transparent; margin-bottom: 0; }
+  .tab-btn.active { border-bottom-color: transparent; border-top-color: #1cb0f6; }
+  .tab-btn img, .tab-btn .tab-icon-text { width: 28px; height: 28px; }
+  .tab-btn .tab-label { font-size: 11px; }
+  .options-scroll { max-height: none; overflow: visible; padding: 18px 16px; }
+  .swatch-grid { flex-wrap: nowrap; overflow-x: auto; padding: 3px 3px 8px; scrollbar-width: none; scroll-snap-type: x proximity; }
+  .swatch-grid::-webkit-scrollbar { height: 0; }
+  .swatch { width: 50px; height: 50px; scroll-snap-align: start; }
+  .tile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(104px, 1fr)); gap: 10px; }
+  .tile { width: 100%; height: auto; min-height: 104px; aspect-ratio: 1; border-radius: 12px; }
   .swatch { width: 50px; height: 50px; }
+  .action-list { max-width: none; }
   .site-footer { padding: 8px 12px 12px; font-size: 10px; }
 }
 </style>
@@ -110,11 +125,6 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   <div class="header-left">
     <h1>Avatar Builder</h1>
     <div class="dot wait" id="statusDot"></div>
-  </div>
-  <div class="header-right">
-    <input type="file" id="fileInput" accept=".riv">
-    <button class="btn btn-secondary" onclick="resetAll()">Reset</button>
-    <button class="btn btn-primary" onclick="exportPNG()">Export PNG</button>
   </div>
 </div>
 
@@ -154,6 +164,10 @@ let dirtyTabs = new Set();
 let currentTabIdx = 0;
 let tileDrawPending = false;
 let bgColorMap = {};
+let defaultInputValues = {};
+let hasAvatarChanges = false;
+
+const STORAGE_KEY = 'duolingoAvatarCreator.avatarState.v1';
 
 const TAB_DEFS = [
   { icon: 'avatar_builder_body_unselected_dark.svg', label: 'Body', idx: 0 },
@@ -164,6 +178,7 @@ const TAB_DEFS = [
   { icon: 'avatar_builder_headwear_unselected_dark.svg', label: 'Hat', idx: 5 },
   { icon: 'avatar_builder_tshirt_unselected_dark.svg', label: 'Shirt', idx: 6 },
   { icon: 'avatar_builder_background_unselected_dark.svg', label: 'BG', idx: 7 },
+  { iconText: '...', label: 'More', idx: 8, action: 'more' },
 ];
 
 const canvas = document.getElementById('riveCanvas');
@@ -201,6 +216,7 @@ async function loadRiveFile(buffer) {
   if (riveInst) { try { riveInst.cleanup(); } catch(e) {} riveInst = null; }
   destroyAllTileInstances();
   smNames = []; currentSM = ''; stateMachineInputs = {}; currentInputValues = {};
+  defaultInputValues = {}; hasAvatarChanges = false;
   sharedRiveFile = null;
 
   try {
@@ -237,6 +253,8 @@ function onMainLoaded() {
     requestAnimationFrame(() => {
       selectStateMachine('SMAvatar');
       applyConfigDefaults();
+      applySavedAvatarState();
+      renderUI();
       loadingOverlay.classList.add('hidden');
     });
   });
@@ -255,7 +273,6 @@ function selectStateMachine(name) {
     else currentInputValues[inp.name] = inp.value;
   }
   updateBackground();
-  if (builderConfig) renderUI();
 }
 
 // ===================== TILE RIVE INSTANCES =====================
@@ -438,6 +455,123 @@ async function renderTabTiles(tabIdx) {
   thumbStatus.textContent = '';
 }
 
+// ===================== LOCAL STATE =====================
+function getSerializableAvatarState() {
+  const state = {};
+  for (const [key, value] of Object.entries(currentInputValues)) {
+    if (typeof value === 'number' || typeof value === 'boolean') state[key] = value;
+  }
+  return state;
+}
+
+function statesMatch(a, b) {
+  const keys = new Set([...Object.keys(a || {}), ...Object.keys(b || {})]);
+  for (const key of keys) {
+    if (a?.[key] !== b?.[key]) return false;
+  }
+  return true;
+}
+
+function isDefaultAvatarState() {
+  if (Object.keys(defaultInputValues).length === 0) return true;
+  return statesMatch(getSerializableAvatarState(), defaultInputValues);
+}
+
+function markAllTabsDirty() {
+  for (let i = 0; i < TAB_DEFS.length; i++) dirtyTabs.add(i);
+}
+
+function updateSaveStatus() {
+  hasAvatarChanges = !isDefaultAvatarState();
+  const el = document.getElementById('saveStatus');
+  if (!el) return;
+  el.textContent = hasAvatarChanges
+    ? 'Custom avatar saved on this device.'
+    : 'Default avatar. No custom state is saved.';
+}
+
+function saveAvatarState() {
+  if (Object.keys(defaultInputValues).length === 0) return;
+  try {
+    if (isDefaultAvatarState()) {
+      localStorage.removeItem(STORAGE_KEY);
+    } else {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        version: 1,
+        state: getSerializableAvatarState(),
+      }));
+    }
+  } catch(e) {}
+  updateSaveStatus();
+}
+
+function loadSavedAvatarState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    const state = parsed?.state;
+    if (!state || typeof state !== 'object') return null;
+    const clean = {};
+    for (const [key, value] of Object.entries(state)) {
+      if (typeof value === 'number' || typeof value === 'boolean') clean[key] = value;
+    }
+    return Object.keys(clean).length > 0 ? clean : null;
+  } catch(e) {
+    return null;
+  }
+}
+
+function applyInputValue(name, value) {
+  const inp = stateMachineInputs[name];
+  if (!inp) return false;
+  if (inp.type === 56 && typeof value === 'number') {
+    inp.value = value;
+    currentInputValues[name] = value;
+    return true;
+  }
+  if (inp.type === 59 && typeof value === 'boolean') {
+    inp.value = value;
+    currentInputValues[name] = value;
+    return true;
+  }
+  return false;
+}
+
+function applySavedAvatarState() {
+  const saved = loadSavedAvatarState();
+  if (!saved) {
+    updateSaveStatus();
+    return false;
+  }
+  let applied = false;
+  for (const [name, value] of Object.entries(saved)) {
+    if (applyInputValue(name, value)) applied = true;
+  }
+  if (!applied) {
+    updateSaveStatus();
+    return false;
+  }
+  scheduleTrigger();
+  updateBackground();
+  markAllTabsDirty();
+  updateSaveStatus();
+  return true;
+}
+
+function clearSavedAvatar() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  resetAll();
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  updateSaveStatus();
+}
+
+window.addEventListener('beforeunload', (e) => {
+  if (!hasAvatarChanges) return;
+  e.preventDefault();
+  e.returnValue = '';
+});
+
 // ===================== VALUE SETTING =====================
 function findTabForState(stateName) {
   const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs;
@@ -474,10 +608,16 @@ function invalidateThumbnails(stateName) {
 function setSMValue(name, value) {
   const inp = stateMachineInputs[name];
   if (!inp) return;
-  if (inp.type === 56) inp.value = value;
-  else if (inp.type === 59) inp.value = !!value;
-  currentInputValues[name] = value;
+  if (inp.type === 56) {
+    inp.value = value;
+    currentInputValues[name] = value;
+  } else if (inp.type === 59) {
+    const boolValue = !!value;
+    inp.value = boolValue;
+    currentInputValues[name] = boolValue;
+  }
   invalidateThumbnails(name);
+  saveAvatarState();
 }
 
 function applyFeatureButton(fb) {
@@ -532,6 +672,41 @@ function exportPNG() {
   link.click();
 }
 
+function createTabButton(def) {
+  const btn = document.createElement('button');
+  btn.className = 'tab-btn';
+  const icon = def.icon
+    ? `<img src="${def.icon}" alt="${def.label}">`
+    : `<span class="tab-icon-text" aria-hidden="true">${def.iconText}</span>`;
+  btn.innerHTML = `${icon}<span class="tab-label">${def.label}</span>`;
+  btn.onclick = () => switchTab(def.idx);
+  return btn;
+}
+
+function createMorePanel() {
+  const panel = document.createElement('div');
+  panel.className = 'tab-panel action-panel';
+  panel.innerHTML = `
+    <div class="section">
+      <div class="section-header">Actions</div>
+      <div class="action-list">
+        <div class="action-row">
+          <label class="btn btn-secondary file-btn" for="fileInput">Upload .riv</label>
+          <input class="visually-hidden" type="file" id="fileInput" accept=".riv">
+          <button class="btn btn-secondary" onclick="resetAll()">Reset Avatar</button>
+          <button class="btn btn-primary" onclick="exportPNG()">Export PNG</button>
+        </div>
+        <div class="action-row">
+          <button class="btn btn-danger" onclick="clearSavedAvatar()">Clear Saved Avatar</button>
+        </div>
+        <div class="save-status" id="saveStatus"></div>
+        <div class="action-note">Avatar choices are saved locally on this device. Uploaded .riv files are not saved after refresh.</div>
+      </div>
+    </div>
+  `;
+  return panel;
+}
+
 // ===================== UI RENDER =====================
 function renderUI() {
   if (!builderConfig) return;
@@ -541,11 +716,12 @@ function renderUI() {
   tabContent.innerHTML = '';
 
   TAB_DEFS.forEach((def) => {
-    const btn = document.createElement('button');
-    btn.className = 'tab-btn';
-    btn.innerHTML = `<img src="${def.icon}" alt="${def.label}"><span class="tab-label">${def.label}</span>`;
-    btn.onclick = () => switchTab(def.idx);
-    tabBar.appendChild(btn);
+    tabBar.appendChild(createTabButton(def));
+
+    if (def.action === 'more') {
+      tabContent.appendChild(createMorePanel());
+      return;
+    }
 
     const tab = tabs[def.idx];
     if (!tab) return;
@@ -618,6 +794,7 @@ function renderUI() {
   });
 
   switchTab(0);
+  updateSaveStatus();
   setTimeout(() => renderTabTiles(0), 200);
 }
 
@@ -676,39 +853,46 @@ function applyConfigDefaults() {
   for (const [name, value] of Object.entries(defaults)) {
     const inp = stateMachineInputs[name];
     if (!inp) continue;
-    if (inp.type === 56) inp.value = value;
-    else if (inp.type === 59) inp.value = !!value;
-    currentInputValues[name] = value;
+    if (inp.type === 56) {
+      inp.value = value;
+      currentInputValues[name] = value;
+    } else if (inp.type === 59) {
+      const boolValue = !!value;
+      inp.value = boolValue;
+      currentInputValues[name] = boolValue;
+    }
   }
+  defaultInputValues = { ...getSerializableAvatarState() };
   scheduleTrigger();
   updateBackground();
   dirtyTabs.clear();
-  for (let i = 0; i < TAB_DEFS.length; i++) dirtyTabs.add(i);
+  markAllTabsDirty();
+  updateSaveStatus();
 }
 
 // ===================== RESET =====================
 function resetAll() {
   if (!builderConfig || !currentSM) return;
-  const defaults = builderConfig.avatarBuilderConfig.defaultBuiltAvatarState;
+  const defaults = Object.keys(defaultInputValues).length
+    ? defaultInputValues
+    : builderConfig.avatarBuilderConfig.defaultBuiltAvatarState;
   if (!defaults) return;
   for (const [name, value] of Object.entries(defaults)) {
-    const inp = stateMachineInputs[name];
-    if (!inp) continue;
-    if (inp.type === 56) inp.value = value;
-    else if (inp.type === 59) inp.value = !!value;
-    currentInputValues[name] = value;
+    applyInputValue(name, value);
   }
   scheduleTrigger();
   updateBackground();
   destroyAllTileInstances();
   dirtyTabs.clear();
-  for (let i = 0; i < TAB_DEFS.length; i++) dirtyTabs.add(i);
+  markAllTabsDirty();
+  saveAvatarState();
   if (builderConfig) renderUI();
 }
 
 // ===================== EVENTS =====================
-document.getElementById('fileInput').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
+document.addEventListener('change', async (e) => {
+  if (e.target?.id !== 'fileInput') return;
+  const file = e.target.files?.[0];
   if (!file) return;
   loadRiveFile(await file.arrayBuffer());
 });
