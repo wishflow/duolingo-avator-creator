@@ -15,8 +15,77 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      docs_only: ${{ steps.filter.outputs.docs_only }}
+      deploy_required: ${{ steps.filter.outputs.deploy_required }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - id: filter
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+            echo "deploy_required=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          base_sha="${{ github.event.before }}"
+          head_sha="${{ github.sha }}"
+          zero_sha="0000000000000000000000000000000000000000"
+
+          if [ -n "$base_sha" ] && [ "$base_sha" != "$zero_sha" ]; then
+            changed_files="$(git diff --name-only "$base_sha" "$head_sha")"
+          elif git rev-parse HEAD^ >/dev/null 2>&1; then
+            changed_files="$(git diff --name-only HEAD^ HEAD)"
+          else
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+            echo "deploy_required=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ -z "$changed_files" ]; then
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+            echo "deploy_required=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          non_doc_files="$(printf '%s\n' "$changed_files" | grep -Ev '^(docs/|[^/]+\.md$)' || true)"
+          if [ -z "$non_doc_files" ]; then
+            echo "docs_only=true" >> "$GITHUB_OUTPUT"
+            echo "deploy_required=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+            echo "deploy_required=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  docs-only:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.docs_only == 'true'
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Validate documentation diff
+        shell: bash
+        run: |
+          base_sha="${{ github.event.before }}"
+          zero_sha="0000000000000000000000000000000000000000"
+          if [ -n "$base_sha" ] && [ "$base_sha" != "$zero_sha" ]; then
+            git diff --check "$base_sha" "${{ github.sha }}"
+          else
+            git diff --check HEAD^ HEAD
+          fi
+
   test:
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.deploy_required == 'true'
     steps:
       - uses: actions/checkout@v6
 
@@ -47,7 +116,8 @@ jobs:
 
   validate-cloudflare-config:
     runs-on: ubuntu-latest
-    needs: test
+    needs: [changes, test]
+    if: always() && needs.changes.outputs.deploy_required == 'true' && needs.test.result == 'success'
     steps:
       - uses: actions/checkout@v6
 

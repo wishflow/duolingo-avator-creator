@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:site": "mkdir -p _site && cp -R assets/. _site/ && cp assets/avatar_explorer.html _site/index.html && touch _site/.nojekyll",
+    "dev": "vite --host 0.0.0.0",
+    "build:site": "vite build && touch _site/.nojekyll",
     "test:static": "python3 tests/test_static_site.py",
     "test:worker": "node --test tests/worker.test.mjs",
     "test:e2e": "python3 tests/test_avatar_explorer.py --port 8775 --debug-port 9228",
@@ -16,6 +17,11 @@
     "@rive-app/canvas": "^2.37.8"
   },
   "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.2",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.14",
     "wrangler": "^4.94.0"
   }
 }

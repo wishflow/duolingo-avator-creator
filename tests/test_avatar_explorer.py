@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test framework for avatar_explorer.html.
+Test framework for the built avatar editor site.
 
 Tests thumbnail cache invalidation, dynamic composition, canvas sizing,
 and cross-tab consistency via Chrome DevTools Protocol.
@@ -27,7 +27,7 @@ except ImportError:
 
 # === CONFIG ============================================================
 PROJECT_DIR = Path(__file__).resolve().parent.parent
-ASSETS_DIR = PROJECT_DIR / "assets"
+SITE_DIR = PROJECT_DIR / "_site"
 CHROME_EXEC = None
 CHROME_USER_DATA = "/tmp/chrome-test-profile"
 TEST_TIMEOUT = 30  # seconds per test
@@ -43,7 +43,7 @@ http_port = 8769
 chrome_debug_port = 9223
 
 def page_url():
-    return f"http://127.0.0.1:{http_port}/avatar_explorer.html"
+    return f"http://127.0.0.1:{http_port}/index.html"
 
 def find_chrome_exec(explicit=None):
     candidates = []
@@ -110,24 +110,37 @@ class TestRunner:
     async def setup(self):
         """Start HTTP server, launch Chrome, connect CDP."""
 
-        # 1. Start HTTP server
+        # 1. Build the Vite static site that will be published.
+        info("Building static site...")
+        build = subprocess.run(
+            ["npm", "run", "build:site"],
+            cwd=str(PROJECT_DIR),
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if build.returncode != 0:
+            raise RuntimeError(build.stderr or build.stdout or "Vite build failed")
+        ok("Static site built")
+
+        # 2. Start HTTP server
         info("Starting HTTP server...")
         self.http_proc = subprocess.Popen(
             [sys.executable, "-m", "http.server", str(self.http_port)],
-            cwd=str(ASSETS_DIR),
+            cwd=str(SITE_DIR),
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         )
         await asyncio.sleep(0.5)
         ok(f"HTTP server on :{self.http_port}")
 
-        # 2. Kill any existing chrome on our debug port
+        # 3. Kill any existing chrome on our debug port
         subprocess.run(
             ["pkill", "-f", f"remote-debugging-port={self.debug_port}"],
             capture_output=True,
         )
         await asyncio.sleep(0.3)
 
-        # 3. Launch Chrome
+        # 4. Launch Chrome
         info("Launching Chrome...")
         os.makedirs(CHROME_USER_DATA, exist_ok=True)
         self.chrome_proc = subprocess.Popen(
@@ -150,7 +163,7 @@ class TestRunner:
             text=True,
         )
 
-        # 4. Wait for Chrome to start and get the page's WS URL
+        # 5. Wait for Chrome to start and get the page's WS URL
         info("Waiting for Chrome debug port...")
         import urllib.request
         for attempt in range(20):
@@ -163,7 +176,7 @@ class TestRunner:
                 pages = json.loads(req.read())
                 # Find our page
                 for p in pages:
-                    if "avatar_explorer" in p.get("url", ""):
+                    if f"127.0.0.1:{self.http_port}" in p.get("url", ""):
                         self._ws_url = p["webSocketDebuggerUrl"]
                         break
                 if self._ws_url:
@@ -179,7 +192,7 @@ class TestRunner:
 
         ok(f"Chrome ready, WS: {self._ws_url[:60]}...")
 
-        # 5. Connect CDP
+        # 6. Connect CDP
         self.cdp = CDPClient(self._ws_url)
         await self.cdp.connect()
 
@@ -188,11 +201,11 @@ class TestRunner:
         await self.cdp.send("Page.enable")
         ok("CDP connected")
 
-        # 6. Wait for page to fully load (Rive + config + tile instances)
+        # 7. Wait for page to fully load (Rive + config + tile instances)
         info("Waiting for app to load...")
         for attempt in range(30):
             ready = await self.cdp.evaluate(
-                "typeof riveInst !== 'undefined' && sharedRiveFile !== null && tileInstances.size > 0"
+                "window.__avatarTestHooks?.isReady?.() === true || (typeof riveInst !== 'undefined' && sharedRiveFile !== null && tileInstances.size > 0)"
             )
             if ready:
                 break

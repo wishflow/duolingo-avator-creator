@@ -1,29 +1,28 @@
 #!/usr/bin/env python3
 """
-Static checks for the GitHub Pages site.
+Static checks for the Vite-built public site.
 
 This suite is intended to run in Codespaces and CI without requiring Chrome.
-It verifies the static publish shape, local resource references, and inline JS
-syntax. Browser rendering remains covered by tests/test_avatar_explorer.py.
+It verifies source assets, the `_site` publish shape, generated local
+references, and manifest icon references. Browser rendering remains covered by
+tests/test_avatar_explorer.py.
 """
 
 import html.parser
 import json
 import re
-import shutil
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 from urllib.parse import urlparse
 
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 ASSETS_DIR = PROJECT_DIR / "assets"
-HTML_PATH = ASSETS_DIR / "avatar_explorer.html"
+SITE_DIR = PROJECT_DIR / "_site"
+INDEX_PATH = SITE_DIR / "index.html"
 
-REQUIRED_ASSET_FILES = [
-    "avatar_explorer.html",
+REQUIRED_SOURCE_ASSETS = [
     "avatar_builder_config.json",
     "avatar_builder_25_sept2025.riv",
     "manifest.webmanifest",
@@ -39,39 +38,29 @@ REQUIRED_ASSET_FILES = [
     "avatar_builder_background_unselected_dark.svg",
 ]
 
+REQUIRED_SITE_FILES = [
+    "index.html",
+    ".nojekyll",
+    "avatar_explorer.html",
+    "avatar_builder_config.json",
+    "avatar_builder_25_sept2025.riv",
+    "manifest.webmanifest",
+    "avatar-icon-192.png",
+    "avatar-icon-512.png",
+]
+
 
 class StaticReferenceParser(html.parser.HTMLParser):
     def __init__(self):
         super().__init__()
         self.refs = []
-        self.inline_scripts = []
-        self._in_inline_script = False
-        self._script_chunks = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
-        if tag == "script":
-            src = attrs.get("src")
-            if src:
-                self.refs.append(("script src", src))
-                self._in_inline_script = False
-            else:
-                self._in_inline_script = True
-                self._script_chunks = []
         for attr in ("src", "href"):
             value = attrs.get(attr)
             if value:
                 self.refs.append((f"{tag} {attr}", value))
-
-    def handle_data(self, data):
-        if self._in_inline_script:
-            self._script_chunks.append(data)
-
-    def handle_endtag(self, tag):
-        if tag == "script" and self._in_inline_script:
-            self.inline_scripts.append("".join(self._script_chunks))
-            self._in_inline_script = False
-            self._script_chunks = []
 
 
 def is_local_reference(ref):
@@ -91,70 +80,10 @@ def normalize_reference(ref):
     return path
 
 
-def read_html():
-    assert HTML_PATH.exists(), f"Missing HTML entry: {HTML_PATH}"
-    return HTML_PATH.read_text(encoding="utf-8")
-
-
-def parse_html():
-    parser = StaticReferenceParser()
-    parser.feed(read_html())
-    return parser
-
-
-def assert_required_assets_exist():
-    for rel in REQUIRED_ASSET_FILES:
-        path = ASSETS_DIR / rel
-        assert path.exists(), f"Required asset missing: {rel}"
-
-
-def assert_local_references_exist(parser):
-    refs = list(parser.refs)
-    html = read_html()
-    for match in re.finditer(r"fetch\(\s*(['\"])(.*?)\1", html):
-        refs.append(("fetch", match.group(2)))
-
-    missing = []
-    for source, ref in refs:
-        if not is_local_reference(ref):
-            continue
-        rel = normalize_reference(ref)
-        if not rel:
-            continue
-        if not (ASSETS_DIR / rel).exists():
-            missing.append(f"{source}: {ref}")
-
-    assert not missing, "Missing local references:\n" + "\n".join(missing)
-
-
-def assert_manifest_icon_references_exist():
-    manifest_path = ASSETS_DIR / "manifest.webmanifest"
-    assert manifest_path.exists(), "Missing manifest.webmanifest"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    missing = []
-    for icon in manifest.get("icons", []):
-        src = icon.get("src")
-        if src and is_local_reference(src):
-            rel = normalize_reference(src)
-            if rel and not (ASSETS_DIR / rel).exists():
-                missing.append(src)
-    assert not missing, "Missing manifest icon references:\n" + "\n".join(missing)
-
-
-def assert_inline_scripts_parse(parser):
-    node = shutil.which("node")
-    assert node, "node is required for inline script syntax checks"
-    code = """
-const fs = require('fs');
-const scripts = JSON.parse(fs.readFileSync(0, 'utf8'));
-for (let i = 0; i < scripts.length; i++) {
-  new Function(scripts[i]);
-}
-console.log(`Parsed ${scripts.length} inline script(s)`);
-"""
+def run_site_build():
     result = subprocess.run(
-        [node, "-e", code],
-        input=json.dumps(parser.inline_scripts),
+        ["npm", "run", "build:site"],
+        cwd=PROJECT_DIR,
         text=True,
         capture_output=True,
         check=False,
@@ -162,24 +91,85 @@ console.log(`Parsed ${scripts.length} inline script(s)`);
     assert result.returncode == 0, result.stderr or result.stdout
 
 
-def assert_pages_publish_shape():
-    with tempfile.TemporaryDirectory(prefix="avatar-pages-") as tmp:
-        site_dir = Path(tmp) / "_site"
-        shutil.copytree(ASSETS_DIR, site_dir)
-        shutil.copy2(HTML_PATH, site_dir / "index.html")
-        (site_dir / ".nojekyll").touch()
+def read_site_file(rel):
+    path = SITE_DIR / rel
+    assert path.exists(), f"Missing built file: {rel}"
+    return path.read_text(encoding="utf-8")
 
-        for rel in ("index.html", "avatar_builder_config.json", "avatar_builder_25_sept2025.riv"):
-            assert (site_dir / rel).exists(), f"Pages artifact missing: {rel}"
+
+def parse_html(rel="index.html"):
+    parser = StaticReferenceParser()
+    parser.feed(read_site_file(rel))
+    return parser
+
+
+def assert_required_source_assets_exist():
+    for rel in REQUIRED_SOURCE_ASSETS:
+        path = ASSETS_DIR / rel
+        assert path.exists(), f"Required source asset missing: {rel}"
+
+
+def assert_pages_publish_shape():
+    for rel in REQUIRED_SITE_FILES:
+        assert (SITE_DIR / rel).exists(), f"Pages artifact missing: {rel}"
+    assert any((SITE_DIR / "assets").glob("*.js")), "Vite JS bundle missing"
+    assert any((SITE_DIR / "assets").glob("*.css")), "Vite CSS bundle missing"
+    assert any((SITE_DIR / "assets").glob("*.wasm")), "Local Rive WASM bundle missing"
+
+
+def assert_local_references_exist():
+    refs = []
+    for rel in ("index.html", "avatar_explorer.html"):
+        parser = parse_html(rel)
+        refs.extend((rel, source, ref) for source, ref in parser.refs)
+        html = read_site_file(rel)
+        for match in re.finditer(r"fetch\(\s*(['\"])(.*?)\1", html):
+            refs.append((rel, "fetch", match.group(2)))
+
+    missing = []
+    for html_rel, source, ref in refs:
+        if not is_local_reference(ref):
+            continue
+        rel = normalize_reference(ref)
+        if not rel:
+            continue
+        base_dir = (SITE_DIR / html_rel).parent
+        if not (base_dir / rel).exists():
+            missing.append(f"{html_rel} {source}: {ref}")
+
+    assert not missing, "Missing local references:\n" + "\n".join(missing)
+
+
+def assert_manifest_icon_references_exist():
+    manifest = json.loads(read_site_file("manifest.webmanifest"))
+    missing = []
+    for icon in manifest.get("icons", []):
+        src = icon.get("src")
+        if src and is_local_reference(src):
+            rel = normalize_reference(src)
+            if rel and not (SITE_DIR / rel).exists():
+                missing.append(src)
+    assert not missing, "Missing manifest icon references:\n" + "\n".join(missing)
+
+
+def assert_no_unpkg_rive_runtime():
+    offenders = []
+    for path in [INDEX_PATH, *SITE_DIR.glob("assets/*.js"), SITE_DIR / "avatar_explorer.html"]:
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        if "unpkg.com/@rive-app/canvas" in text:
+            offenders.append(str(path.relative_to(SITE_DIR)))
+    assert not offenders, "Built site still references unpkg Rive runtime: " + ", ".join(offenders)
 
 
 def main():
-    parser = parse_html()
-    assert_required_assets_exist()
-    assert_local_references_exist(parser)
-    assert_manifest_icon_references_exist()
-    assert_inline_scripts_parse(parser)
+    assert_required_source_assets_exist()
+    run_site_build()
     assert_pages_publish_shape()
+    assert_local_references_exist()
+    assert_manifest_icon_references_exist()
+    assert_no_unpkg_rive_runtime()
     print("Static site checks passed")
 
 
