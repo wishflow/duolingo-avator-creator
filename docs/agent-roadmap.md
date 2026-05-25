@@ -100,6 +100,10 @@ flowchart TD
 - 多轮对话期间可复用有效 access token。
 - access token 过期时提示用户重新验证，不清空对话 thread。
 
+独立文档：
+
+- `docs/agent-steps/03-security-verification-flow.md`
+
 ### 04. SSE Agent 协议、语言策略与结构化 schema
 
 目标：

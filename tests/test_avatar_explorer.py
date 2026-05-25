@@ -755,6 +755,9 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
             var before = currentInputValues['Body'];
             var target = before === 5 ? 1 : 5;
             var originalFetch = window.fetch.bind(window);
+            var sessionCalls = 0;
+            var generateCalls = 0;
+            var generatePayload = null;
 
             window.__TEST_TURNSTILE_TOKEN__ = 'test-token';
             backendConfig = {
@@ -778,6 +781,7 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
             window.avatarBackend = backendConfig;
             window.fetch = function(url, init) {
                 if (String(url).indexOf('/api/avatar/session') !== -1) {
+                    sessionCalls += 1;
                     return Promise.resolve(new Response(JSON.stringify({
                         ok: true,
                         sessionToken: 'test-ai-session',
@@ -790,6 +794,8 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
                 }
                 if (String(url).indexOf('/api/avatar/generate') !== -1) {
                     var payload = JSON.parse(init.body || '{}');
+                    generateCalls += 1;
+                    generatePayload = payload;
                     if (payload.sessionToken !== 'test-ai-session') {
                         return Promise.resolve(new Response(JSON.stringify({
                             ok: false,
@@ -824,10 +830,11 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
             await new Promise(function(resolve) { setTimeout(resolve, 100); });
             aiPrompt.value = '@current make it bold';
             aiPrompt.dispatchEvent(new Event('input', { bubbles: true }));
-            var disabledBeforeVerify = generateBtn.disabled;
-            await verifyAiSession();
-            await new Promise(function(resolve) { setTimeout(resolve, 100); });
-            var disabledAfterVerify = generateBtn.disabled;
+            var disabledBeforeGenerate = generateBtn.disabled;
+            var visibleVerifyButtons = Array.from(document.querySelectorAll('#verifyAiBtn'))
+                .filter(function(btn) {
+                    return !btn.hidden && window.getComputedStyle(btn).display !== 'none';
+                }).length;
             await startAvatarGeneration();
             await new Promise(function(resolve) { setTimeout(resolve, 300); });
             var after = currentInputValues['Body'];
@@ -849,8 +856,11 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
                 after: after,
                 undone: undone,
                 redone: redone,
-                disabledBeforeVerify: disabledBeforeVerify,
-                disabledAfterVerify: disabledAfterVerify,
+                disabledBeforeGenerate: disabledBeforeGenerate,
+                visibleVerifyButtons: visibleVerifyButtons,
+                sessionCalls: sessionCalls,
+                generateCalls: generateCalls,
+                generateSessionToken: generatePayload && generatePayload.sessionToken,
                 streamText: streamText,
                 stepCount: stepCount,
                 modeGenerate: document.body.classList.contains('mode-generate'),
@@ -863,8 +873,11 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
     info(f"Mocked AI result: {result}")
 
     assert result["modeGenerate"], "Generate route should activate mode-generate"
-    assert result["disabledBeforeVerify"], "Generate should be disabled before explicit Verify"
-    assert not result["disabledAfterVerify"], "Generate should be enabled after a verified AI session"
+    assert not result["disabledBeforeGenerate"], "Generate should be enabled once prompt and Turnstile token are ready"
+    assert result["visibleVerifyButtons"] == 0, "Verify button should not be visible in the Generate UI"
+    assert result["sessionCalls"] == 1, "First Generate should automatically request an AI session"
+    assert result["generateCalls"] == 1, "First Generate should continue to the generation request"
+    assert result["generateSessionToken"] == "test-ai-session", "Generate request should use the auto-created AI session"
     assert result["after"] == result["target"], "AI final state should apply to current avatar"
     assert result["undone"] == result["before"], "Undo should restore the pre-AI avatar state"
     assert result["redone"] == result["target"], "Redo should restore the AI avatar state"

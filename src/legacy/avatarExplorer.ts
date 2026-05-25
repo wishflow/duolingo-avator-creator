@@ -86,6 +86,8 @@ const turnstileContainer = document.getElementById('turnstileContainer');
 const undoBtn = document.getElementById('undoBtn');
 const redoBtn = document.getElementById('redoBtn');
 
+if (verifyAiBtn) verifyAiBtn.remove();
+
 // ===================== TRIGGER =====================
 function scheduleTrigger() {
   if (!triggerInput) return;
@@ -728,8 +730,11 @@ function updateAiControls(message) {
   const promptReady = !!aiPrompt?.value.trim();
   const tokenReady = !!turnstileToken;
   const sessionReady = hasValidAiSession();
-  if (verifyAiBtn) verifyAiBtn.disabled = aiGenerating || !configured || !tokenReady || sessionReady;
-  generateBtn.disabled = aiGenerating || !configured || !promptReady || !sessionReady;
+  if (verifyAiBtn) {
+    verifyAiBtn.hidden = true;
+    verifyAiBtn.disabled = true;
+  }
+  generateBtn.disabled = aiGenerating || !configured || !promptReady || !(sessionReady || tokenReady);
   if (message) {
     aiStatus.textContent = message;
   } else if (!configured) {
@@ -738,14 +743,14 @@ function updateAiControls(message) {
     aiStatus.textContent = 'Generating editable avatar...';
   } else if (aiPinnedStatus) {
     aiStatus.textContent = aiPinnedStatus;
-  } else if (sessionReady && !promptReady) {
-    aiStatus.textContent = 'Verified. Describe the avatar to generate.';
+  } else if (!promptReady) {
+    aiStatus.textContent = 'Describe the avatar to generate.';
   } else if (sessionReady) {
-    aiStatus.textContent = 'Verified. Ready to generate.';
+    aiStatus.textContent = 'Ready to generate.';
   } else if (tokenReady) {
-    aiStatus.textContent = 'Verification ready. Click Verify before generating.';
+    aiStatus.textContent = 'Ready to generate. Verification will run automatically.';
   } else {
-    aiStatus.textContent = 'Complete the Turnstile check, then click Verify.';
+    aiStatus.textContent = 'Complete the Turnstile check, then generate.';
   }
 }
 
@@ -780,21 +785,18 @@ function renderTurnstileIfNeeded() {
     sitekey: siteKey,
     callback: (token) => {
       turnstileToken = token;
-      clearAiSession();
       aiPinnedStatus = '';
       updateAiControls();
     },
     'expired-callback': () => {
       if (suppressTurnstileCallbacks) return;
       turnstileToken = '';
-      clearAiSession();
-      updateAiControls('Turnstile expired. Please verify again.');
+      updateAiControls(hasValidAiSession() ? undefined : 'Turnstile expired. Complete it again before generating.');
     },
     'error-callback': () => {
       if (suppressTurnstileCallbacks) return;
       turnstileToken = '';
-      clearAiSession();
-      updateAiControls('Turnstile failed. Please try again.');
+      updateAiControls(hasValidAiSession() ? undefined : 'Turnstile failed. Please try again.');
     },
   });
 }
@@ -958,42 +960,57 @@ function getGenerationBaselineState(contextMode) {
 
 async function verifyAiSession() {
   if (aiGenerating) return;
+  return ensureAiSessionToken({ showStatus: true });
+}
+
+async function requestAiSessionToken(token) {
+  const endpoint = backendConfig?.config?.endpoints?.avatarSession || '/api/avatar/session';
+  const response = await fetch(apiUrl(endpoint), {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ turnstileToken: token }),
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok || !body.sessionToken) {
+    throw new Error(body.message || body.error || `Verification failed with ${response.status}.`);
+  }
+  saveAiSession({
+    sessionToken: body.sessionToken,
+    expiresAt: Number(body.expiresAt || Date.now() + (body.ttlSeconds || 1800) * 1000),
+  });
+  turnstileToken = '';
+  resetTurnstileWidget();
+  return aiSession.sessionToken;
+}
+
+async function ensureAiSessionToken(options = {}) {
   if (!isAiConfigured()) {
     updateAiControls('AI generation is unavailable until the backend is configured.');
-    return;
+    return '';
   }
+  const existingToken = getAiSessionToken();
+  if (existingToken) return existingToken;
+
   const token = turnstileToken;
   if (!token) {
-    updateAiControls('Complete the Turnstile check before Verify.');
-    return;
+    updateAiControls('Complete the Turnstile check, then generate.');
+    return '';
   }
 
-  aiPinnedStatus = '';
-  updateAiControls('Verifying...');
+  if (options.showStatus !== false) updateAiControls('Verifying before generation...');
   try {
-    const endpoint = backendConfig?.config?.endpoints?.avatarSession || '/api/avatar/session';
-    const response = await fetch(apiUrl(endpoint), {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ turnstileToken: token }),
-    });
-    const body = await response.json().catch(() => ({}));
-    if (!response.ok || !body.sessionToken) {
-      throw new Error(body.message || body.error || `Verification failed with ${response.status}.`);
-    }
-    saveAiSession({
-      sessionToken: body.sessionToken,
-      expiresAt: Number(body.expiresAt || Date.now() + (body.ttlSeconds || 1800) * 1000),
-    });
-    turnstileToken = '';
-    resetTurnstileWidget();
-    updateAiControls('Verified for AI generation.');
+    const sessionToken = await requestAiSessionToken(token);
+    if (options.showStatus !== false) updateAiControls('Verified. Starting generation...');
+    return sessionToken;
   } catch(e) {
     clearAiSession();
-    updateAiControls(e.message || 'Verification failed. Please try again.');
+    turnstileToken = '';
+    resetTurnstileWidget();
+    updateAiControls(e.message || 'Verification failed. Please complete the Turnstile check and try again.');
+    return '';
   }
 }
 
@@ -1110,20 +1127,19 @@ async function startAvatarGeneration() {
     updateAiControls('AI generation is unavailable until the backend is configured.');
     return;
   }
-  const sessionToken = getAiSessionToken();
-  if (!sessionToken) {
-    updateAiControls('Verify first, then generate.');
-    return;
-  }
 
   const contextMode = detectContextMode(prompt);
   aiGenerating = true;
   aiPinnedStatus = '';
   aiFinalReceived = false;
-  resetAiOutput();
-  updateAiControls('Starting generation...');
+  updateAiControls('Preparing generation...');
 
   try {
+    const sessionToken = await ensureAiSessionToken({ showStatus: true });
+    if (!sessionToken) return;
+
+    resetAiOutput();
+    updateAiControls('Starting generation...');
     const endpoint = backendConfig?.config?.endpoints?.avatarGenerate || '/api/avatar/generate';
     const response = await fetch(apiUrl(endpoint), {
       method: 'POST',
@@ -1144,7 +1160,7 @@ async function startAvatarGeneration() {
       if (/^session_/.test(body.error || '')) {
         clearAiSession();
         resetTurnstileWidget();
-        throw new Error('Verification expired. Click Verify again.');
+        throw new Error('Verification expired. Complete the Turnstile check, then click Generate again.');
       }
       throw new Error(body.message || body.error || `Generation failed with ${response.status}.`);
     }
