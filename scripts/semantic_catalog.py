@@ -278,6 +278,26 @@ def limited_options(options: list[dict[str, Any]], args: argparse.Namespace) -> 
     return options
 
 
+def option_report_summary(option: dict[str, Any]) -> dict[str, Any]:
+    option_id = option["optionId"]
+    result = {
+        "optionId": option_id,
+        "group": option.get("group"),
+        "state": option.get("state"),
+        "value": option.get("value"),
+        "labelSource": option.get("labelSource"),
+        "tags": option.get("tags", []),
+        "confidence": option.get("confidence"),
+        "needsReview": option.get("needsReview"),
+        "visible": option.get("visible"),
+        "imagePath": str((CACHE_DIR / "options" / f"{safe_filename(option_id)}.png").relative_to(PROJECT_DIR)),
+        "samplePath": str(sample_report_path(option_id).relative_to(PROJECT_DIR)),
+    }
+    if option.get("evidence"):
+        result["evidence"] = option.get("evidence")
+    return result
+
+
 def write_run_report(args: argparse.Namespace, selected: list[dict[str, Any]], processed: int, mode: str, status: str, error: str = "") -> None:
     run_id = os.environ.get("GITHUB_RUN_ID") or str(int(time.time()))
     report = {
@@ -292,6 +312,7 @@ def write_run_report(args: argparse.Namespace, selected: list[dict[str, Any]], p
         "limit": args.limit,
         "all": args.all,
         "optionIds": [option["optionId"] for option in selected],
+        "results": [option_report_summary(option) for option in selected],
         "error": error,
     }
     output_path = CACHE_DIR / "runs" / f"semantic_catalog_{run_id}.json"
@@ -349,16 +370,38 @@ def make_option(button: dict[str, Any], tab: str, section: str, kind: str, index
     }
 
 
-def build_prompt(option: dict[str, Any]) -> str:
-    allowed = {
+def allowed_tags_for_option(option: dict[str, Any]) -> list[str]:
+    return {
         "facial_hair": ["none", "mustache", "goatee", "full_beard", "sideburns", "short", "thick", "unclear"],
         "headwear": ["none", "hat", "bowler_like", "brimmed_hat", "cap", "soft_hat", "unclear"],
         "main_hair": ["short_hair", "medium_hair", "long_hair", "receding_hair", "neat_hair", "unclear"],
         "expression": ["serious", "stern", "calm", "smile", "friendly", "surprised", "playful", "neutral", "unclear"],
         "glasses": ["none", "round_glasses", "square_glasses", "bold_glasses", "unclear"],
     }.get(option["group"], ["unclear"])
+
+
+def build_guided_json(option: dict[str, Any]) -> dict[str, Any]:
+    allowed = allowed_tags_for_option(option)
+    return {
+        "type": "object",
+        "properties": {
+            "primaryTag": {"type": "string", "enum": allowed},
+            "secondaryTags": {
+                "type": "array",
+                "items": {"type": "string", "enum": allowed},
+                "maxItems": 4,
+            },
+            "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+            "evidence": {"type": "string", "maxLength": 180},
+        },
+        "required": ["primaryTag", "secondaryTags", "confidence", "evidence"],
+    }
+
+
+def build_prompt(option: dict[str, Any]) -> str:
+    allowed = allowed_tags_for_option(option)
     return json.dumps({
-        "task": "Label one Duolingo-style avatar editor option using only allowedTags.",
+        "task": "Label one Duolingo-style avatar editor option using only allowedTags. Return JSON only.",
         "group": option["group"],
         "allowedTags": allowed,
         "outputJson": {
@@ -367,21 +410,88 @@ def build_prompt(option: dict[str, Any]) -> str:
             "confidence": "0..1",
             "evidence": "short visual evidence",
         },
-    })
+    }, ensure_ascii=False)
 
 
-def call_cloudflare_vision(model: str, image_path: Path, option: dict[str, Any]) -> dict[str, Any] | None:
+def compact_json(value: Any, max_chars: int = 4000) -> str:
+    try:
+        text = json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+    except TypeError:
+        text = str(value)
+    if len(text) <= max_chars:
+        return text
+    return text[:max_chars] + "...[truncated]"
+
+
+def unresolved_vision_result(reason: str, body: Any | None = None, text: str = "", detail: str = "") -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "tags": ["unclear"],
+        "confidence": 0,
+        "evidence": reason,
+        "parseStatus": "failed",
+    }
+    if text:
+        result["rawResponseText"] = text[:4000]
+    if body is not None:
+        result["rawResponse"] = compact_json(body)
+    if detail:
+        result["parseError"] = detail
+    return result
+
+
+def extract_response_text(body: Any) -> str:
+    result = body.get("result", body) if isinstance(body, dict) else body
+    if isinstance(result, str):
+        return result
+    if not isinstance(result, dict):
+        return ""
+    for key in ("response", "text", "output_text", "result"):
+        value = result.get(key)
+        if isinstance(value, str):
+            return value
+    return ""
+
+
+def vision_result_from_parsed(parsed: dict[str, Any], option: dict[str, Any], body: Any, raw_response_text: str = "") -> dict[str, Any]:
+    tags = [parsed.get("primaryTag"), *parsed.get("secondaryTags", [])]
+    allowed = set(allowed_tags_for_option(option))
+    raw_tags = [str(tag) for tag in tags if isinstance(tag, str) and tag]
+    clean_tags = [tag for tag in raw_tags if tag in allowed]
+    discarded_tags = [tag for tag in raw_tags if tag not in allowed]
+    if not clean_tags:
+        clean_tags = ["unclear"]
+    try:
+        confidence = float(parsed.get("confidence", 0))
+    except (TypeError, ValueError):
+        confidence = 0
+    result = {
+        "tags": clean_tags,
+        "confidence": max(0, min(1, confidence)),
+        "evidence": str(parsed.get("evidence", ""))[:180],
+        "rawResponse": compact_json(body),
+        "parseStatus": "ok" if "unclear" not in clean_tags else "needs_review",
+    }
+    if raw_response_text:
+        result["rawResponseText"] = raw_response_text[:4000]
+    if discarded_tags:
+        result["discardedTags"] = discarded_tags
+    return result
+
+
+def call_cloudflare_vision(model: str, image_path: Path, option: dict[str, Any]) -> dict[str, Any]:
     account_id = os.environ.get("CLOUDFLARE_ACCOUNT_ID")
     token = os.environ.get("CLOUDFLARE_API_TOKEN")
     if not account_id or not token:
         raise RuntimeError("CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN are required with --run")
     image_bytes = image_path.read_bytes()
+    image_base64 = base64.b64encode(image_bytes).decode("ascii")
     payload = {
         "messages": [
             {"role": "system", "content": "Return compact JSON only."},
             {"role": "user", "content": build_prompt(option)},
         ],
-        "image": list(image_bytes),
+        "image": f"data:image/png;base64,{image_base64}",
+        "guided_json": build_guided_json(option),
         "max_tokens": 240,
         "temperature": 0,
     }
@@ -400,33 +510,32 @@ def call_cloudflare_vision(model: str, image_path: Path, option: dict[str, Any])
     except urllib.error.HTTPError as error:
         detail = error.read().decode("utf-8", errors="ignore")
         raise RuntimeError(f"Cloudflare AI request failed: {error.code} {detail}") from error
-    result = body.get("result", body)
-    text = result.get("response") if isinstance(result, dict) else ""
-    if not isinstance(text, str):
-        return None
+    if isinstance(body, dict) and body.get("success") is False:
+        raise RuntimeError(f"Cloudflare AI request failed: {compact_json(body)}")
+    model_result = body.get("result", body) if isinstance(body, dict) else body
+    if isinstance(model_result, dict):
+        if "primaryTag" in model_result:
+            return vision_result_from_parsed(model_result, option, body)
+        response_value = model_result.get("response")
+        if isinstance(response_value, dict) and "primaryTag" in response_value:
+            return vision_result_from_parsed(response_value, option, body)
+    text = extract_response_text(body)
+    if not text:
+        return unresolved_vision_result("vision response missing response text", body=body)
     match = re.search(r"\{.*\}", text, re.S)
     if not match:
-        return None
+        return unresolved_vision_result("vision response did not contain JSON", body=body, text=text)
     raw_response_text = text
     try:
         parsed = json.loads(match.group(0))
     except json.JSONDecodeError as error:
-        return {
-            "tags": ["unclear"],
-            "confidence": 0,
-            "evidence": "vision response JSON parse failed",
-            "rawResponseText": raw_response_text,
-            "parseError": str(error),
-        }
-    tags = [parsed.get("primaryTag"), *parsed.get("secondaryTags", [])]
-    clean_tags = [str(tag) for tag in tags if isinstance(tag, str) and tag]
-    confidence = float(parsed.get("confidence", 0))
-    return {
-        "tags": clean_tags,
-        "confidence": max(0, min(1, confidence)),
-        "evidence": str(parsed.get("evidence", ""))[:180],
-        "rawResponseText": raw_response_text,
-    }
+        return unresolved_vision_result(
+            "vision response JSON parse failed",
+            body=body,
+            text=raw_response_text,
+            detail=str(error),
+        )
+    return vision_result_from_parsed(parsed, option, body, raw_response_text)
 
 
 def sample_report_path(option_id: str) -> Path:
@@ -710,6 +819,7 @@ def run_sample(config: dict[str, Any], args: argparse.Namespace) -> int:
         print("--sample requires exactly one optionId", file=sys.stderr)
         return 2
     option = selected[0]
+    option_before = json.loads(json.dumps(option))
     avatar_config = config["avatarBuilderConfig"]
     default_state = avatar_config.get("defaultBuiltAvatarState", {})
     result = None
@@ -720,15 +830,16 @@ def run_sample(config: dict[str, Any], args: argparse.Namespace) -> int:
         image_path = CACHE_DIR / "options" / f"{safe_filename(option['optionId'])}.png"
         result = call_cloudflare_vision(args.model, image_path, option)
         if result:
-            option_after = json.loads(json.dumps(option))
+            option_after = json.loads(json.dumps(option_before))
             option_after["tags"] = add_unique([], *result["tags"])
             option_after["confidence"] = result["confidence"]
             option_after["needsReview"] = option_after["confidence"] < 0.65 or "unclear" in option_after["tags"]
             option_after["labelSource"] = "vision_ai"
             if result.get("evidence"):
                 option_after["evidence"] = result["evidence"]
+            selected[0] = option_after
         write_run_report(args, selected, 1, "sample", "success")
-    write_sample_report(option, args, default_state, result, option_after)
+    write_sample_report(option_before, args, default_state, result, option_after)
     output_path = sample_report_path(option["optionId"])
     print(f"Wrote {output_path.relative_to(PROJECT_DIR)}")
     if not args.run:

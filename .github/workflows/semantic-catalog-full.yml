@@ -129,6 +129,7 @@ jobs:
                   f"- selectedCount: `{report.get('selectedCount')}`",
                   f"- processedCount: `{report.get('processedCount')}`",
                   f"- maxCalls: `{report.get('maxCalls')}`",
+                  f"- artifact: `semantic-catalog-full-{os.environ.get('GITHUB_RUN_ID')}-{os.environ.get('GITHUB_RUN_ATTEMPT')}`",
               ])
           else:
               log = Path(".cache/avatar-semantic/runs/semantic-catalog-full.log")
@@ -148,7 +149,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: semantic-catalog-full-${{ github.run_id }}
+          name: semantic-catalog-full-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: ignore
           path: |
             .cache/avatar-semantic/options/**

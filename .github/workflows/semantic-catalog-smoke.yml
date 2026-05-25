@@ -108,11 +108,35 @@ jobs:
                   f"- selectedCount: `{report.get('selectedCount')}`",
                   f"- processedCount: `{report.get('processedCount')}`",
                   f"- maxCalls: `{report.get('maxCalls')}`",
+                  f"- artifact: `semantic-catalog-smoke-{os.environ.get('GITHUB_RUN_ID')}-{os.environ.get('GITHUB_RUN_ATTEMPT')}`",
                   "",
                   "## optionIds",
                   "",
               ])
               lines.extend(f"- `{option_id}`" for option_id in report.get("optionIds", []))
+              results = report.get("results") or []
+              if results:
+                  lines.extend([
+                      "",
+                      "## labeling results",
+                      "",
+                      "| optionId | labelSource | tags | confidence | needsReview | evidence |",
+                      "| --- | --- | --- | --- | --- | --- |",
+                  ])
+                  for item in results:
+                      tags = ", ".join(item.get("tags") or [])
+                      evidence = str(item.get("evidence") or "").replace("|", "\\|")
+                      lines.append(
+                          f"| `{item.get('optionId')}` | `{item.get('labelSource')}` | "
+                          f"{tags} | `{item.get('confidence')}` | `{item.get('needsReview')}` | {evidence} |"
+                      )
+                  lines.extend([
+                      "",
+                      "## artifact paths",
+                      "",
+                  ])
+                  for item in results:
+                      lines.append(f"- `{item.get('optionId')}` image: `{item.get('imagePath')}` sample: `{item.get('samplePath')}`")
           else:
               log = Path(".cache/avatar-semantic/runs/semantic-catalog-smoke.log")
               lines.extend([
@@ -128,7 +152,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: semantic-catalog-smoke-${{ github.run_id }}
+          name: semantic-catalog-smoke-${{ github.run_id }}-${{ github.run_attempt }}
           if-no-files-found: ignore
           path: |
             .cache/avatar-semantic/options/**
