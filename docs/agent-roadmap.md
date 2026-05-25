@@ -123,6 +123,26 @@ flowchart TD
 
 - `docs/agent-steps/03.1-semantic-generation-flow.md`
 
+### 03.2 Codex 本地语义标注
+
+目标：
+
+- 评估并固化 Codex 在 Codespaces 内做头像元素语义识别标注的本地通道。
+- 用脚本生成 `baseline | option | diff` 三栏对比图和任务包，由 Codex 按固定 JSONL 输出语义标签。
+- 让 Codex 标注结果可以和 GitHub Actions / Cloudflare 视觉模型标注互相对比。
+- 只把 Codex 作为半自动标注与复核通道，不接入用户 Generate、不替代 03.1 的运行时 semantic catalog 设计。
+
+验收重点：
+
+- 文档明确测试识别和全量识别流程。
+- JSONL schema、受控 `tags`、开放 `extraTags`、批大小和 smoke 样本固定。
+- Codespaces 浏览器准备方式固定为推荐使用 Playwright Chromium 缓存，脚本优先尊重 `CHROME_EXEC`。
+- 记录 full 标注验证通过后，再创建并 push 私有 skill 仓库 `wishflow/avatar-semantic-labeler-skill`。
+
+独立文档：
+
+- `docs/agent-steps/03.2-codex-semantic-labeling.md`
+
 ### 04. SSE Agent 协议、语言策略与结构化 schema
 
 目标：
