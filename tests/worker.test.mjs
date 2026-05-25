@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import worker, { normalizeCatalog, sanitizeModelResult } from '../worker/index.js';
+import worker, { normalizeCatalog, sanitizeModelResult } from '../worker/index.ts';
 
 const API_URL = 'https://duolingo-avator-creator.wei-shi-ws.workers.dev';
 
@@ -34,6 +34,9 @@ function makeAiMock(result = {}) {
         });
       }
       if (result.throwStructured) throw new Error('mock structured failure');
+      if (result.response !== undefined) {
+        return { response: result.response };
+      }
       return {
         response: {
           summary: 'Generated editable avatar.',
@@ -211,9 +214,144 @@ describe('Cloudflare Worker API', () => {
     assert.equal(final.ok, true);
     assert.deepEqual(final.avatarState, { Body: 5, BackgroundColor: 6 });
     assert.equal(final.contextMode, 'current');
+    assert.equal(final.model, 'workers-ai');
+    assert.equal(typeof final.summary, 'string');
+    assert.equal(typeof final.confidence, 'number');
+    assert.equal(typeof final.usedFallback, 'boolean');
+    assert.ok(Array.isArray(final.steps));
+    assert.ok(Array.isArray(final.warnings));
     assert.equal(ai.calls.length, 2);
     assert.equal(ai.calls[0].input.response_format.type, 'json_schema');
     assert.equal(ai.calls[1].input.stream, true);
+  });
+
+  it('rejects invalid JSON and content types', async () => {
+    const badJson = await fetchWorker('/api/avatar/session', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://127.0.0.1:8775',
+        'Content-Type': 'application/json',
+      },
+      body: '{',
+    });
+    const badJsonBody = await badJson.json();
+
+    assert.equal(badJson.status, 400);
+    assert.equal(badJsonBody.error, 'invalid_json');
+
+    const badType = await fetchWorker('/api/avatar/session', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://127.0.0.1:8775',
+        'Content-Type': 'text/plain',
+      },
+      body: 'turnstileToken=token',
+    });
+    const badTypeBody = await badType.json();
+
+    assert.equal(badType.status, 400);
+    assert.equal(badTypeBody.error, 'invalid_content_type');
+  });
+
+  it('rejects invalid prompt, catalog, and session payloads before calling AI', async () => {
+    const ai = makeAiMock();
+    const env = testEnv({ AI: ai });
+
+    const invalidSession = await fetchWorker('/api/avatar/generate', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://127.0.0.1:8775',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: 'green hoodie',
+        sessionToken: 'invalid-session',
+        catalog: TEST_CATALOG,
+      }),
+    }, env);
+    const invalidSessionBody = await invalidSession.json();
+    assert.equal(invalidSession.status, 403);
+    assert.equal(invalidSessionBody.error, 'session_invalid');
+
+    const missingPrompt = await fetchWorker('/api/avatar/generate', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://127.0.0.1:8775',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: '   ',
+        sessionToken: 'unused',
+        catalog: TEST_CATALOG,
+      }),
+    }, env);
+    const missingPromptBody = await missingPrompt.json();
+    assert.equal(missingPrompt.status, 400);
+    assert.equal(missingPromptBody.error, 'prompt_required');
+
+    const invalidCatalog = await fetchWorker('/api/avatar/generate', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://127.0.0.1:8775',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: 'green hoodie',
+        sessionToken: 'unused',
+        catalog: { states: { Body: [{ value: { nested: true } }] } },
+      }),
+    }, env);
+    const invalidCatalogBody = await invalidCatalog.json();
+    assert.equal(invalidCatalog.status, 400);
+    assert.equal(invalidCatalogBody.error, 'catalog_required');
+    assert.equal(ai.calls.length, 0);
+  });
+
+  it('filters dirty model output before sending final payload', async () => {
+    const dirtyWarnings = Array.from({ length: 12 }, (_, index) => `dirty warning ${index + 1}`);
+    const ai = makeAiMock({
+      response: {
+        summary: 'Dirty model output still produced valid edits.',
+        confidence: 1.5,
+        avatarState: [
+          { state: 'Body', valueNumber: 5 },
+          { state: 'Body', valueNumber: 999 },
+          { state: 'BackgroundColor', valueNumber: 6 },
+          { state: 'UnknownState', valueNumber: 1 },
+          { state: 'BackgroundColor', valueBoolean: true },
+          { state: 'Body', value: 'bad' },
+        ],
+        steps: Array.from({ length: 20 }, (_, index) => `dirty step ${index + 1}`),
+        warnings: dirtyWarnings,
+      },
+    });
+    const env = testEnv({ AI: ai });
+    const sessionToken = await createSession(env);
+    const response = await fetchWorker('/api/avatar/generate', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://127.0.0.1:8775',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: '@current make a purple avatar',
+        contextMode: 'current',
+        baselineState: { Body: 1, BackgroundColor: 1 },
+        sessionToken,
+        catalog: TEST_CATALOG,
+      }),
+    }, env);
+    const events = await readSse(response);
+    const final = events.find((item) => item.event === 'final')?.data;
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.deepEqual(final.avatarState, { Body: 5, BackgroundColor: 6 });
+    assert.equal(final.confidence, 1);
+    assert.equal(final.usedFallback, false);
+    assert.ok(final.warnings.length <= 10);
+    assert.ok(final.warnings.some((warning) => warning.includes('UnknownState')));
+    assert.ok(final.steps.every((step) => step.startsWith('Open ')));
   });
 
   it('rejects sessions from a different origin', async () => {

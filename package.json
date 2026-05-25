@@ -6,7 +6,7 @@
     "dev": "vite --host 0.0.0.0",
     "build:site": "vite build && touch _site/.nojekyll",
     "test:static": "python3 tests/test_static_site.py",
-    "test:worker": "node --test tests/worker.test.mjs",
+    "test:worker": "tsx --test tests/worker.test.mjs",
     "test:e2e": "python3 tests/test_avatar_explorer.py --port 8775 --debug-port 9228",
     "test:ci": "npm run test:static && npm run test:worker && python3 tests/test_avatar_explorer.py --port 8775 --debug-port 9228 --require-browser",
     "check:cloudflare-config": "node scripts/check_cloudflare_config.mjs",
@@ -14,12 +14,15 @@
     "deploy:cf:worker": "wrangler deploy"
   },
   "dependencies": {
-    "@rive-app/canvas": "^2.37.8"
+    "@rive-app/canvas": "^2.37.8",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260525.1",
     "@vitejs/plugin-react": "^6.0.2",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "tsx": "^4.22.3",
     "typescript": "^6.0.3",
     "vite": "^8.0.14",
     "wrangler": "^4.94.0"

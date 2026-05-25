@@ -81,6 +81,10 @@ flowchart TD
 - Worker 单测覆盖合法输入、非法输入、模型脏输出、session 失效、Origin 不匹配。
 - Wrangler 部署流程保持不变。
 
+独立文档：
+
+- `docs/agent-steps/02-worker-typescript-zod.md`
+
 ### 03. 修复安全验证链路
 
 目标：

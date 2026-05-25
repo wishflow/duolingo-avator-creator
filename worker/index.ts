@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 const SERVICE_NAME = 'duolingo-avator-creator';
 const SERVICE_VERSION = '0.3.0';
 const DEFAULT_TEXT_MODEL = '@cf/meta/llama-3.1-8b-instruct-fast';
@@ -5,19 +7,123 @@ const MAX_PROMPT_LENGTH = 800;
 const MAX_CATALOG_OPTIONS = 420;
 const AI_SESSION_TTL_SECONDS = 30 * 60;
 
+type AvatarValue = number | boolean;
+type AvatarState = Record<string, AvatarValue>;
+type ContextMode = 'current' | 'default';
+type CatalogOption = {
+  value: AvatarValue;
+  tab: string;
+  section: string;
+  kind: string;
+  color?: string;
+  index?: number;
+};
+type AvatarCatalog = {
+  states: Record<string, CatalogOption[]>;
+};
+type SanitizedModelResult = {
+  avatarState: AvatarState;
+  steps: string[];
+  summary: string;
+  confidence: number;
+  warnings: string[];
+};
+type EditableAvatarResult = SanitizedModelResult & {
+  usedFallback: boolean;
+};
+type ValidatedGenerationRequest = {
+  prompt: string;
+  contextMode: ContextMode;
+  baselineState: AvatarState;
+  catalog: AvatarCatalog;
+  sessionToken: string;
+};
+type JsonError = 'invalid_content_type' | 'invalid_json';
+type RuntimeEnv = Partial<Env> & {
+  AI?: Ai;
+  AI_SESSION_SECRET?: string;
+  AI_SESSION_TTL_SECONDS?: string | number;
+  MAX_PROMPT_LENGTH?: string | number;
+  TURNSTILE_TEST_RESULT?: string;
+};
+type SseEvent = 'status' | 'final' | 'plan_delta' | 'error';
+type EnqueueSse = (event: SseEvent, data: unknown) => void;
+
+const avatarValueSchema = z.union([z.number().finite(), z.boolean()]);
+const avatarStateSchema = z.record(z.string(), avatarValueSchema);
+const catalogStatesSchema = z.object({
+  states: z.record(z.string().min(1), z.array(z.unknown())),
+}).passthrough();
+const catalogOptionSchema = z.object({
+  value: avatarValueSchema,
+  tab: z.unknown().optional(),
+  section: z.unknown().optional(),
+  kind: z.unknown().optional(),
+  color: z.unknown().optional(),
+  index: z.unknown().optional(),
+}).passthrough();
+const modelChangeSchema = z.object({
+  state: z.unknown().optional(),
+  value: z.unknown().optional(),
+  valueNumber: z.unknown().optional(),
+  valueBoolean: z.unknown().optional(),
+}).passthrough();
+const modelResultSchema = z.object({
+  avatarState: z.unknown().optional(),
+  steps: z.unknown().optional(),
+  summary: z.unknown().optional(),
+  confidence: z.unknown().optional(),
+  warnings: z.unknown().optional(),
+}).passthrough();
+const sessionRequestSchema = z.object({
+  turnstileToken: z.string().trim().min(1),
+}).passthrough();
+const generationRequestSchema = z.object({
+  prompt: z.unknown().optional(),
+  contextMode: z.unknown().optional(),
+  baselineState: z.unknown().optional(),
+  catalog: z.unknown().optional(),
+  sessionToken: z.unknown().optional(),
+}).passthrough();
+const turnstileResponseSchema = z.object({
+  success: z.boolean().optional(),
+  'error-codes': z.array(z.string()).optional(),
+}).passthrough();
+const sessionPayloadSchema = z.object({
+  iss: z.string(),
+  iat: z.number().finite(),
+  exp: z.number().finite(),
+  origin: z.string(),
+});
+const sseFinalPayloadSchema = z.object({
+  ok: z.literal(true),
+  contextMode: z.enum(['current', 'default']),
+  model: z.string(),
+  avatarState: avatarStateSchema,
+  steps: z.array(z.string()),
+  summary: z.string(),
+  confidence: z.number().min(0).max(1),
+  warnings: z.array(z.string()),
+  usedFallback: z.boolean(),
+}).strict();
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  return error instanceof Error ? error.message : fallback;
+}
+
 const ALLOWED_ORIGINS = new Set([
   'https://wishflow.github.io',
   'https://duolingo-avator-creator.pages.dev',
 ]);
 const LOCAL_DEV_ORIGIN_PATTERN = new RegExp('^http://(localhost|127\\.0\\.0\\.1)(:\\d+)?$');
 
-function isAllowedOrigin(origin) {
+function isAllowedOrigin(origin: string | null): boolean {
   if (!origin) return false;
   if (ALLOWED_ORIGINS.has(origin)) return true;
   return LOCAL_DEV_ORIGIN_PATTERN.test(origin);
 }
 
-function corsHeaders(request) {
+function corsHeaders(request: Request): Headers {
   const origin = request.headers.get('Origin');
   const headers = new Headers({
     'Vary': 'Origin',
@@ -26,19 +132,19 @@ function corsHeaders(request) {
     'Access-Control-Max-Age': '86400',
   });
   if (isAllowedOrigin(origin)) {
-    headers.set('Access-Control-Allow-Origin', origin);
+    headers.set('Access-Control-Allow-Origin', origin || '');
   }
   return headers;
 }
 
-function jsonResponse(request, body, status = 200) {
+function jsonResponse(request: Request, body: unknown, status = 200): Response {
   const headers = corsHeaders(request);
   headers.set('Content-Type', 'application/json; charset=utf-8');
   headers.set('Cache-Control', 'no-store');
   return new Response(JSON.stringify(body), { status, headers });
 }
 
-function sseHeaders(request) {
+function sseHeaders(request: Request): Headers {
   const headers = corsHeaders(request);
   headers.set('Content-Type', 'text/event-stream; charset=utf-8');
   headers.set('Cache-Control', 'no-store');
@@ -46,7 +152,7 @@ function sseHeaders(request) {
   return headers;
 }
 
-function methodNotAllowed(request, allowedMethods) {
+function methodNotAllowed(request: Request, allowedMethods: string[]): Response {
   const headers = corsHeaders(request);
   headers.set('Allow', allowedMethods.join(', '));
   headers.set('Content-Type', 'application/json; charset=utf-8');
@@ -57,45 +163,45 @@ function methodNotAllowed(request, allowedMethods) {
   }), { status: 405, headers });
 }
 
-function getServiceName(env) {
+function getServiceName(env: RuntimeEnv): string {
   return env?.SERVICE_NAME || SERVICE_NAME;
 }
 
-function getServiceVersion(env) {
+function getServiceVersion(env: RuntimeEnv): string {
   return env?.SERVICE_VERSION || SERVICE_VERSION;
 }
 
-function getTextModel(env) {
+function getTextModel(env: RuntimeEnv): string {
   return env?.AI_TEXT_MODEL || DEFAULT_TEXT_MODEL;
 }
 
-function getTurnstileSiteKey(env) {
+function getTurnstileSiteKey(env: RuntimeEnv): string {
   return env?.TURNSTILE_SITE_KEY || '';
 }
 
-function getMaxPromptLength(env) {
+function getMaxPromptLength(env: RuntimeEnv): number {
   const configured = Number(env?.MAX_PROMPT_LENGTH || MAX_PROMPT_LENGTH);
   return Number.isFinite(configured) ? Math.min(Math.max(configured, 80), 2000) : MAX_PROMPT_LENGTH;
 }
 
-function getAiSessionTtlSeconds(env) {
+function getAiSessionTtlSeconds(env: RuntimeEnv): number {
   const configured = Number(env?.AI_SESSION_TTL_SECONDS || AI_SESSION_TTL_SECONDS);
   return Number.isFinite(configured) ? Math.min(Math.max(configured, 60), 24 * 60 * 60) : AI_SESSION_TTL_SECONDS;
 }
 
-function normalizePrompt(value, maxLength) {
+function normalizePrompt(value: unknown, maxLength: number): string {
   if (typeof value !== 'string') return '';
   return value.replace(/\s+/g, ' ').trim().slice(0, maxLength + 1);
 }
 
-function normalizeContextMode(value) {
+function normalizeContextMode(value: unknown): ContextMode {
   if (value === 'current' || value === 'default') return value;
   return 'default';
 }
 
-function cleanStateSnapshot(value) {
+function cleanStateSnapshot(value: unknown): AvatarState {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
-  const clean = {};
+  const clean: AvatarState = {};
   for (const [key, raw] of Object.entries(value)) {
     if (typeof raw === 'number' && Number.isFinite(raw)) clean[key] = raw;
     if (typeof raw === 'boolean') clean[key] = raw;
@@ -103,20 +209,23 @@ function cleanStateSnapshot(value) {
   return clean;
 }
 
-function normalizeCatalog(catalog) {
-  const states = catalog?.states;
-  if (!states || typeof states !== 'object' || Array.isArray(states)) return null;
+function normalizeCatalog(catalog: unknown): AvatarCatalog | null {
+  const parsedCatalog = catalogStatesSchema.safeParse(catalog);
+  if (!parsedCatalog.success) return null;
+  const { states } = parsedCatalog.data;
 
-  const normalized = {};
+  const normalized: AvatarCatalog['states'] = {};
   let optionCount = 0;
   for (const [stateName, options] of Object.entries(states)) {
-    if (!Array.isArray(options) || !stateName || optionCount >= MAX_CATALOG_OPTIONS) continue;
-    const cleanOptions = [];
-    const seen = new Set();
-    for (const option of options) {
-      if (!option || typeof option !== 'object' || optionCount >= MAX_CATALOG_OPTIONS) break;
+    if (!stateName || optionCount >= MAX_CATALOG_OPTIONS) continue;
+    const cleanOptions: CatalogOption[] = [];
+    const seen = new Set<string>();
+    for (const rawOption of options) {
+      if (optionCount >= MAX_CATALOG_OPTIONS) break;
+      const parsedOption = catalogOptionSchema.safeParse(rawOption);
+      if (!parsedOption.success) continue;
+      const option = parsedOption.data;
       const value = option.value;
-      if (typeof value !== 'number' && typeof value !== 'boolean') continue;
       const key = `${typeof value}:${value}`;
       if (seen.has(key)) continue;
       seen.add(key);
@@ -136,34 +245,40 @@ function normalizeCatalog(catalog) {
   return Object.keys(normalized).length ? { states: normalized } : null;
 }
 
-function buildAllowedValues(catalog) {
-  const allowed = new Map();
+function buildAllowedValues(catalog: AvatarCatalog): Map<string, Set<string>> {
+  const allowed = new Map<string, Set<string>>();
   for (const [stateName, options] of Object.entries(catalog.states)) {
-    const values = new Set();
+    const values = new Set<string>();
     for (const option of options) values.add(`${typeof option.value}:${option.value}`);
     allowed.set(stateName, values);
   }
   return allowed;
 }
 
-function isAllowedStateValue(allowed, stateName, value) {
+function isAllowedStateValue(allowed: Map<string, Set<string>>, stateName: string, value: AvatarValue): boolean {
   return allowed.get(stateName)?.has(`${typeof value}:${value}`) || false;
 }
 
-function sanitizeModelResult(rawResult, catalog) {
+function sanitizeModelResult(rawResult: unknown, catalog: AvatarCatalog): SanitizedModelResult {
   const allowed = buildAllowedValues(catalog);
-  const warnings = [];
-  const avatarState = {};
+  const warnings: string[] = [];
+  const avatarState: AvatarState = {};
 
-  const result = rawResult && typeof rawResult === 'object' ? rawResult : {};
+  const result = modelResultSchema.safeParse(rawResult).success
+    ? modelResultSchema.parse(rawResult)
+    : {};
   const changes = Array.isArray(result.avatarState)
     ? result.avatarState
-    : Object.entries(result.avatarState || {}).map(([state, value]) => ({ state, value }));
+    : avatarStateSchema.safeParse(result.avatarState).success
+      ? Object.entries(avatarStateSchema.parse(result.avatarState)).map(([state, value]) => ({ state, value }))
+      : [];
 
-  for (const change of changes) {
-    if (!change || typeof change !== 'object') continue;
-    const stateName = String(change.state || '');
-    let value = change.value;
+  for (const rawChange of changes) {
+    const parsedChange = modelChangeSchema.safeParse(rawChange);
+    if (!parsedChange.success) continue;
+    const change = parsedChange.data;
+    const stateName = typeof change.state === 'string' ? change.state : '';
+    let value: unknown = change.value;
     if (typeof value !== 'number' && typeof value !== 'boolean') {
       if (typeof change.valueNumber === 'number' && Number.isFinite(change.valueNumber)) value = change.valueNumber;
       if (typeof change.valueBoolean === 'boolean') value = change.valueBoolean;
@@ -194,13 +309,15 @@ function sanitizeModelResult(rawResult, catalog) {
   };
 }
 
-function parseJsonModeResponse(response) {
-  const value = response?.response ?? response;
+function parseJsonModeResponse(response: unknown): unknown {
+  const value = response && typeof response === 'object' && 'response' in response
+    ? response.response
+    : response;
   if (typeof value === 'string') return JSON.parse(value);
   return value;
 }
 
-function avatarJsonSchema(catalog) {
+function avatarJsonSchema(catalog: AvatarCatalog): Record<string, unknown> {
   return {
     type: 'object',
     additionalProperties: false,
@@ -234,7 +351,11 @@ function avatarJsonSchema(catalog) {
   };
 }
 
-function buildExplanationMessages({ prompt, contextMode, result }) {
+function buildExplanationMessages({ prompt, contextMode, result }: {
+  prompt: string;
+  contextMode: ContextMode;
+  result: EditableAvatarResult;
+}): Array<{ role: string; content: string }> {
   const applied = JSON.stringify({
     summary: result.summary,
     avatarState: result.avatarState,
@@ -263,7 +384,7 @@ function buildExplanationMessages({ prompt, contextMode, result }) {
   ];
 }
 
-function buildStructuredMessages({ prompt, contextMode, baselineState, catalog }) {
+function buildStructuredMessages({ prompt, contextMode, baselineState, catalog }: ValidatedGenerationRequest): Array<{ role: string; content: string }> {
   return [
     {
       role: 'system',
@@ -293,37 +414,40 @@ function buildStructuredMessages({ prompt, contextMode, baselineState, catalog }
   ];
 }
 
-function encodeSse(event, data) {
+function encodeSse(event: SseEvent, data: unknown): string {
   return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
 }
 
-function streamFromString(value) {
+function streamFromString(value: string): ReadableStream<Uint8Array> {
   return new ReadableStream({
-    start(controller) {
+    start(controller: ReadableStreamDefaultController<Uint8Array>) {
       controller.enqueue(new TextEncoder().encode(value));
       controller.close();
     },
   });
 }
 
-function parseAiStreamPayload(payload) {
+function parseAiStreamPayload(payload: string): string {
   if (!payload || payload === '[DONE]') return '';
   try {
-    const parsed = JSON.parse(payload);
-    return parsed.response
-      || parsed.text
-      || parsed.delta
-      || parsed.choices?.[0]?.delta?.content
-      || parsed.choices?.[0]?.text
+    const parsed = z.record(z.string(), z.unknown()).parse(JSON.parse(payload));
+    const choices = Array.isArray(parsed.choices) ? parsed.choices : [];
+    const firstChoice = choices[0] && typeof choices[0] === 'object' ? choices[0] as Record<string, unknown> : {};
+    const delta = firstChoice.delta && typeof firstChoice.delta === 'object' ? firstChoice.delta as Record<string, unknown> : {};
+    return (typeof parsed.response === 'string' && parsed.response)
+      || (typeof parsed.text === 'string' && parsed.text)
+      || (typeof parsed.delta === 'string' && parsed.delta)
+      || (typeof delta.content === 'string' && delta.content)
+      || (typeof firstChoice.text === 'string' && firstChoice.text)
       || '';
   } catch (_) {
     return payload;
   }
 }
 
-async function pipeAiPlanStream(aiStream, enqueue) {
+async function pipeAiPlanStream(aiStream: unknown, enqueue: EnqueueSse): Promise<void> {
   const stream = typeof aiStream === 'string' ? streamFromString(aiStream) : aiStream;
-  if (!stream?.getReader) return;
+  if (!(stream instanceof ReadableStream)) return;
   const decoder = new TextDecoder();
   const reader = stream.getReader();
   let buffer = '';
@@ -348,7 +472,7 @@ async function pipeAiPlanStream(aiStream, enqueue) {
   if (trailing && !trailing.startsWith('data:')) enqueue('plan_delta', { text: trailing });
 }
 
-async function verifyTurnstile(request, token, env) {
+async function verifyTurnstile(request: Request, token: string, env: RuntimeEnv): Promise<{ success: boolean; errors: string[] }> {
   if (env?.TURNSTILE_TEST_RESULT) {
     return {
       success: env.TURNSTILE_TEST_RESULT === 'pass',
@@ -371,30 +495,28 @@ async function verifyTurnstile(request, token, env) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: form,
   });
-  const body = await response.json().catch(() => ({}));
+  const body = turnstileResponseSchema.safeParse(await response.json().catch(() => ({}))).data || {};
   return {
     success: !!body.success,
     errors: Array.isArray(body['error-codes']) ? body['error-codes'] : [],
   };
 }
 
-function toBase64(binary) {
-  if (typeof btoa === 'function') return btoa(binary);
-  return Buffer.from(binary, 'binary').toString('base64');
+function toBase64(binary: string): string {
+  return btoa(binary);
 }
 
-function fromBase64(value) {
-  if (typeof atob === 'function') return atob(value);
-  return Buffer.from(value, 'base64').toString('binary');
+function fromBase64(value: string): string {
+  return atob(value);
 }
 
-function bytesToBase64url(bytes) {
+function bytesToBase64url(bytes: Uint8Array): string {
   let binary = '';
   for (const byte of bytes) binary += String.fromCharCode(byte);
   return toBase64(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 }
 
-function base64urlToBytes(value) {
+function base64urlToBytes(value: string): Uint8Array {
   const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
   const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
   const binary = fromBase64(padded);
@@ -403,19 +525,19 @@ function base64urlToBytes(value) {
   return bytes;
 }
 
-function stringToBase64url(value) {
+function stringToBase64url(value: string): string {
   return bytesToBase64url(new TextEncoder().encode(value));
 }
 
-function base64urlToString(value) {
+function base64urlToString(value: string): string {
   return new TextDecoder().decode(base64urlToBytes(value));
 }
 
-function getAiSessionSecret(env) {
+function getAiSessionSecret(env: RuntimeEnv): string {
   return env?.AI_SESSION_SECRET || env?.TURNSTILE_SECRET_KEY || '';
 }
 
-async function signSessionPayload(payloadPart, env) {
+async function signSessionPayload(payloadPart: string, env: RuntimeEnv): Promise<string> {
   const secret = getAiSessionSecret(env);
   if (!secret) throw new Error('missing_session_secret');
   const key = await crypto.subtle.importKey(
@@ -429,7 +551,7 @@ async function signSessionPayload(payloadPart, env) {
   return bytesToBase64url(new Uint8Array(signature));
 }
 
-async function createAiSessionToken(request, env) {
+async function createAiSessionToken(request: Request, env: RuntimeEnv): Promise<{ sessionToken: string; expiresAt: number; ttlSeconds: number }> {
   const origin = request.headers.get('Origin') || '';
   const now = Math.floor(Date.now() / 1000);
   const ttlSeconds = getAiSessionTtlSeconds(env);
@@ -448,7 +570,13 @@ async function createAiSessionToken(request, env) {
   };
 }
 
-async function verifyAiSessionToken(request, token, env) {
+async function verifyAiSessionToken(request: Request, token: unknown, env: RuntimeEnv): Promise<{
+  success: true;
+  payload: z.infer<typeof sessionPayloadSchema>;
+} | {
+  success: false;
+  error: 'session_required' | 'session_invalid' | 'session_expired' | 'session_origin_mismatch';
+}> {
   if (typeof token !== 'string' || !token.trim()) {
     return { success: false, error: 'session_required' };
   }
@@ -459,7 +587,7 @@ async function verifyAiSessionToken(request, token, env) {
   try {
     const expectedSignature = await signSessionPayload(parts[0], env);
     if (expectedSignature !== parts[1]) return { success: false, error: 'session_invalid' };
-    const payload = JSON.parse(base64urlToString(parts[0]));
+    const payload = sessionPayloadSchema.parse(JSON.parse(base64urlToString(parts[0])));
     const now = Math.floor(Date.now() / 1000);
     if (!payload || payload.exp <= now) return { success: false, error: 'session_expired' };
     if (payload.origin !== request.headers.get('Origin')) return { success: false, error: 'session_origin_mismatch' };
@@ -470,18 +598,23 @@ async function verifyAiSessionToken(request, token, env) {
   }
 }
 
-function optionsForState(catalog, stateName) {
+function optionsForState(catalog: AvatarCatalog, stateName: string): CatalogOption[] {
   return catalog.states[stateName] || [];
 }
 
-function chooseOption(catalog, baselineState, stateName, predicate = () => true) {
+function chooseOption(
+  catalog: AvatarCatalog,
+  baselineState: AvatarState,
+  stateName: string,
+  predicate: (option: CatalogOption) => boolean = () => true,
+): CatalogOption | null {
   const options = optionsForState(catalog, stateName);
   return options.find((option) => predicate(option) && baselineState[stateName] !== option.value)
     || options.find(predicate)
     || null;
 }
 
-function chooseOptionByRatio(catalog, baselineState, stateName, ratio) {
+function chooseOptionByRatio(catalog: AvatarCatalog, baselineState: AvatarState, stateName: string, ratio: number): CatalogOption | null {
   const options = optionsForState(catalog, stateName);
   if (!options.length) return null;
   const index = Math.max(0, Math.min(options.length - 1, Math.round((options.length - 1) * ratio)));
@@ -490,7 +623,7 @@ function chooseOptionByRatio(catalog, baselineState, stateName, ratio) {
   return chooseOption(catalog, baselineState, stateName);
 }
 
-function parseHexColor(hex) {
+function parseHexColor(hex: unknown): { r: number; g: number; b: number } | null {
   const match = String(hex || '').match(/^#?([0-9a-f]{6})$/i);
   if (!match) return null;
   const value = Number.parseInt(match[1], 16);
@@ -501,39 +634,41 @@ function parseHexColor(hex) {
   };
 }
 
-function colorLuminance(option) {
+function colorLuminance(option: CatalogOption): number {
   const rgb = parseHexColor(option.color);
   if (!rgb) return 1;
   return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255;
 }
 
-function colorDistance(option, targetHex) {
+function colorDistance(option: CatalogOption, targetHex: string): number {
   const rgb = parseHexColor(option.color);
   const target = parseHexColor(targetHex);
   if (!rgb || !target) return Number.POSITIVE_INFINITY;
   return ((rgb.r - target.r) ** 2) + ((rgb.g - target.g) ** 2) + ((rgb.b - target.b) ** 2);
 }
 
-function chooseDarkColor(catalog, baselineState, stateName) {
+function chooseDarkColor(catalog: AvatarCatalog, baselineState: AvatarState, stateName: string): CatalogOption | null {
   return [...optionsForState(catalog, stateName)]
     .filter((option) => option.color && baselineState[stateName] !== option.value)
     .sort((a, b) => colorLuminance(a) - colorLuminance(b))[0]
     || chooseOption(catalog, baselineState, stateName, (option) => !!option.color);
 }
 
-function chooseClosestColor(catalog, baselineState, stateName, targetHex) {
+function chooseClosestColor(catalog: AvatarCatalog, baselineState: AvatarState, stateName: string, targetHex: string): CatalogOption | null {
   return [...optionsForState(catalog, stateName)]
     .filter((option) => option.color && baselineState[stateName] !== option.value)
     .sort((a, b) => colorDistance(a, targetHex) - colorDistance(b, targetHex))[0]
     || chooseOption(catalog, baselineState, stateName, (option) => !!option.color);
 }
 
-function buildStepsFromAvatarState(avatarState, catalog) {
+function buildStepsFromAvatarState(avatarState: AvatarState, catalog: AvatarCatalog): string[] {
   return Object.entries(avatarState).map(([stateName, value]) => {
     const option = optionsForState(catalog, stateName).find((item) => item.value === value);
     const tab = option?.tab || stateName;
     const section = option?.section || stateName;
-    const optionLabel = Number.isFinite(option?.index) ? `option ${option.index + 1}` : 'the matching option';
+    const optionLabel = typeof option?.index === 'number' && Number.isFinite(option.index)
+      ? `option ${option.index + 1}`
+      : 'the matching option';
     if (option?.kind === 'color' && option.color) {
       return `Open ${tab}, find ${section}, then choose the ${option.color} color swatch (${optionLabel}).`;
     }
@@ -541,26 +676,26 @@ function buildStepsFromAvatarState(avatarState, catalog) {
   }).slice(0, 12);
 }
 
-function summarizeAvatarState(avatarState) {
+function summarizeAvatarState(avatarState: AvatarState): string {
   const states = Object.keys(avatarState);
   if (!states.length) return 'No editable avatar changes were produced.';
   return `Applied ${states.length} editable avatar choices: ${states.join(', ')}.`;
 }
 
-function buildFallbackResult(validated, warning) {
+function buildFallbackResult(validated: ValidatedGenerationRequest, warning?: string): EditableAvatarResult {
   const { prompt, baselineState, catalog } = validated;
   const lower = prompt.toLowerCase();
-  const avatarState = {};
+  const avatarState: AvatarState = {};
   const warnings = warning ? [warning] : [];
 
-  const add = (stateName, option) => {
+  const add = (stateName: string, option: CatalogOption | null) => {
     if (!option) return;
     if (baselineState[stateName] === option.value) return;
     if (avatarState[stateName] !== undefined) return;
     avatarState[stateName] = option.value;
   };
 
-  const colorTargets = [
+  const colorTargets: Array<[RegExp, string]> = [
     [/purple|violet|lavender|紫/, '#9069CD'],
     [/blue|cyan|sky|蓝/, '#44A1CD'],
     [/green|lime|emerald|绿/, '#78B13B'],
@@ -639,15 +774,19 @@ function buildFallbackResult(validated, warning) {
   };
 }
 
-function removeNoopChanges(avatarState, baselineState) {
-  const clean = {};
+function removeNoopChanges(avatarState: AvatarState, baselineState: AvatarState): AvatarState {
+  const clean: AvatarState = {};
   for (const [stateName, value] of Object.entries(avatarState || {})) {
     if (baselineState[stateName] !== value) clean[stateName] = value;
   }
   return clean;
 }
 
-function completeStructuredResult(result, validated, warning) {
+function completeStructuredResult(
+  result: SanitizedModelResult,
+  validated: ValidatedGenerationRequest,
+  warning?: string,
+): EditableAvatarResult {
   const avatarState = removeNoopChanges(result.avatarState, validated.baselineState);
   if (!Object.keys(avatarState).length) {
     return buildFallbackResult(validated, warning || 'Model returned no visible editable changes, so a safe editor mapping was used.');
@@ -664,7 +803,11 @@ function completeStructuredResult(result, validated, warning) {
   };
 }
 
-async function buildEditableAvatarResult(validated, env, model) {
+async function buildEditableAvatarResult(
+  validated: ValidatedGenerationRequest,
+  env: RuntimeEnv & { AI: Ai },
+  model: string,
+): Promise<EditableAvatarResult> {
   try {
     const structured = await env.AI.run(model, {
       messages: buildStructuredMessages(validated),
@@ -681,12 +824,12 @@ async function buildEditableAvatarResult(validated, env, model) {
   } catch (error) {
     return buildFallbackResult(
       validated,
-      `Structured model output failed, so a safe editor mapping was used: ${error?.message || 'unknown error'}.`,
+      `Structured model output failed, so a safe editor mapping was used: ${getErrorMessage(error, 'unknown error')}.`,
     );
   }
 }
 
-async function readJsonBody(request) {
+async function readJsonBody(request: Request): Promise<{ body: unknown } | { error: JsonError }> {
   const contentType = request.headers.get('Content-Type') || '';
   if (!contentType.includes('application/json')) {
     return { error: 'invalid_content_type' };
@@ -698,7 +841,10 @@ async function readJsonBody(request) {
   }
 }
 
-function validateGenerationRequest(request, body, env) {
+function validateGenerationRequest(request: Request, body: unknown, env: RuntimeEnv): ValidatedGenerationRequest | {
+  status: number;
+  body: { ok: false; error: string; maxPromptLength?: number };
+} {
   if (!isAllowedOrigin(request.headers.get('Origin'))) {
     return { status: 403, body: { ok: false, error: 'origin_not_allowed' } };
   }
@@ -709,27 +855,29 @@ function validateGenerationRequest(request, body, env) {
     return { status: 503, body: { ok: false, error: 'turnstile_not_configured' } };
   }
 
+  const parsedRequest = generationRequestSchema.safeParse(body);
+  const parsedBody = parsedRequest.success ? parsedRequest.data : {};
   const maxPromptLength = getMaxPromptLength(env);
-  const prompt = normalizePrompt(body?.prompt, maxPromptLength);
+  const prompt = normalizePrompt(parsedBody.prompt, maxPromptLength);
   if (!prompt) return { status: 400, body: { ok: false, error: 'prompt_required' } };
   if (prompt.length > maxPromptLength) return { status: 400, body: { ok: false, error: 'prompt_too_long', maxPromptLength } };
-  if (typeof body?.sessionToken !== 'string' || !body.sessionToken.trim()) {
+  if (typeof parsedBody.sessionToken !== 'string' || !parsedBody.sessionToken.trim()) {
     return { status: 401, body: { ok: false, error: 'session_required' } };
   }
 
-  const catalog = normalizeCatalog(body?.catalog);
+  const catalog = normalizeCatalog(parsedBody.catalog);
   if (!catalog) return { status: 400, body: { ok: false, error: 'catalog_required' } };
 
   return {
     prompt,
-    contextMode: normalizeContextMode(body?.contextMode),
-    baselineState: cleanStateSnapshot(body?.baselineState),
+    contextMode: normalizeContextMode(parsedBody.contextMode),
+    baselineState: cleanStateSnapshot(parsedBody.baselineState),
     catalog,
-    sessionToken: body.sessionToken.trim(),
+    sessionToken: parsedBody.sessionToken.trim(),
   };
 }
 
-async function handleAvatarSession(request, env) {
+async function handleAvatarSession(request: Request, env: RuntimeEnv): Promise<Response> {
   if (!isAllowedOrigin(request.headers.get('Origin'))) {
     return jsonResponse(request, { ok: false, error: 'origin_not_allowed' }, 403);
   }
@@ -738,9 +886,10 @@ async function handleAvatarSession(request, env) {
   }
 
   const parsed = await readJsonBody(request);
-  if (parsed.error) return jsonResponse(request, { ok: false, error: parsed.error }, 400);
-  const token = typeof parsed.body?.turnstileToken === 'string' ? parsed.body.turnstileToken.trim() : '';
-  if (!token) return jsonResponse(request, { ok: false, error: 'turnstile_token_required' }, 400);
+  if ('error' in parsed) return jsonResponse(request, { ok: false, error: parsed.error }, 400);
+  const sessionRequest = sessionRequestSchema.safeParse(parsed.body);
+  if (!sessionRequest.success) return jsonResponse(request, { ok: false, error: 'turnstile_token_required' }, 400);
+  const token = sessionRequest.data.turnstileToken;
 
   const turnstile = await verifyTurnstile(request, token, env);
   if (!turnstile.success) {
@@ -758,12 +907,17 @@ async function handleAvatarSession(request, env) {
   });
 }
 
-async function handleAvatarGenerate(request, env) {
+function hasConfiguredAi(env: RuntimeEnv): env is RuntimeEnv & { AI: Ai } {
+  return !!env.AI;
+}
+
+async function handleAvatarGenerate(request: Request, env: RuntimeEnv): Promise<Response> {
   const parsed = await readJsonBody(request);
-  if (parsed.error) return jsonResponse(request, { ok: false, error: parsed.error }, 400);
+  if ('error' in parsed) return jsonResponse(request, { ok: false, error: parsed.error }, 400);
 
   const validated = validateGenerationRequest(request, parsed.body, env);
-  if (validated.status) return jsonResponse(request, validated.body, validated.status);
+  if ('status' in validated) return jsonResponse(request, validated.body, validated.status);
+  if (!hasConfiguredAi(env)) return jsonResponse(request, { ok: false, error: 'ai_not_configured' }, 503);
 
   const session = await verifyAiSessionToken(request, validated.sessionToken, env);
   if (!session.success) {
@@ -775,18 +929,19 @@ async function handleAvatarGenerate(request, env) {
 
   const encoder = new TextEncoder();
   const model = getTextModel(env);
-  const body = new ReadableStream({
-    async start(controller) {
-      const enqueue = (event, data) => controller.enqueue(encoder.encode(encodeSse(event, data)));
+  const body = new ReadableStream<Uint8Array>({
+    async start(controller: ReadableStreamDefaultController<Uint8Array>) {
+      const enqueue: EnqueueSse = (event, data) => controller.enqueue(encoder.encode(encodeSse(event, data)));
       try {
         enqueue('status', { message: 'Building editable avatar configuration...' });
         const safeResult = await buildEditableAvatarResult(validated, env, model);
-        enqueue('final', {
+        const finalPayload = sseFinalPayloadSchema.parse({
           ok: true,
           contextMode: validated.contextMode,
           model: 'workers-ai',
           ...safeResult,
         });
+        enqueue('final', finalPayload);
 
         enqueue('status', { message: 'Writing applied edit notes...' });
         try {
@@ -804,7 +959,7 @@ async function handleAvatarGenerate(request, env) {
         enqueue('error', {
           ok: false,
           error: 'generation_failed',
-          message: error?.message || 'Avatar generation failed.',
+          message: getErrorMessage(error, 'Avatar generation failed.'),
         });
       } finally {
         controller.close();
@@ -815,7 +970,7 @@ async function handleAvatarGenerate(request, env) {
   return new Response(body, { status: 200, headers: sseHeaders(request) });
 }
 
-async function handleRequest(request, env = {}) {
+async function handleRequest(request: Request, env: RuntimeEnv = {}): Promise<Response> {
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders(request) });
   }
@@ -873,7 +1028,7 @@ async function handleRequest(request, env = {}) {
 
 export default {
   fetch: handleRequest,
-};
+} satisfies ExportedHandler<RuntimeEnv>;
 
 export {
   buildFallbackResult,
