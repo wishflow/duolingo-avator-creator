@@ -26,7 +26,17 @@ REQUIRED_ASSET_FILES = [
     "avatar_explorer.html",
     "avatar_builder_config.json",
     "avatar_builder_25_sept2025.riv",
+    "manifest.webmanifest",
+    "avatar-icon-192.png",
+    "avatar-icon-512.png",
     "avatar_builder_body_unselected_dark.svg",
+    "avatar_builder_face_unselected_dark.svg",
+    "avatar_builder_hair_unselected_dark.svg",
+    "avatar_builder_face_details_unselected_dark.svg",
+    "avatar_builder_facial_hair_unselected_dark.svg",
+    "avatar_builder_headwear_unselected_dark.svg",
+    "avatar_builder_tshirt_unselected_dark.svg",
+    "avatar_builder_background_unselected_dark.svg",
 ]
 
 
@@ -117,6 +127,20 @@ def assert_local_references_exist(parser):
     assert not missing, "Missing local references:\n" + "\n".join(missing)
 
 
+def assert_manifest_icon_references_exist():
+    manifest_path = ASSETS_DIR / "manifest.webmanifest"
+    assert manifest_path.exists(), "Missing manifest.webmanifest"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    missing = []
+    for icon in manifest.get("icons", []):
+        src = icon.get("src")
+        if src and is_local_reference(src):
+            rel = normalize_reference(src)
+            if rel and not (ASSETS_DIR / rel).exists():
+                missing.append(src)
+    assert not missing, "Missing manifest icon references:\n" + "\n".join(missing)
+
+
 def assert_inline_scripts_parse(parser):
     node = shutil.which("node")
     assert node, "node is required for inline script syntax checks"
@@ -153,6 +177,7 @@ def main():
     parser = parse_html()
     assert_required_assets_exist()
     assert_local_references_exist(parser)
+    assert_manifest_icon_references_exist()
     assert_inline_scripts_parse(parser)
     assert_pages_publish_shape()
     print("Static site checks passed")

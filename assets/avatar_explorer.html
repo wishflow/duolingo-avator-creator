@@ -3,19 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#58cc02">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Avatar Builder">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="avatar-icon-192.png">
 <title>Duolingo Avatar Explorer</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f0f0; color: #3c3c3c; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f0f0; color: #3c3c3c; height: 100vh; overflow: hidden; }
 
-.header { display: flex; align-items: center; padding: 0 44px; height: 44px; background: #fff; border-bottom: 2px solid #e5e5e5; flex-shrink: 0; }
-.header-left { display: flex; align-items: center; gap: 10px; }
-.header-left h1 { font-size: 16px; font-weight: 800; color: #3c3c3c; }
+.app-header { display: flex; align-items: center; justify-content: space-between; height: 42px; padding: 0 18px; background: #fff; border-bottom: 2px solid #e5e5e5; flex-shrink: 0; }
+.app-title { font-size: 15px; font-weight: 800; color: #3c3c3c; }
+
 .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .dot.ok { background: #58cc02; }
 .dot.wait { background: #ffc107; }
 
-.btn { padding: 8px 20px; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.12s; font-family: inherit; }
+.btn { padding: 8px 16px; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.12s; font-family: inherit; }
 .btn-primary { background: #58cc02; color: #fff; border-bottom: 3px solid #46a302; }
 .btn-primary:hover { background: #4cb000; }
 .btn-secondary { background: #e5e5e5; color: #3c3c3c; border-bottom: 3px solid #d1d1d1; }
@@ -23,14 +29,19 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .btn-danger { background: #ffdfdf; color: #b3261e; border-bottom: 3px solid #efc4c4; }
 .btn-danger:hover { background: #ffd2d2; }
 
-.main-layout { display: flex; flex: 1; overflow: hidden; padding: 20px; gap: 20px; background: #f0f0f0; }
+.main-layout { display: grid; grid-template-columns: 92px minmax(360px, 1fr) minmax(420px, 50%); height: calc(100vh - 42px); overflow: hidden; padding: 16px; gap: 16px; background: #f0f0f0; }
+
+.tool-rail { display: flex; flex-direction: column; gap: 10px; align-items: stretch; background: #fff; border-radius: 16px; padding: 12px 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow-y: auto; }
+.tool-rail .btn { width: 100%; padding: 9px 8px; font-size: 12px; line-height: 1.15; }
+.tool-spacer { flex: 1; min-height: 6px; }
 
 /* LEFT: Avatar preview */
-.preview-panel { width: 50%; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.preview-panel { position: relative; min-width: 0; display: flex; align-items: center; justify-content: center; transition: background-color 0.3s; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
 .preview-panel canvas { max-width: 100%; max-height: 100%; background: transparent; }
+.preview-status { position: absolute; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 7px; min-height: 28px; padding: 6px 10px; border-radius: 999px; background: rgba(255,255,255,0.88); color: #52656D; font-size: 12px; font-weight: 800; box-shadow: 0 1px 8px rgba(0,0,0,0.08); pointer-events: none; }
 
 /* RIGHT: Options */
-.options-panel { width: 50%; display: flex; flex-direction: column; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.options-panel { min-width: 0; display: flex; flex-direction: column; background: #fff; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
 
 .tab-bar { display: flex; background: #fff; border-bottom: 2px solid #e5e5e5; flex-shrink: 0; overflow-x: auto; scrollbar-width: none; justify-content: center; }
 .tab-bar::-webkit-scrollbar { height: 0; }
@@ -79,6 +90,14 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 .save-status { color: #52656D; font-size: 13px; font-weight: 700; line-height: 1.45; }
 .file-btn { display: inline-flex; align-items: center; justify-content: center; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.mobile-action-bar { display: none; }
+.more-sheet { position: fixed; inset: 0; z-index: 120; display: none; }
+.more-sheet.open { display: block; }
+.more-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.28); }
+.more-panel { position: absolute; left: 50%; top: 50%; width: min(420px, calc(100vw - 32px)); transform: translate(-50%, -50%); background: #fff; border-radius: 16px; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+.more-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.more-title { font-size: 16px; font-weight: 800; }
+.more-close { width: 34px; height: 34px; border-radius: 50%; border: 0; background: #e5e5e5; color: #3c3c3c; font-size: 18px; font-weight: 800; cursor: pointer; }
 
 .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.92); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
 .loading-overlay.hidden { display: none; }
@@ -86,23 +105,24 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-text { font-size: 14px; color: #777; }
 
-.site-footer { flex-shrink: 0; padding: 6px 16px 8px; background: #f0f0f0; color: #777; font-size: 11px; line-height: 1.4; text-align: center; border-top: 1px solid #e1e1e1; }
-
 @media (max-width: 760px) {
-  body { height: auto; min-height: 100dvh; overflow-y: auto; padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
-  .header { height: 44px; min-height: 44px; padding: 0 14px; gap: 8px; }
-  .header-left { min-width: 140px; }
+  body { height: 100vh; height: 100dvh; overflow: hidden; }
+  .app-header { height: 38px; padding: 0 12px; }
+  .app-title { font-size: 14px; }
   .btn { padding: 8px 12px; font-size: 12px; border-radius: 9px; white-space: nowrap; }
 
-  .main-layout { flex: none; flex-direction: column; overflow: visible; padding: 12px; gap: 12px; }
-  .preview-panel { width: 100%; height: clamp(260px, 46vh, 420px); min-height: 260px; border-radius: 16px; }
-  .options-panel { width: 100%; min-height: 360px; flex: none; border-radius: 16px; overflow: visible; }
-  .tab-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; justify-content: flex-start; padding: 0 8px env(safe-area-inset-bottom); height: calc(64px + env(safe-area-inset-bottom)); border-top: 2px solid #e5e5e5; border-bottom: 0; box-shadow: 0 -2px 14px rgba(0,0,0,0.08); }
-  .tab-btn { min-width: 64px; height: 64px; padding: 8px 8px 6px; border-bottom: 0; border-top: 3px solid transparent; margin-bottom: 0; }
-  .tab-btn.active { border-bottom-color: transparent; border-top-color: #1cb0f6; }
-  .tab-btn img, .tab-btn .tab-icon-text { width: 28px; height: 28px; }
+  .main-layout { display: grid; grid-template-columns: 1fr; grid-template-rows: clamp(238px, 38vh, 360px) minmax(0, 1fr); grid-template-rows: clamp(238px, 38dvh, 360px) minmax(0, 1fr); height: calc(100vh - 38px - 64px); height: calc(100dvh - 38px - 64px - env(safe-area-inset-bottom)); padding: 0; gap: 0; overflow: hidden; }
+  .tool-rail { display: none; }
+  .preview-panel { width: 100%; min-height: 0; border-radius: 0; box-shadow: none; }
+  .preview-status { top: 10px; left: 10px; min-height: 26px; padding: 5px 9px; font-size: 11px; }
+  .options-panel { width: 100%; min-height: 0; height: 100%; border-radius: 0; box-shadow: none; overflow: hidden; }
+  .tab-bar { position: static; justify-content: flex-start; height: 58px; border-top: 0; border-bottom: 2px solid #e5e5e5; box-shadow: none; }
+  .tab-btn { min-width: 64px; height: 58px; padding: 7px 8px 6px; border-top: 0; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+  .tab-btn.active { border-top-color: transparent; border-bottom-color: #1cb0f6; }
+  .tab-btn img, .tab-btn .tab-icon-text { width: 27px; height: 27px; }
   .tab-btn .tab-label { font-size: 11px; }
-  .options-scroll { max-height: none; overflow: visible; padding: 18px 16px; }
+  .thumb-status { min-height: 16px; }
+  .options-scroll { flex: 1; min-height: 0; max-height: none; overflow-y: auto; padding: 14px 12px 20px; }
   .swatch-grid { flex-wrap: nowrap; overflow-x: auto; padding: 3px 3px 8px; scrollbar-width: none; scroll-snap-type: x proximity; }
   .swatch-grid::-webkit-scrollbar { height: 0; }
   .swatch { width: 50px; height: 50px; scroll-snap-align: start; }
@@ -110,7 +130,9 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   .tile { width: 100%; height: auto; min-height: 104px; aspect-ratio: 1; border-radius: 12px; }
   .swatch { width: 50px; height: 50px; }
   .action-list { max-width: none; }
-  .site-footer { padding: 8px 12px 12px; font-size: 10px; }
+  .mobile-action-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 70; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; height: calc(64px + env(safe-area-inset-bottom)); padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); background: #fff; border-top: 2px solid #e5e5e5; box-shadow: 0 -2px 14px rgba(0,0,0,0.08); }
+  .mobile-action-bar .btn { width: 100%; }
+  .more-panel { left: 0; right: 0; top: auto; bottom: 0; width: 100%; max-height: min(72dvh, 520px); transform: none; border-radius: 18px 18px 0 0; padding: 18px 16px calc(18px + env(safe-area-inset-bottom)); overflow-y: auto; }
 }
 </style>
 </head>
@@ -121,15 +143,25 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   <div class="loading-text">Loading Avatar Builder...</div>
 </div>
 
-<div class="header">
-  <div class="header-left">
-    <h1>Avatar Builder</h1>
-    <div class="dot wait" id="statusDot"></div>
-  </div>
-</div>
+<header class="app-header">
+  <div class="app-title">Avatar Builder</div>
+</header>
 
 <div class="main-layout">
+  <aside class="tool-rail" aria-label="Avatar actions">
+    <button class="btn btn-primary" onclick="exportPNG()">Export</button>
+    <button class="btn btn-secondary" onclick="confirmResetAll()">Reset</button>
+    <button class="btn btn-secondary" onclick="openFilePicker()">Upload</button>
+    <button class="btn btn-danger" onclick="clearSavedAvatar()">Clear</button>
+    <div class="tool-spacer"></div>
+    <button class="btn btn-secondary" onclick="openMoreSheet()">More</button>
+  </aside>
+
   <div class="preview-panel" id="previewPanel">
+    <div class="preview-status">
+      <div class="dot wait" id="statusDot"></div>
+      <span id="statusText">Loading</span>
+    </div>
     <canvas id="riveCanvas" width="1000" height="1380"></canvas>
   </div>
 
@@ -140,10 +172,32 @@ body { font-family: 'Feather Bold', -apple-system, BlinkMacSystemFont, 'Segoe UI
   </div>
 </div>
 
-<footer class="site-footer">
-  Unofficial fan-made avatar editor. Runs locally in your browser; no files are uploaded by this page.
-</footer>
+<div class="mobile-action-bar" aria-label="Avatar actions">
+  <button class="btn btn-primary" onclick="exportPNG()">Export</button>
+  <button class="btn btn-secondary" onclick="confirmResetAll()">Reset</button>
+  <button class="btn btn-secondary" onclick="openMoreSheet()">More</button>
+</div>
 
+<div class="more-sheet" id="moreSheet" aria-hidden="true">
+  <div class="more-backdrop" onclick="closeMoreSheet()"></div>
+  <div class="more-panel" role="dialog" aria-modal="true" aria-labelledby="moreTitle">
+    <div class="more-head">
+      <div class="more-title" id="moreTitle">More</div>
+      <button class="more-close" onclick="closeMoreSheet()" aria-label="Close">x</button>
+    </div>
+    <div class="action-list">
+      <div class="action-row">
+        <button class="btn btn-secondary" onclick="openFilePicker()">Upload .riv</button>
+        <button class="btn btn-danger" onclick="clearSavedAvatar()">Clear Saved Avatar</button>
+      </div>
+      <div class="save-status" data-save-status></div>
+      <div class="action-note">Avatar choices are saved locally on this device. Uploaded .riv files are not saved after refresh.</div>
+      <div class="action-note">Unofficial fan-made avatar editor. Runs locally in your browser; no files are uploaded by this page.</div>
+    </div>
+  </div>
+</div>
+
+<input class="visually-hidden" type="file" id="fileInput" accept=".riv">
 <canvas id="exportCanvas" style="display:none;"></canvas>
 
 <script src="https://unpkg.com/@rive-app/canvas@2.37.8/rive.js"></script>
@@ -166,6 +220,7 @@ let tileDrawPending = false;
 let bgColorMap = {};
 let defaultInputValues = {};
 let hasAvatarChanges = false;
+let statusTimer = null;
 
 const STORAGE_KEY = 'duolingoAvatarCreator.avatarState.v1';
 
@@ -178,7 +233,6 @@ const TAB_DEFS = [
   { icon: 'avatar_builder_headwear_unselected_dark.svg', label: 'Hat', idx: 5 },
   { icon: 'avatar_builder_tshirt_unselected_dark.svg', label: 'Shirt', idx: 6 },
   { icon: 'avatar_builder_background_unselected_dark.svg', label: 'BG', idx: 7 },
-  { iconText: '...', label: 'More', idx: 8, action: 'more' },
 ];
 
 const canvas = document.getElementById('riveCanvas');
@@ -188,6 +242,7 @@ const tabBar = document.getElementById('tabBar');
 const tabContent = document.getElementById('tabContent');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const statusDot = document.getElementById('statusDot');
+const statusText = document.getElementById('statusText');
 const thumbStatus = document.getElementById('thumbStatus');
 
 // ===================== TRIGGER =====================
@@ -246,7 +301,7 @@ function onMainLoaded() {
   const ab = riveInst.riveFile.file.defaultArtboard();
   smNames = [];
   for (let i = 0; i < ab.stateMachineCount(); i++) smNames.push(ab.stateMachineByIndex(i).name);
-  statusDot.className = 'dot ok';
+  setStatus('Ready', 'ok');
 
   riveInst.play(smNames);
   requestAnimationFrame(() => {
@@ -344,6 +399,22 @@ function destroyAllTileInstances() {
     try { instance.cleanup(); } catch(e) {}
   }
   tileInstances.clear();
+}
+
+function setStatus(text, state = 'ok', transient = false) {
+  if (statusDot) statusDot.className = `dot ${state}`;
+  if (statusText) statusText.textContent = text;
+  if (statusTimer) {
+    clearTimeout(statusTimer);
+    statusTimer = null;
+  }
+  if (transient) {
+    statusTimer = setTimeout(() => {
+      if (statusDot) statusDot.className = 'dot ok';
+      if (statusText) statusText.textContent = 'Ready';
+      statusTimer = null;
+    }, 1400);
+  }
 }
 
 function updateTileInstancesForState(stateName, newValue) {
@@ -483,11 +554,13 @@ function markAllTabsDirty() {
 
 function updateSaveStatus() {
   hasAvatarChanges = !isDefaultAvatarState();
-  const el = document.getElementById('saveStatus');
-  if (!el) return;
-  el.textContent = hasAvatarChanges
-    ? 'Custom avatar saved on this device.'
-    : 'Default avatar. No custom state is saved.';
+  document.querySelectorAll('[data-save-status]').forEach((el) => {
+    el.textContent = hasAvatarChanges
+      ? 'Custom avatar saved on this device.'
+      : 'Default avatar. No custom state is saved.';
+  });
+  if (hasAvatarChanges) setStatus('Saved locally', 'ok', true);
+  else setStatus('Ready', 'ok');
 }
 
 function saveAvatarState() {
@@ -564,6 +637,29 @@ function clearSavedAvatar() {
   resetAll();
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
   updateSaveStatus();
+}
+
+function confirmResetAll() {
+  if (!window.confirm('Reset avatar to default?')) return;
+  resetAll();
+}
+
+function openFilePicker() {
+  document.getElementById('fileInput')?.click();
+}
+
+function openMoreSheet() {
+  const sheet = document.getElementById('moreSheet');
+  if (!sheet) return;
+  sheet.classList.add('open');
+  sheet.setAttribute('aria-hidden', 'false');
+}
+
+function closeMoreSheet() {
+  const sheet = document.getElementById('moreSheet');
+  if (!sheet) return;
+  sheet.classList.remove('open');
+  sheet.setAttribute('aria-hidden', 'true');
 }
 
 window.addEventListener('beforeunload', (e) => {
@@ -675,36 +771,9 @@ function exportPNG() {
 function createTabButton(def) {
   const btn = document.createElement('button');
   btn.className = 'tab-btn';
-  const icon = def.icon
-    ? `<img src="${def.icon}" alt="${def.label}">`
-    : `<span class="tab-icon-text" aria-hidden="true">${def.iconText}</span>`;
-  btn.innerHTML = `${icon}<span class="tab-label">${def.label}</span>`;
+  btn.innerHTML = `<img src="${def.icon}" alt="${def.label}"><span class="tab-label">${def.label}</span>`;
   btn.onclick = () => switchTab(def.idx);
   return btn;
-}
-
-function createMorePanel() {
-  const panel = document.createElement('div');
-  panel.className = 'tab-panel action-panel';
-  panel.innerHTML = `
-    <div class="section">
-      <div class="section-header">Actions</div>
-      <div class="action-list">
-        <div class="action-row">
-          <label class="btn btn-secondary file-btn" for="fileInput">Upload .riv</label>
-          <input class="visually-hidden" type="file" id="fileInput" accept=".riv">
-          <button class="btn btn-secondary" onclick="resetAll()">Reset Avatar</button>
-          <button class="btn btn-primary" onclick="exportPNG()">Export PNG</button>
-        </div>
-        <div class="action-row">
-          <button class="btn btn-danger" onclick="clearSavedAvatar()">Clear Saved Avatar</button>
-        </div>
-        <div class="save-status" id="saveStatus"></div>
-        <div class="action-note">Avatar choices are saved locally on this device. Uploaded .riv files are not saved after refresh.</div>
-      </div>
-    </div>
-  `;
-  return panel;
 }
 
 // ===================== UI RENDER =====================
@@ -717,11 +786,6 @@ function renderUI() {
 
   TAB_DEFS.forEach((def) => {
     tabBar.appendChild(createTabButton(def));
-
-    if (def.action === 'more') {
-      tabContent.appendChild(createMorePanel());
-      return;
-    }
 
     const tab = tabs[def.idx];
     if (!tab) return;

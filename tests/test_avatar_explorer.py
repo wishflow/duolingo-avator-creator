@@ -649,6 +649,80 @@ async def test_10_no_duplicate_thumbnails_in_tile(cdp: CDPClient):
     ok(f"All {len(counts)} tiles have at most 1 canvas element")
 
 
+async def test_11_mobile_shell_layout(cdp: CDPClient):
+    """Verify mobile layout keeps preview fixed and separates actions from category tabs."""
+    info("Testing mobile shell layout...")
+
+    await cdp.send("Emulation.setDeviceMetricsOverride", {
+        "width": 390,
+        "height": 844,
+        "deviceScaleFactor": 2,
+        "mobile": True,
+    })
+    await asyncio.sleep(0.5)
+
+    layout_json = await cdp.evaluate("""
+        (function() {
+            var preview = document.querySelector('.preview-panel').getBoundingClientRect();
+            var tabs = document.querySelector('.tab-bar').getBoundingClientRect();
+            var actions = document.querySelector('.mobile-action-bar').getBoundingClientRect();
+            var options = document.querySelector('.options-scroll');
+            var optionsRect = options.getBoundingClientRect();
+            var actionLabels = Array.from(document.querySelectorAll('.mobile-action-bar .btn'))
+                .map(function(btn) { return btn.textContent.trim(); });
+            var beforeTop = preview.top;
+            options.scrollTop = 500;
+            var afterTop = document.querySelector('.preview-panel').getBoundingClientRect().top;
+            return JSON.stringify({
+                innerHeight: window.innerHeight,
+                bodyOverflowY: getComputedStyle(document.body).overflowY,
+                optionsOverflowY: getComputedStyle(options).overflowY,
+                previewTop: preview.top,
+                previewBottom: preview.bottom,
+                previewHeight: preview.height,
+                tabsTop: tabs.top,
+                tabsBottom: tabs.bottom,
+                actionsTop: actions.top,
+                actionsBottom: actions.bottom,
+                actionsDisplay: getComputedStyle(document.querySelector('.mobile-action-bar')).display,
+                tabsPosition: getComputedStyle(document.querySelector('.tab-bar')).position,
+                toolRailDisplay: getComputedStyle(document.querySelector('.tool-rail')).display,
+                tabCount: document.querySelectorAll('.tab-btn').length,
+                actionLabels: actionLabels,
+                optionsClientHeight: options.clientHeight,
+                optionsScrollHeight: options.scrollHeight,
+                optionsTop: optionsRect.top,
+                optionsBottom: optionsRect.bottom,
+                previewTopAfterOptionsScroll: afterTop,
+                previewTopBeforeOptionsScroll: beforeTop,
+                windowScrollY: window.scrollY
+            });
+        })()
+    """)
+    layout = json.loads(layout_json)
+    info(f"Mobile layout: {layout}")
+
+    assert layout["actionsDisplay"] != "none", "Mobile action bar should be visible"
+    assert layout["toolRailDisplay"] == "none", "Desktop action rail should be hidden on mobile"
+    assert layout["tabCount"] == 8, f"Category tabs should contain 8 avatar groups, got {layout['tabCount']}"
+    assert layout["actionLabels"] == ["Export", "Reset", "More"], \
+        f"Mobile action bar should only contain global actions, got {layout['actionLabels']}"
+    assert layout["tabsPosition"] == "static", f"Category tabs should not be fixed, got {layout['tabsPosition']}"
+    assert layout["previewHeight"] >= 220, f"Preview should remain visible, got height {layout['previewHeight']}"
+    assert layout["tabsTop"] >= layout["previewBottom"] - 2, "Category tabs should sit below preview"
+    assert layout["tabsBottom"] < layout["actionsTop"], "Category tabs should stay above the bottom action bar"
+    assert layout["optionsBottom"] <= layout["actionsTop"] + 2, "Options scroller should not run behind actions"
+    assert layout["optionsOverflowY"] in ("auto", "scroll"), \
+        f"Options panel should own vertical scrolling, got {layout['optionsOverflowY']}"
+    assert abs(layout["previewTopAfterOptionsScroll"] - layout["previewTopBeforeOptionsScroll"]) < 1, \
+        "Preview should not move when options scroll"
+    assert layout["bodyOverflowY"] == "hidden", f"Body should not own mobile scrolling, got {layout['bodyOverflowY']}"
+    assert layout["windowScrollY"] == 0, f"Window should not scroll on mobile shell, got {layout['windowScrollY']}"
+    ok("Mobile shell keeps preview fixed and actions separate")
+
+    await cdp.send("Emulation.clearDeviceMetricsOverride")
+
+
 # === MAIN ===============================================================
 
 async def main():
@@ -703,6 +777,7 @@ async def main():
     runner.register("Thumbnail status feedback", test_08_thumb_status_feedback)
     runner.register("Reset restores defaults", test_09_reset_all)
     runner.register("No duplicate images in tiles", test_10_no_duplicate_thumbnails_in_tile)
+    runner.register("Mobile shell layout", test_11_mobile_shell_layout)
 
     exit_code = await runner.run(only_test=args.test)
     sys.exit(exit_code)
