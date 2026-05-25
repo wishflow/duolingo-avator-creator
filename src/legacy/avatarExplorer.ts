@@ -37,6 +37,8 @@ let aiPinnedStatus = '';
 let aiFinalReceived = false;
 let suppressTurnstileCallbacks = false;
 let mentionRange = null;
+let semanticCatalog = null;
+let semanticCatalogStatus = { ready: false, error: 'semantic_catalog_loading' };
 
 const STORAGE_KEY = 'duolingoAvatarCreator.avatarState.v1';
 const HISTORY_KEY = 'duolingoAvatarCreator.avatarHistory.v1';
@@ -50,6 +52,7 @@ let backendConfig = {
   config: null,
 };
 window.avatarBackend = backendConfig;
+window.avatarGenerationDebug = { lastFinal: null };
 
 const TAB_DEFS = [
   { icon: 'avatar_builder_body_unselected_dark.svg', label: 'Body', idx: 0 },
@@ -680,6 +683,25 @@ function isAiConfigured() {
   );
 }
 
+function getConfigSourceVersion() {
+  return builderConfig?.avatarBuilderConfig?.riveFileVersion || '';
+}
+
+function isSemanticCatalogReady() {
+  return !!semanticCatalogStatus.ready;
+}
+
+function getSemanticCatalogMessage() {
+  if (semanticCatalogStatus.ready) return '';
+  if (semanticCatalogStatus.error === 'semantic_catalog_version_mismatch') {
+    return 'Semantic catalog version mismatch. Regenerate the semantic catalog before using AI generation.';
+  }
+  if (semanticCatalogStatus.error === 'semantic_catalog_loading') {
+    return 'Semantic catalog is loading.';
+  }
+  return 'Semantic catalog unavailable. Regenerate the semantic catalog before using AI generation.';
+}
+
 function getStoredAiSession() {
   try {
     const stored = JSON.parse(sessionStorage.getItem(AI_SESSION_KEY) || 'null');
@@ -727,6 +749,7 @@ function updateAiControls(message) {
   if (!generateBtn || !aiStatus) return;
   if (message) aiPinnedStatus = message;
   const configured = isAiConfigured();
+  const semanticReady = isSemanticCatalogReady();
   const promptReady = !!aiPrompt?.value.trim();
   const tokenReady = !!turnstileToken;
   const sessionReady = hasValidAiSession();
@@ -734,11 +757,13 @@ function updateAiControls(message) {
     verifyAiBtn.hidden = true;
     verifyAiBtn.disabled = true;
   }
-  generateBtn.disabled = aiGenerating || !configured || !promptReady || !(sessionReady || tokenReady);
+  generateBtn.disabled = aiGenerating || !configured || !semanticReady || !promptReady || !(sessionReady || tokenReady);
   if (message) {
     aiStatus.textContent = message;
   } else if (!configured) {
     aiStatus.textContent = 'AI generation is unavailable until the backend and Turnstile are configured.';
+  } else if (!semanticReady) {
+    aiStatus.textContent = getSemanticCatalogMessage();
   } else if (aiGenerating) {
     aiStatus.textContent = 'Generating editable avatar...';
   } else if (aiPinnedStatus) {
@@ -817,6 +842,41 @@ async function loadBackendConfig() {
     renderTurnstileIfNeeded();
   } catch(e) {
     window.avatarBackend = backendConfig;
+    updateAiControls();
+  }
+}
+
+async function loadSemanticCatalog() {
+  semanticCatalogStatus = { ready: false, error: 'semantic_catalog_loading' };
+  try {
+    const resp = await fetch('avatar_semantic_catalog.json', {
+      headers: { 'Accept': 'application/json' },
+    });
+    if (!resp.ok) {
+      semanticCatalog = null;
+      semanticCatalogStatus = { ready: false, error: 'semantic_catalog_required' };
+      updateAiControls();
+      return;
+    }
+    const catalog = await resp.json();
+    if (!catalog || catalog.semanticVersion !== 1 || !Array.isArray(catalog.options) || !catalog.options.length) {
+      semanticCatalog = null;
+      semanticCatalogStatus = { ready: false, error: 'semantic_catalog_required' };
+      updateAiControls();
+      return;
+    }
+    if (catalog.sourceVersion !== getConfigSourceVersion()) {
+      semanticCatalog = catalog;
+      semanticCatalogStatus = { ready: false, error: 'semantic_catalog_version_mismatch' };
+      updateAiControls();
+      return;
+    }
+    semanticCatalog = catalog;
+    semanticCatalogStatus = { ready: true, error: '' };
+    updateAiControls();
+  } catch(e) {
+    semanticCatalog = null;
+    semanticCatalogStatus = { ready: false, error: 'semantic_catalog_required' };
     updateAiControls();
   }
 }
@@ -912,6 +972,10 @@ function buildBgColorMap() {
 function buildAvatarCatalog() {
   const tabs = builderConfig?.avatarBuilderConfig?.stateChooserTabs || [];
   const states = {};
+  const semanticById = new Map();
+  for (const option of semanticCatalog?.options || []) {
+    semanticById.set(`${option.state}:${option.value}`, option);
+  }
   for (let tabIdx = 0; tabIdx < tabs.length; tabIdx++) {
     const tab = tabs[tabIdx];
     const tabLabel = TAB_DEFS.find(d => d.idx === tabIdx)?.label || `Tab ${tabIdx + 1}`;
@@ -927,6 +991,7 @@ function buildAvatarCatalog() {
             kind: 'color',
             color: ib.color,
             index,
+            ...(semanticById.get(`${ib.state}:${ib.value}`) || {}),
           });
         });
       } else if (section.buttonType === 'FEATURE') {
@@ -938,12 +1003,19 @@ function buildAvatarCatalog() {
             section: sectionLabel,
             kind: 'feature',
             index,
+            ...(semanticById.get(`${fb.state}:${fb.value}`) || {}),
           });
         });
       }
     }
   }
-  return { states };
+  return {
+    semanticVersion: semanticCatalog?.semanticVersion,
+    sourceVersion: semanticCatalog?.sourceVersion,
+    configSourceVersion: getConfigSourceVersion(),
+    states,
+    semanticOptions: semanticCatalog?.options || [],
+  };
 }
 
 function detectContextMode(prompt) {
@@ -1107,6 +1179,7 @@ function handleGenerationEvent(payload) {
   if (event === 'plan_delta') appendAiStreamText(data.text || '');
   if (event === 'final') {
     aiFinalReceived = true;
+    window.avatarGenerationDebug.lastFinal = data;
     const applied = applyGeneratedAvatarState(data.avatarState);
     renderAiResult(data);
     updateAiControls(applied ? 'Generated avatar applied. You can keep editing.' : 'Generated result had no applicable changes.');
@@ -1125,6 +1198,10 @@ async function startAvatarGeneration() {
   }
   if (!isAiConfigured()) {
     updateAiControls('AI generation is unavailable until the backend is configured.');
+    return;
+  }
+  if (!isSemanticCatalogReady()) {
+    updateAiControls(getSemanticCatalogMessage());
     return;
   }
 
@@ -1161,6 +1238,9 @@ async function startAvatarGeneration() {
         clearAiSession();
         resetTurnstileWidget();
         throw new Error('Verification expired. Complete the Turnstile check, then click Generate again.');
+      }
+      if (/^semantic_catalog_/.test(body.error || '')) {
+        throw new Error(getSemanticCatalogMessage());
       }
       throw new Error(body.message || body.error || `Generation failed with ${response.status}.`);
     }
@@ -1513,6 +1593,8 @@ function installAvatarGlobals() {
     aiPrompt: { configurable: true, get: () => aiPrompt },
     generateBtn: { configurable: true, get: () => generateBtn },
     verifyAiBtn: { configurable: true, get: () => verifyAiBtn },
+    semanticCatalog: { configurable: true, get: () => semanticCatalog },
+    semanticCatalogStatus: { configurable: true, get: () => semanticCatalogStatus },
   });
   global.__avatarTestHooks = {
     isReady: () => !!riveInst && sharedRiveFile !== null && tileInstances.size > 0,
@@ -1525,6 +1607,7 @@ function installAvatarGlobals() {
     redo: redoAvatarChange,
     getTileCount: () => tileInstances.size,
     getCurrentTab: () => currentTabIdx,
+    isSemanticCatalogReady,
   };
 }
 
@@ -1533,7 +1616,11 @@ async function init() {
   loadBackendConfig();
   try {
     const resp = await fetch('avatar_builder_config.json');
-    if (resp.ok) { builderConfig = await resp.json(); buildBgColorMap(); }
+    if (resp.ok) {
+      builderConfig = await resp.json();
+      buildBgColorMap();
+      await loadSemanticCatalog();
+    }
   } catch(e) { console.warn('Config:', e.message); }
   try {
     const resp = await fetch('avatar_builder_25_sept2025.riv');

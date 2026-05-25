@@ -18,8 +18,35 @@ type CatalogOption = {
   color?: string;
   index?: number;
 };
+type SemanticRequirement = {
+  state: string;
+  notValue?: AvatarValue;
+};
+type SemanticOption = CatalogOption & {
+  optionId: string;
+  state: string;
+  group: string;
+  tags: string[];
+  confidence: number;
+  visible: boolean;
+  needsReview: boolean;
+  requires: SemanticRequirement[];
+  statesToOverride: AvatarState;
+};
 type AvatarCatalog = {
+  semanticVersion?: number;
+  sourceVersion?: string;
+  configSourceVersion?: string;
   states: Record<string, CatalogOption[]>;
+  semanticOptions: SemanticOption[];
+};
+type SelectionTrace = {
+  trait: string;
+  matchedOptionId: string;
+  state: string;
+  value: AvatarValue;
+  score: number;
+  reason: string;
 };
 type SanitizedModelResult = {
   avatarState: AvatarState;
@@ -27,9 +54,22 @@ type SanitizedModelResult = {
   summary: string;
   confidence: number;
   warnings: string[];
+  selectionTrace: SelectionTrace[];
 };
 type EditableAvatarResult = SanitizedModelResult & {
   usedFallback: boolean;
+};
+type TraitIntent = {
+  group: string;
+  tags: string[];
+  color?: string;
+  required: boolean;
+};
+type SanitizedTraitResult = {
+  summary: string;
+  confidence: number;
+  selectionIntent: TraitIntent[];
+  warnings: string[];
 };
 type ValidatedGenerationRequest = {
   prompt: string;
@@ -54,6 +94,10 @@ const avatarStateSchema = z.record(z.string(), avatarValueSchema);
 const catalogStatesSchema = z.object({
   states: z.record(z.string().min(1), z.array(z.unknown())),
 }).passthrough();
+const semanticRequirementSchema = z.object({
+  state: z.string(),
+  notValue: avatarValueSchema.optional(),
+}).passthrough();
 const catalogOptionSchema = z.object({
   value: avatarValueSchema,
   tab: z.unknown().optional(),
@@ -61,6 +105,17 @@ const catalogOptionSchema = z.object({
   kind: z.unknown().optional(),
   color: z.unknown().optional(),
   index: z.unknown().optional(),
+}).passthrough();
+const semanticOptionSchema = catalogOptionSchema.extend({
+  optionId: z.string().min(1),
+  state: z.string().min(1),
+  group: z.string().min(1),
+  tags: z.array(z.string().min(1)).min(1),
+  confidence: z.number().min(0).max(1),
+  visible: z.boolean(),
+  needsReview: z.boolean(),
+  requires: z.array(semanticRequirementSchema).optional(),
+  statesToOverride: avatarStateSchema.optional(),
 }).passthrough();
 const modelChangeSchema = z.object({
   state: z.unknown().optional(),
@@ -73,6 +128,19 @@ const modelResultSchema = z.object({
   steps: z.unknown().optional(),
   summary: z.unknown().optional(),
   confidence: z.unknown().optional(),
+  warnings: z.unknown().optional(),
+}).passthrough();
+const modelTraitIntentSchema = z.object({
+  group: z.unknown().optional(),
+  tags: z.unknown().optional(),
+  color: z.unknown().optional(),
+  required: z.unknown().optional(),
+}).passthrough();
+const modelTraitResultSchema = z.object({
+  summary: z.unknown().optional(),
+  confidence: z.unknown().optional(),
+  targetTraits: z.unknown().optional(),
+  selectionIntent: z.unknown().optional(),
   warnings: z.unknown().optional(),
 }).passthrough();
 const sessionRequestSchema = z.object({
@@ -105,6 +173,14 @@ const sseFinalPayloadSchema = z.object({
   confidence: z.number().min(0).max(1),
   warnings: z.array(z.string()),
   usedFallback: z.boolean(),
+  selectionTrace: z.array(z.object({
+    trait: z.string(),
+    matchedOptionId: z.string(),
+    state: z.string(),
+    value: avatarValueSchema,
+    score: z.number(),
+    reason: z.string(),
+  })),
 }).strict();
 
 function getErrorMessage(error: unknown, fallback: string): string {
@@ -209,10 +285,26 @@ function cleanStateSnapshot(value: unknown): AvatarState {
   return clean;
 }
 
+function getSemanticCatalogError(catalog: unknown): 'semantic_catalog_required' | 'semantic_catalog_version_mismatch' | null {
+  if (!catalog || typeof catalog !== 'object' || Array.isArray(catalog)) return 'semantic_catalog_required';
+  const raw = catalog as Record<string, unknown>;
+  if (raw.semanticVersion !== 1) return 'semantic_catalog_required';
+  if (!Array.isArray(raw.semanticOptions) || !raw.semanticOptions.length) return 'semantic_catalog_required';
+  const sourceVersion = typeof raw.sourceVersion === 'string' ? raw.sourceVersion : '';
+  const configSourceVersion = typeof raw.configSourceVersion === 'string' ? raw.configSourceVersion : '';
+  if (!sourceVersion || !configSourceVersion || sourceVersion !== configSourceVersion) {
+    return 'semantic_catalog_version_mismatch';
+  }
+  return null;
+}
+
 function normalizeCatalog(catalog: unknown): AvatarCatalog | null {
   const parsedCatalog = catalogStatesSchema.safeParse(catalog);
   if (!parsedCatalog.success) return null;
   const { states } = parsedCatalog.data;
+  const rawCatalog = catalog && typeof catalog === 'object' && !Array.isArray(catalog)
+    ? catalog as Record<string, unknown>
+    : {};
 
   const normalized: AvatarCatalog['states'] = {};
   let optionCount = 0;
@@ -242,7 +334,44 @@ function normalizeCatalog(catalog: unknown): AvatarCatalog | null {
     if (cleanOptions.length) normalized[stateName] = cleanOptions;
   }
 
-  return Object.keys(normalized).length ? { states: normalized } : null;
+  const semanticOptions: SemanticOption[] = [];
+  const rawSemanticOptions = Array.isArray(rawCatalog.semanticOptions) ? rawCatalog.semanticOptions : [];
+  const allowedValues = buildAllowedValues({ states: normalized, semanticOptions: [] });
+  for (const rawOption of rawSemanticOptions) {
+    const parsed = semanticOptionSchema.safeParse(rawOption);
+    if (!parsed.success) continue;
+    const option = parsed.data;
+    if (!isAllowedStateValue(allowedValues, option.state, option.value)) continue;
+    semanticOptions.push({
+      value: option.value,
+      tab: String(option.tab || '').slice(0, 40),
+      section: String(option.section || '').slice(0, 60),
+      kind: String(option.kind || '').slice(0, 20),
+      color: typeof option.color === 'string' ? option.color.slice(0, 20) : undefined,
+      index: Number.isFinite(Number(option.index)) ? Number(option.index) : undefined,
+      optionId: option.optionId.slice(0, 80),
+      state: option.state,
+      group: option.group.slice(0, 48),
+      tags: option.tags.map((tag) => tag.slice(0, 48)).slice(0, 16),
+      confidence: option.confidence,
+      visible: option.visible,
+      needsReview: option.needsReview,
+      requires: (option.requires || []).map((item) => ({
+        state: item.state,
+        notValue: item.notValue,
+      })).slice(0, 4),
+      statesToOverride: cleanStateSnapshot(option.statesToOverride || { [option.state]: option.value }),
+    });
+    if (semanticOptions.length >= MAX_CATALOG_OPTIONS) break;
+  }
+
+  return Object.keys(normalized).length ? {
+    semanticVersion: Number(rawCatalog.semanticVersion),
+    sourceVersion: typeof rawCatalog.sourceVersion === 'string' ? rawCatalog.sourceVersion : undefined,
+    configSourceVersion: typeof rawCatalog.configSourceVersion === 'string' ? rawCatalog.configSourceVersion : undefined,
+    states: normalized,
+    semanticOptions,
+  } : null;
 }
 
 function buildAllowedValues(catalog: AvatarCatalog): Map<string, Set<string>> {
@@ -306,6 +435,7 @@ function sanitizeModelResult(rawResult: unknown, catalog: AvatarCatalog): Saniti
     summary,
     confidence,
     warnings: [...warnings, ...extraWarnings].slice(0, 10),
+    selectionTrace: [],
   };
 }
 
@@ -351,6 +481,60 @@ function avatarJsonSchema(catalog: AvatarCatalog): Record<string, unknown> {
   };
 }
 
+function traitJsonSchema(catalog: AvatarCatalog): Record<string, unknown> {
+  const groups = [...new Set(catalog.semanticOptions.map((option) => option.group))].sort();
+  return {
+    type: 'object',
+    additionalProperties: false,
+    properties: {
+      summary: { type: 'string' },
+      confidence: { type: 'number', minimum: 0, maximum: 1 },
+      targetTraits: {
+        type: 'object',
+        additionalProperties: {
+          oneOf: [
+            { type: 'string' },
+            { type: 'array', items: { type: 'string' } },
+          ],
+        },
+      },
+      selectionIntent: {
+        type: 'array',
+        items: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            group: { type: 'string', enum: groups },
+            tags: { type: 'array', items: { type: 'string' }, minItems: 1 },
+            color: { type: 'string' },
+            required: { type: 'boolean' },
+          },
+          required: ['group', 'tags'],
+        },
+      },
+      warnings: {
+        type: 'array',
+        items: { type: 'string' },
+      },
+    },
+    required: ['summary', 'confidence', 'selectionIntent', 'warnings'],
+  };
+}
+
+function buildTraitCatalog(catalog: AvatarCatalog): Record<string, string[]> {
+  const groups: Record<string, Set<string>> = {};
+  for (const option of catalog.semanticOptions) {
+    if (!option.visible || option.needsReview) continue;
+    groups[option.group] ||= new Set<string>();
+    for (const tag of option.tags) groups[option.group].add(tag);
+  }
+  const result: Record<string, string[]> = {};
+  for (const [group, tags] of Object.entries(groups)) {
+    result[group] = [...tags].sort().slice(0, 80);
+  }
+  return result;
+}
+
 function buildExplanationMessages({ prompt, contextMode, result }: {
   prompt: string;
   contextMode: ContextMode;
@@ -384,17 +568,17 @@ function buildExplanationMessages({ prompt, contextMode, result }: {
   ];
 }
 
-function buildStructuredMessages({ prompt, contextMode, baselineState, catalog }: ValidatedGenerationRequest): Array<{ role: string; content: string }> {
+function buildTraitMessages({ prompt, contextMode, baselineState, catalog }: ValidatedGenerationRequest): Array<{ role: string; content: string }> {
   return [
     {
       role: 'system',
       content: [
-        'You convert a user avatar request into supported avatar editor options.',
-        'Return only choices that are available in the supplied catalog.',
-        'Prefer a small coherent set of changes over changing every state.',
-        'If the catalog lacks semantic labels, choose conservative values based on tab, section, color, and option index.',
-        'Every avatarState item must set exactly one of valueNumber or valueBoolean.',
-        'Write detailed manual reproduction steps for a user following the editor categories.',
+        'You convert an avatar request into visual target traits for a Duolingo-style avatar editor.',
+        'Do not choose raw option numbers, state names, or state values.',
+        'Use only groups and tags from the supplied semantic taxonomy.',
+        'For real or fictional people, infer a small set of recognizable visual traits, but treat the result as a stylized approximation.',
+        'Prefer visible traits such as facial hair, headwear, hair shape, expression, clothing color, background color, glasses, wrinkles, and skin tone.',
+        'Do not output traits for unavailable or unsupported details.',
       ].join(' '),
     },
     {
@@ -403,15 +587,63 @@ function buildStructuredMessages({ prompt, contextMode, baselineState, catalog }
         prompt,
         contextMode,
         baselineState,
-        catalog,
+        semanticTaxonomy: buildTraitCatalog(catalog),
         outputRules: {
-          avatarState: 'Array of supported { state, valueNumber or valueBoolean, reason } changes only.',
-          steps: 'Detailed manual guide, 6-12 steps, same language as user prompt when possible.',
-          warnings: 'Mention uncertain choices caused by missing semantic labels.',
+          selectionIntent: 'Array of { group, tags, required }. Tags must come from semanticTaxonomy[group].',
+          targetTraits: 'Optional human-readable trait map using the same groups and tags.',
+          warnings: 'Mention approximation limits or traits that cannot be represented.',
         },
       }),
     },
   ];
+}
+
+function sanitizeTraitResult(rawResult: unknown, catalog: AvatarCatalog): SanitizedTraitResult {
+  const taxonomy = buildTraitCatalog(catalog);
+  const result = modelTraitResultSchema.safeParse(rawResult).success
+    ? modelTraitResultSchema.parse(rawResult)
+    : {};
+  const intents: TraitIntent[] = [];
+  const addIntent = (rawGroup: unknown, rawTags: unknown, rawRequired: unknown, rawColor?: unknown) => {
+    const group = typeof rawGroup === 'string' ? rawGroup : '';
+    if (!group || !taxonomy[group]) return;
+    const tags = (Array.isArray(rawTags) ? rawTags : [rawTags])
+      .map((tag) => String(tag || '').trim())
+      .filter((tag) => taxonomy[group].includes(tag))
+      .slice(0, 8);
+    if (!tags.length) return;
+    intents.push({
+      group,
+      tags,
+      color: typeof rawColor === 'string' ? rawColor.slice(0, 40) : undefined,
+      required: rawRequired === true,
+    });
+  };
+
+  if (Array.isArray(result.selectionIntent)) {
+    for (const rawIntent of result.selectionIntent) {
+      const parsed = modelTraitIntentSchema.safeParse(rawIntent);
+      if (!parsed.success) continue;
+      addIntent(parsed.data.group, parsed.data.tags, parsed.data.required, parsed.data.color);
+    }
+  }
+
+  if (!intents.length && result.targetTraits && typeof result.targetTraits === 'object' && !Array.isArray(result.targetTraits)) {
+    for (const [group, rawTags] of Object.entries(result.targetTraits as Record<string, unknown>)) {
+      addIntent(group, rawTags, true);
+    }
+  }
+
+  const warnings = Array.isArray(result.warnings)
+    ? result.warnings.map((warning) => String(warning).trim()).filter(Boolean).slice(0, 8)
+    : [];
+
+  return {
+    summary: String(result.summary || '').trim().slice(0, 280),
+    confidence: Math.max(0, Math.min(1, Number(result.confidence ?? 0.55))),
+    selectionIntent: intents.slice(0, 12),
+    warnings,
+  };
 }
 
 function encodeSse(event: SseEvent, data: unknown): string {
@@ -661,6 +893,107 @@ function chooseClosestColor(catalog: AvatarCatalog, baselineState: AvatarState, 
     || chooseOption(catalog, baselineState, stateName, (option) => !!option.color);
 }
 
+function requirementMet(requirement: SemanticRequirement, baselineState: AvatarState, avatarState: AvatarState): boolean {
+  const value = avatarState[requirement.state] ?? baselineState[requirement.state];
+  if (requirement.notValue !== undefined) return value !== undefined && value !== requirement.notValue;
+  return value !== undefined;
+}
+
+function scoreSemanticOption(intent: TraitIntent, option: SemanticOption, baselineState: AvatarState, avatarState: AvatarState): number {
+  if (!option.visible || option.needsReview) return -1;
+  if (option.group !== intent.group) return -1;
+  if (baselineState[option.state] === option.value || avatarState[option.state] === option.value) return -1;
+  if (option.requires.some((requirement) => !requirementMet(requirement, baselineState, avatarState))) return -1;
+  const matchedTags = intent.tags.filter((tag) => option.tags.includes(tag));
+  if (!matchedTags.length) return -1;
+  const requiredWeight = intent.required ? 0.1 : 0;
+  return matchedTags.length + option.confidence + requiredWeight;
+}
+
+function buildSelectionTrace(intent: TraitIntent, option: SemanticOption, score: number): SelectionTrace {
+  const matchedTags = intent.tags.filter((tag) => option.tags.includes(tag));
+  return {
+    trait: `${intent.group}:${intent.tags.join('+')}`,
+    matchedOptionId: option.optionId,
+    state: option.state,
+    value: option.value,
+    score: Number(score.toFixed(3)),
+    reason: `matched tags: ${matchedTags.join(', ')}`,
+  };
+}
+
+function applySemanticOption(avatarState: AvatarState, option: SemanticOption): void {
+  avatarState[option.state] = option.value;
+}
+
+function buildAvatarStateFromTraits(result: SanitizedTraitResult, validated: ValidatedGenerationRequest): {
+  avatarState: AvatarState;
+  selectionTrace: SelectionTrace[];
+  warnings: string[];
+} {
+  const { baselineState, catalog } = validated;
+  const avatarState: AvatarState = {};
+  const selectionTrace: SelectionTrace[] = [];
+  const warnings = [...result.warnings];
+  const orderedIntents = [...result.selectionIntent].sort((a, b) => {
+    const aRequires = catalog.semanticOptions.some((option) => option.group === a.group && option.requires.length > 0) ? 1 : 0;
+    const bRequires = catalog.semanticOptions.some((option) => option.group === b.group && option.requires.length > 0) ? 1 : 0;
+    return aRequires - bRequires;
+  });
+
+  for (const intent of orderedIntents) {
+    let best: { option: SemanticOption; score: number } | null = null;
+    for (const option of catalog.semanticOptions) {
+      const score = scoreSemanticOption(intent, option, baselineState, avatarState);
+      if (score < 0) continue;
+      if (!best || score > best.score) best = { option, score };
+    }
+    if (!best) {
+      if (intent.required) warnings.push(`No visible supported option matched ${intent.group}: ${intent.tags.join(', ')}.`);
+      continue;
+    }
+    applySemanticOption(avatarState, best.option);
+    selectionTrace.push(buildSelectionTrace(intent, best.option, best.score));
+  }
+
+  return {
+    avatarState: removeNoopChanges(avatarState, baselineState),
+    selectionTrace,
+    warnings: warnings.slice(0, 10),
+  };
+}
+
+function buildTraitFallback(validated: ValidatedGenerationRequest, warning?: string): SanitizedTraitResult {
+  const lower = validated.prompt.toLowerCase();
+  const intents: TraitIntent[] = [];
+  const add = (group: string, tags: string[], required = false) => {
+    intents.push({ group, tags, required });
+  };
+  if (/black|dark|深|黑/.test(lower)) {
+    add('clothing_color', ['dark'], true);
+    add('background_color', ['dark'], false);
+  }
+  if (/white|light|浅|白/.test(lower)) add('clothing_color', ['light'], true);
+  if (/mustache|moustache|beard|facial hair|胡子|胡须|小胡子/.test(lower)) {
+    add('facial_hair', ['mustache'], true);
+    add('facial_hair_color', ['dark'], false);
+  }
+  if (/hat|cap|headwear|帽/.test(lower)) add('headwear', ['hat'], true);
+  if (/glasses|spectacles|眼镜/.test(lower)) add('glasses', ['glasses'], true);
+  if (/serious|stern|严肃|威严/.test(lower)) add('expression', ['serious'], false);
+  if (/smile|happy|开心|微笑/.test(lower)) add('expression', ['smile'], false);
+  if (!intents.length) {
+    add('clothing_color', ['dark'], true);
+    add('background_color', ['blue'], false);
+  }
+  return {
+    summary: warning || 'Used deterministic target traits where model semantics were uncertain.',
+    confidence: 0.42,
+    selectionIntent: intents,
+    warnings: warning ? [warning] : ['Used deterministic target traits where model semantics were uncertain.'],
+  };
+}
+
 function buildStepsFromAvatarState(avatarState: AvatarState, catalog: AvatarCatalog): string[] {
   return Object.entries(avatarState).map(([stateName, value]) => {
     const option = optionsForState(catalog, stateName).find((item) => item.value === value);
@@ -683,93 +1016,19 @@ function summarizeAvatarState(avatarState: AvatarState): string {
 }
 
 function buildFallbackResult(validated: ValidatedGenerationRequest, warning?: string): EditableAvatarResult {
-  const { prompt, baselineState, catalog } = validated;
-  const lower = prompt.toLowerCase();
-  const avatarState: AvatarState = {};
-  const warnings = warning ? [warning] : [];
-
-  const add = (stateName: string, option: CatalogOption | null) => {
-    if (!option) return;
-    if (baselineState[stateName] === option.value) return;
-    if (avatarState[stateName] !== undefined) return;
-    avatarState[stateName] = option.value;
-  };
-
-  const colorTargets: Array<[RegExp, string]> = [
-    [/purple|violet|lavender|紫/, '#9069CD'],
-    [/blue|cyan|sky|蓝/, '#44A1CD'],
-    [/green|lime|emerald|绿/, '#78B13B'],
-    [/yellow|gold|金|黄/, '#F3CB3F'],
-    [/orange|橙/, '#F3A13F'],
-    [/red|pink|rose|红|粉/, '#C03C64'],
-    [/black|dark|深|黑/, '#424242'],
-    [/white|light|pale|白|浅/, '#ECF0F1'],
-  ];
-
-  const matchedColor = colorTargets.find(([pattern]) => pattern.test(lower));
-  if (matchedColor) {
-    add('ClothingColor', chooseClosestColor(catalog, baselineState, 'ClothingColor', matchedColor[1]));
-    add('BackgroundColor', chooseClosestColor(catalog, baselineState, 'BackgroundColor', matchedColor[1]));
-  }
-
-  if (/鲁迅|lu\s*xun|luxun/.test(lower)) {
-    add('SkinTone', chooseOptionByRatio(catalog, baselineState, 'SkinTone', 0.25));
-    add('MainHair', chooseOptionByRatio(catalog, baselineState, 'MainHair', 0.18));
-    add('MainHairColor', chooseDarkColor(catalog, baselineState, 'MainHairColor'));
-    add('Glasses', chooseOption(catalog, baselineState, 'Glasses', (option) => option.value !== 0));
-    add('GlassesColor', chooseDarkColor(catalog, baselineState, 'GlassesColor'));
-    add('Wrinkles', chooseOption(catalog, baselineState, 'Wrinkles', (option) => option.value !== 0));
-    add('FacialHair', chooseOption(catalog, baselineState, 'FacialHair', (option) => option.value !== 0));
-    add('FacialHairColor', chooseDarkColor(catalog, baselineState, 'FacialHairColor'));
-    add('ClothingColor', chooseDarkColor(catalog, baselineState, 'ClothingColor'));
-    add('BackgroundColor', chooseClosestColor(catalog, baselineState, 'BackgroundColor', '#AFAFAF'));
-  }
-
-  if (/glasses|spectacles|眼镜/.test(lower)) {
-    add('Glasses', chooseOption(catalog, baselineState, 'Glasses', (option) => option.value !== 0));
-    add('GlassesColor', chooseDarkColor(catalog, baselineState, 'GlassesColor'));
-  }
-  if (/beard|mustache|moustache|facial hair|胡子|胡须/.test(lower)) {
-    add('FacialHair', chooseOption(catalog, baselineState, 'FacialHair', (option) => option.value !== 0));
-    add('FacialHairColor', chooseDarkColor(catalog, baselineState, 'FacialHairColor'));
-  }
-  if (/hat|cap|headwear|帽/.test(lower)) {
-    add('Headwear', chooseOption(catalog, baselineState, 'Headwear', (option) => option.value !== 0));
-  }
-  if (/earring|earrings|piercing|耳环|耳钉/.test(lower)) {
-    add('Piercings', chooseOption(catalog, baselineState, 'Piercings', (option) => option.value !== 0));
-  }
-  if (/nose ring|nose piercing|鼻环/.test(lower)) {
-    add('Nose Piercing', chooseOption(catalog, baselineState, 'Nose Piercing', (option) => option.value !== 0));
-  }
-  if (/wrinkle|older|aged|elder|老|年长|皱纹/.test(lower)) {
-    add('Wrinkles', chooseOption(catalog, baselineState, 'Wrinkles', (option) => option.value !== 0));
-  }
-  if (/hair|hairstyle|发型|头发/.test(lower)) {
-    add('MainHair', chooseOption(catalog, baselineState, 'MainHair', (option) => option.value !== 0));
-  }
-  if (/smile|happy|cheerful|开心|微笑|快乐/.test(lower)) {
-    add('Expression', chooseOptionByRatio(catalog, baselineState, 'Expression', 0.15));
-  }
-  if (/serious|wise|calm|thoughtful|严肃|智慧|沉思/.test(lower)) {
-    add('Expression', chooseOptionByRatio(catalog, baselineState, 'Expression', 0.55));
-  }
-
-  if (!Object.keys(avatarState).length) {
-    add('BackgroundColor', chooseClosestColor(catalog, baselineState, 'BackgroundColor', '#84D7FF'));
-    add('Body', chooseOption(catalog, baselineState, 'Body'));
-  }
-
-  if (!warning) {
-    warnings.push('Used deterministic editor mapping where model semantics were uncertain.');
-  }
+  const { catalog } = validated;
+  const traitResult = buildTraitFallback(validated, warning);
+  const built = buildAvatarStateFromTraits(traitResult, validated);
+  const avatarState = built.avatarState;
+  const warnings = built.warnings.length ? built.warnings : traitResult.warnings;
 
   return {
     avatarState,
     steps: buildStepsFromAvatarState(avatarState, catalog),
     summary: summarizeAvatarState(avatarState),
-    confidence: 0.48,
+    confidence: traitResult.confidence,
     warnings: warnings.slice(0, 10),
+    selectionTrace: built.selectionTrace,
     usedFallback: true,
   };
 }
@@ -799,6 +1058,7 @@ function completeStructuredResult(
     summary: result.summary || summarizeAvatarState(avatarState),
     confidence: result.confidence,
     warnings: warnings.slice(0, 10),
+    selectionTrace: result.selectionTrace || [],
     usedFallback: false,
   };
 }
@@ -810,21 +1070,33 @@ async function buildEditableAvatarResult(
 ): Promise<EditableAvatarResult> {
   try {
     const structured = await env.AI.run(model, {
-      messages: buildStructuredMessages(validated),
-      max_tokens: 1100,
+      messages: buildTraitMessages(validated),
+      max_tokens: 900,
       temperature: 0.2,
       response_format: {
         type: 'json_schema',
-        json_schema: avatarJsonSchema(validated.catalog),
+        json_schema: traitJsonSchema(validated.catalog),
       },
     });
     const parsedResult = parseJsonModeResponse(structured);
-    const safeResult = sanitizeModelResult(parsedResult, validated.catalog);
-    return completeStructuredResult(safeResult, validated);
+    const safeResult = sanitizeTraitResult(parsedResult, validated.catalog);
+    const built = buildAvatarStateFromTraits(safeResult, validated);
+    if (!Object.keys(built.avatarState).length) {
+      return buildFallbackResult(validated, 'Model returned no visible semantic matches, so deterministic target traits were used.');
+    }
+    return {
+      avatarState: built.avatarState,
+      steps: buildStepsFromAvatarState(built.avatarState, validated.catalog),
+      summary: safeResult.summary || summarizeAvatarState(built.avatarState),
+      confidence: safeResult.confidence,
+      warnings: built.warnings,
+      selectionTrace: built.selectionTrace,
+      usedFallback: false,
+    };
   } catch (error) {
     return buildFallbackResult(
       validated,
-      `Structured model output failed, so a safe editor mapping was used: ${getErrorMessage(error, 'unknown error')}.`,
+      `Structured semantic output failed, so deterministic target traits were used: ${getErrorMessage(error, 'unknown error')}.`,
     );
   }
 }
@@ -864,6 +1136,9 @@ function validateGenerationRequest(request: Request, body: unknown, env: Runtime
   if (typeof parsedBody.sessionToken !== 'string' || !parsedBody.sessionToken.trim()) {
     return { status: 401, body: { ok: false, error: 'session_required' } };
   }
+
+  const semanticError = getSemanticCatalogError(parsedBody.catalog);
+  if (semanticError) return { status: 400, body: { ok: false, error: semanticError } };
 
   const catalog = normalizeCatalog(parsedBody.catalog);
   if (!catalog) return { status: 400, body: { ok: false, error: 'catalog_required' } };

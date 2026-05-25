@@ -758,6 +758,7 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
             var sessionCalls = 0;
             var generateCalls = 0;
             var generatePayload = null;
+            var semanticReady = window.__avatarTestHooks.isSemanticCatalogReady();
 
             window.__TEST_TURNSTILE_TOKEN__ = 'test-token';
             backendConfig = {
@@ -811,7 +812,15 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
                         avatarState: { Body: target },
                         steps: ['Open Body and choose the generated body tile.'],
                         warnings: [],
-                        confidence: 0.8
+                        confidence: 0.8,
+                        selectionTrace: [{
+                            trait: 'body:body_5',
+                            matchedOptionId: 'Body:' + target,
+                            state: 'Body',
+                            value: target,
+                            score: 1.8,
+                            reason: 'matched tags: body_5'
+                        }]
                     };
                     var body = ''
                         + 'event: plan_delta\\n'
@@ -861,6 +870,13 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
                 sessionCalls: sessionCalls,
                 generateCalls: generateCalls,
                 generateSessionToken: generatePayload && generatePayload.sessionToken,
+                generateCatalogOptions: generatePayload && generatePayload.catalog
+                    && generatePayload.catalog.semanticOptions.length,
+                semanticReady: semanticReady,
+                debugFinalBody: window.avatarGenerationDebug.lastFinal
+                    && window.avatarGenerationDebug.lastFinal.avatarState.Body,
+                debugTraceCount: window.avatarGenerationDebug.lastFinal
+                    && window.avatarGenerationDebug.lastFinal.selectionTrace.length,
                 streamText: streamText,
                 stepCount: stepCount,
                 modeGenerate: document.body.classList.contains('mode-generate'),
@@ -873,12 +889,16 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
     info(f"Mocked AI result: {result}")
 
     assert result["modeGenerate"], "Generate route should activate mode-generate"
+    assert result["semanticReady"], "Semantic catalog should load before Generate is enabled"
     assert not result["disabledBeforeGenerate"], "Generate should be enabled once prompt and Turnstile token are ready"
     assert result["visibleVerifyButtons"] == 0, "Verify button should not be visible in the Generate UI"
     assert result["sessionCalls"] == 1, "First Generate should automatically request an AI session"
     assert result["generateCalls"] == 1, "First Generate should continue to the generation request"
     assert result["generateSessionToken"] == "test-ai-session", "Generate request should use the auto-created AI session"
+    assert result["generateCatalogOptions"] > 0, "Generate request should include semantic catalog options"
     assert result["after"] == result["target"], "AI final state should apply to current avatar"
+    assert result["debugFinalBody"] == result["target"], "Final SSE payload should be saved for DevTools debugging"
+    assert result["debugTraceCount"] == 1, "Saved final payload should include selection trace"
     assert result["undone"] == result["before"], "Undo should restore the pre-AI avatar state"
     assert result["redone"] == result["target"], "Redo should restore the AI avatar state"
     assert "stronger body" in result["streamText"], "Streamed planning text should be visible"

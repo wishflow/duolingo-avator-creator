@@ -1,0 +1,8600 @@
+{
+  "semanticVersion": 1,
+  "sourceVersion": "avatar_builder_25_sept2025",
+  "generatedAt": "manual-dry-run",
+  "labeling": {
+    "mode": "deterministic_seed",
+    "model": "@cf/meta/llama-4-scout-17b-16e-instruct",
+    "reviewThreshold": 0.65
+  },
+  "options": [
+    {
+      "optionId": "SkinTone:15",
+      "state": "SkinTone",
+      "value": 15,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 0,
+      "color": "#6E3D3A",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#6E3D3A"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 15
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:14",
+      "state": "SkinTone",
+      "value": 14,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 1,
+      "color": "#7D4A3F",
+      "tags": [
+        "color",
+        "brown",
+        "medium",
+        "#7D4A3F"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 14
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:13",
+      "state": "SkinTone",
+      "value": 13,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 2,
+      "color": "#8C4A25",
+      "tags": [
+        "color",
+        "brown",
+        "medium",
+        "#8C4A25"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 13
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:12",
+      "state": "SkinTone",
+      "value": 12,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 3,
+      "color": "#97513F",
+      "tags": [
+        "color",
+        "brown",
+        "medium",
+        "#97513F"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 12
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:11",
+      "state": "SkinTone",
+      "value": 11,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 4,
+      "color": "#985C30",
+      "tags": [
+        "color",
+        "brown",
+        "medium",
+        "#985C30"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 11
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:10",
+      "state": "SkinTone",
+      "value": 10,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 5,
+      "color": "#A46648",
+      "tags": [
+        "color",
+        "red",
+        "medium",
+        "#A46648"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 10
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:9",
+      "state": "SkinTone",
+      "value": 9,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 6,
+      "color": "#B76E45",
+      "tags": [
+        "color",
+        "red",
+        "medium",
+        "#B76E45"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 9
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:8",
+      "state": "SkinTone",
+      "value": 8,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 7,
+      "color": "#C6775C",
+      "tags": [
+        "color",
+        "orange",
+        "medium",
+        "#C6775C"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 8
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:7",
+      "state": "SkinTone",
+      "value": 7,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 8,
+      "color": "#E18E70",
+      "tags": [
+        "color",
+        "orange",
+        "medium",
+        "#E18E70"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 7
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:6",
+      "state": "SkinTone",
+      "value": 6,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 9,
+      "color": "#E59D65",
+      "tags": [
+        "color",
+        "yellow",
+        "medium",
+        "#E59D65"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 6
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:5",
+      "state": "SkinTone",
+      "value": 5,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 10,
+      "color": "#F2A07D",
+      "tags": [
+        "color",
+        "yellow",
+        "medium",
+        "#F2A07D"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 5
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:4",
+      "state": "SkinTone",
+      "value": 4,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 11,
+      "color": "#FFB89D",
+      "tags": [
+        "color",
+        "pink",
+        "medium",
+        "#FFB89D"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 4
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:3",
+      "state": "SkinTone",
+      "value": 3,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 12,
+      "color": "#FFC6B7",
+      "tags": [
+        "color",
+        "pink",
+        "light",
+        "#FFC6B7"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 3
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:2",
+      "state": "SkinTone",
+      "value": 2,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 13,
+      "color": "#FFCBA3",
+      "tags": [
+        "color",
+        "pink",
+        "light",
+        "#FFCBA3"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 2
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "SkinTone:1",
+      "state": "SkinTone",
+      "value": 1,
+      "tab": "Body",
+      "section": "Skin tone",
+      "kind": "color",
+      "group": "skin_tone",
+      "index": 14,
+      "color": "#FFE2D6",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#FFE2D6"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "SkinTone": 1
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "Body:3",
+      "state": "Body",
+      "value": 3,
+      "tab": "Body",
+      "section": "Body",
+      "kind": "feature",
+      "group": "body",
+      "index": 0,
+      "color": null,
+      "tags": [
+        "body",
+        "silhouette",
+        "body_3"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 3,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 1,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Body:4",
+      "state": "Body",
+      "value": 4,
+      "tab": "Body",
+      "section": "Body",
+      "kind": "feature",
+      "group": "body",
+      "index": 1,
+      "color": null,
+      "tags": [
+        "body",
+        "silhouette",
+        "body_4"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 4,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 1,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Body:1",
+      "state": "Body",
+      "value": 1,
+      "tab": "Body",
+      "section": "Body",
+      "kind": "feature",
+      "group": "body",
+      "index": 2,
+      "color": null,
+      "tags": [
+        "body",
+        "silhouette",
+        "body_1"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 1,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 1,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Body:5",
+      "state": "Body",
+      "value": 5,
+      "tab": "Body",
+      "section": "Body",
+      "kind": "feature",
+      "group": "body",
+      "index": 3,
+      "color": null,
+      "tags": [
+        "body",
+        "silhouette",
+        "body_5"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 5,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 1,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Body:6",
+      "state": "Body",
+      "value": 6,
+      "tab": "Body",
+      "section": "Body",
+      "kind": "feature",
+      "group": "body",
+      "index": 4,
+      "color": null,
+      "tags": [
+        "body",
+        "silhouette",
+        "body_6"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 6,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 1,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Body:2",
+      "state": "Body",
+      "value": 2,
+      "tab": "Body",
+      "section": "Body",
+      "kind": "feature",
+      "group": "body",
+      "index": 5,
+      "color": null,
+      "tags": [
+        "body",
+        "silhouette",
+        "body_2"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 2,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 1,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "EyeColor:1",
+      "state": "EyeColor",
+      "value": 1,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 0,
+      "color": "#3D3D3D",
+      "tags": [
+        "color",
+        "black",
+        "dark",
+        "#3D3D3D"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 1
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:2",
+      "state": "EyeColor",
+      "value": 2,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 1,
+      "color": "#A44407",
+      "tags": [
+        "color",
+        "brown",
+        "medium",
+        "#A44407"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 2
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:3",
+      "state": "EyeColor",
+      "value": 3,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 2,
+      "color": "#947300",
+      "tags": [
+        "color",
+        "brown",
+        "medium",
+        "#947300"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 3
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:4",
+      "state": "EyeColor",
+      "value": 4,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 3,
+      "color": "#549002",
+      "tags": [
+        "color",
+        "green",
+        "medium",
+        "#549002"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 4
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:5",
+      "state": "EyeColor",
+      "value": 5,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 4,
+      "color": "#0B8890",
+      "tags": [
+        "color",
+        "blue",
+        "medium",
+        "#0B8890"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 5
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:6",
+      "state": "EyeColor",
+      "value": 6,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 5,
+      "color": "#007FCF",
+      "tags": [
+        "color",
+        "blue",
+        "medium",
+        "#007FCF"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 6
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:7",
+      "state": "EyeColor",
+      "value": 7,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 6,
+      "color": "#7386A1",
+      "tags": [
+        "color",
+        "gray",
+        "medium",
+        "#7386A1"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 7
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:8",
+      "state": "EyeColor",
+      "value": 8,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 7,
+      "color": "#945EF0",
+      "tags": [
+        "color",
+        "purple",
+        "medium",
+        "#945EF0"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 8
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:9",
+      "state": "EyeColor",
+      "value": 9,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 8,
+      "color": "#CE26D3",
+      "tags": [
+        "color",
+        "purple",
+        "medium",
+        "#CE26D3"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 9
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:10",
+      "state": "EyeColor",
+      "value": 10,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 9,
+      "color": "#FB4CB7",
+      "tags": [
+        "color",
+        "pink",
+        "medium",
+        "#FB4CB7"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 10
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:11",
+      "state": "EyeColor",
+      "value": 11,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 10,
+      "color": "#F03535",
+      "tags": [
+        "color",
+        "red",
+        "medium",
+        "#F03535"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 11
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:12",
+      "state": "EyeColor",
+      "value": 12,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 11,
+      "color": "#F28300",
+      "tags": [
+        "color",
+        "orange",
+        "medium",
+        "#F28300"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 12
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "EyeColor:13",
+      "state": "EyeColor",
+      "value": 13,
+      "tab": "Eyes",
+      "section": "Eye color",
+      "kind": "color",
+      "group": "eye_color",
+      "index": 12,
+      "color": "#F0AD00",
+      "tags": [
+        "color",
+        "orange",
+        "medium",
+        "#F0AD00"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "EyeColor": 13
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "Expression:17",
+      "state": "Expression",
+      "value": 17,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 0,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_17",
+        "smile",
+        "friendly"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 17
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:54",
+      "state": "Expression",
+      "value": 54,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 1,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_54",
+        "smile",
+        "friendly"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 54
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:55",
+      "state": "Expression",
+      "value": 55,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 2,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_55",
+        "smile",
+        "friendly"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 55
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:5",
+      "state": "Expression",
+      "value": 5,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 3,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_5",
+        "smile",
+        "friendly"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 5
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:31",
+      "state": "Expression",
+      "value": 31,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 4,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_31",
+        "serious",
+        "stern",
+        "calm"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 31
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:32",
+      "state": "Expression",
+      "value": 32,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 5,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_32",
+        "serious",
+        "stern",
+        "calm"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 32
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:1",
+      "state": "Expression",
+      "value": 1,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 6,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_1",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 1
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:21",
+      "state": "Expression",
+      "value": 21,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 7,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_21",
+        "smile",
+        "friendly"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 21
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:20",
+      "state": "Expression",
+      "value": 20,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 8,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_20",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 20
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:22",
+      "state": "Expression",
+      "value": 22,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 9,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_22",
+        "smile",
+        "friendly"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 22
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:23",
+      "state": "Expression",
+      "value": 23,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 10,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_23",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 23
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:24",
+      "state": "Expression",
+      "value": 24,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 11,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_24",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 24
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:11",
+      "state": "Expression",
+      "value": 11,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 12,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_11",
+        "surprised",
+        "playful"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 11
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:43",
+      "state": "Expression",
+      "value": 43,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 13,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_43",
+        "serious",
+        "stern",
+        "calm"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 43
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:44",
+      "state": "Expression",
+      "value": 44,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 14,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_44",
+        "serious",
+        "stern",
+        "calm"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 44
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:16",
+      "state": "Expression",
+      "value": 16,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 15,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_16",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 16
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:18",
+      "state": "Expression",
+      "value": 18,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 16,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_18",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 18
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:53",
+      "state": "Expression",
+      "value": 53,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 17,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_53",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 53
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:8",
+      "state": "Expression",
+      "value": 8,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 18,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_8",
+        "surprised",
+        "playful"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 8
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:37",
+      "state": "Expression",
+      "value": 37,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 19,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_37",
+        "serious",
+        "stern",
+        "calm"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 37
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:38",
+      "state": "Expression",
+      "value": 38,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 20,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_38",
+        "serious",
+        "stern",
+        "calm"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 38
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:9",
+      "state": "Expression",
+      "value": 9,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 21,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_9",
+        "surprised",
+        "playful"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 9
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:39",
+      "state": "Expression",
+      "value": 39,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 22,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_39",
+        "serious",
+        "stern",
+        "calm"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 39
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:40",
+      "state": "Expression",
+      "value": 40,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 23,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_40",
+        "serious",
+        "stern",
+        "calm"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 40
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:3",
+      "state": "Expression",
+      "value": 3,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 24,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_3",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 3
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:27",
+      "state": "Expression",
+      "value": 27,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 25,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_27",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 27
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:28",
+      "state": "Expression",
+      "value": 28,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 26,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_28",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 28
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:2",
+      "state": "Expression",
+      "value": 2,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 27,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_2",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 2
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:25",
+      "state": "Expression",
+      "value": 25,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 28,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_25",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 25
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:26",
+      "state": "Expression",
+      "value": 26,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 29,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_26",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 26
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:4",
+      "state": "Expression",
+      "value": 4,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 30,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_4",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 4
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:29",
+      "state": "Expression",
+      "value": 29,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 31,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_29",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 29
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:30",
+      "state": "Expression",
+      "value": 30,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 32,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_30",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 30
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:45",
+      "state": "Expression",
+      "value": 45,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 33,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_45",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 45
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:46",
+      "state": "Expression",
+      "value": 46,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 34,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_46",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 46
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:12",
+      "state": "Expression",
+      "value": 12,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 35,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_12",
+        "surprised",
+        "playful"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 12
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:10",
+      "state": "Expression",
+      "value": 10,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 36,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_10",
+        "surprised",
+        "playful"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 10
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:41",
+      "state": "Expression",
+      "value": 41,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 37,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_41",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 41
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:42",
+      "state": "Expression",
+      "value": 42,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 38,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_42",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 42
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:19",
+      "state": "Expression",
+      "value": 19,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 39,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_19",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 19
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:56",
+      "state": "Expression",
+      "value": 56,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 40,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_56",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 56
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:57",
+      "state": "Expression",
+      "value": 57,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 41,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_57",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 57
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:6",
+      "state": "Expression",
+      "value": 6,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 42,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_6",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 6
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:33",
+      "state": "Expression",
+      "value": 33,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 43,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_33",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 33
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:34",
+      "state": "Expression",
+      "value": 34,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 44,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_34",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 34
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:13",
+      "state": "Expression",
+      "value": 13,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 45,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_13",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 13
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:47",
+      "state": "Expression",
+      "value": 47,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 46,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_47",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 47
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:48",
+      "state": "Expression",
+      "value": 48,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 47,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_48",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 48
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:14",
+      "state": "Expression",
+      "value": 14,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 48,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_14",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 14
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:49",
+      "state": "Expression",
+      "value": 49,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 49,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_49",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 49
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:50",
+      "state": "Expression",
+      "value": 50,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 50,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_50",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 50
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:15",
+      "state": "Expression",
+      "value": 15,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 51,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_15",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 15
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:51",
+      "state": "Expression",
+      "value": 51,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 52,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_51",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 51
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:52",
+      "state": "Expression",
+      "value": 52,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 53,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_52",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 52
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:7",
+      "state": "Expression",
+      "value": 7,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 54,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_7",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 7
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:35",
+      "state": "Expression",
+      "value": 35,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 55,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_35",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 35
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Expression:36",
+      "state": "Expression",
+      "value": 36,
+      "tab": "Eyes",
+      "section": "Expression",
+      "kind": "feature",
+      "group": "expression",
+      "index": 56,
+      "color": null,
+      "tags": [
+        "expression",
+        "expression_36",
+        "neutral"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 36
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHairColor:1",
+      "state": "MainHairColor",
+      "value": 1,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 0,
+      "color": "#3D3D3D",
+      "tags": [
+        "color",
+        "black",
+        "dark",
+        "#3D3D3D"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 1
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:2",
+      "state": "MainHairColor",
+      "value": 2,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 1,
+      "color": "#553629",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#553629"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 2
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:3",
+      "state": "MainHairColor",
+      "value": 3,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 2,
+      "color": "#662C2C",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#662C2C"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 3
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:4",
+      "state": "MainHairColor",
+      "value": 4,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 3,
+      "color": "#753A23",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#753A23"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 4
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:5",
+      "state": "MainHairColor",
+      "value": 5,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 4,
+      "color": "#A34242",
+      "tags": [
+        "color",
+        "red",
+        "medium",
+        "#A34242"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 5
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:6",
+      "state": "MainHairColor",
+      "value": 6,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 5,
+      "color": "#947872",
+      "tags": [
+        "color",
+        "gray",
+        "medium",
+        "#947872"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 6
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:7",
+      "state": "MainHairColor",
+      "value": 7,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 6,
+      "color": "#BB6A20",
+      "tags": [
+        "color",
+        "orange",
+        "medium",
+        "#BB6A20"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 7
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:8",
+      "state": "MainHairColor",
+      "value": 8,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 7,
+      "color": "#CA6049",
+      "tags": [
+        "color",
+        "red",
+        "medium",
+        "#CA6049"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 8
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:9",
+      "state": "MainHairColor",
+      "value": 9,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 8,
+      "color": "#F5AF62",
+      "tags": [
+        "color",
+        "yellow",
+        "medium",
+        "#F5AF62"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 9
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:10",
+      "state": "MainHairColor",
+      "value": 10,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 9,
+      "color": "#FFDEBB",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#FFDEBB"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 10
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:11",
+      "state": "MainHairColor",
+      "value": 11,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 10,
+      "color": "#E4DDD6",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#E4DDD6"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 11
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:12",
+      "state": "MainHairColor",
+      "value": 12,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 11,
+      "color": "#ECF0F1",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#ECF0F1"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 12
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:13",
+      "state": "MainHairColor",
+      "value": 13,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 12,
+      "color": "#FF97CF",
+      "tags": [
+        "color",
+        "pink",
+        "medium",
+        "#FF97CF"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 13
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:14",
+      "state": "MainHairColor",
+      "value": 14,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 13,
+      "color": "#9961FF",
+      "tags": [
+        "color",
+        "purple",
+        "medium",
+        "#9961FF"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 14
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:15",
+      "state": "MainHairColor",
+      "value": 15,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 14,
+      "color": "#3F83D7",
+      "tags": [
+        "color",
+        "blue",
+        "medium",
+        "#3F83D7"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 15
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHairColor:16",
+      "state": "MainHairColor",
+      "value": 16,
+      "tab": "Hair",
+      "section": "Main hair color",
+      "kind": "color",
+      "group": "main_hair_color",
+      "index": 15,
+      "color": "#249472",
+      "tags": [
+        "color",
+        "green",
+        "medium",
+        "#249472"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "MainHairColor": 16
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "MainHair:58",
+      "state": "MainHair",
+      "value": 58,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 0,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_58",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 58,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:59",
+      "state": "MainHair",
+      "value": 59,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 1,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_59",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 59,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:60",
+      "state": "MainHair",
+      "value": 60,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 2,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_60",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 60,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:55",
+      "state": "MainHair",
+      "value": 55,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 3,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_55",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 55,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:56",
+      "state": "MainHair",
+      "value": 56,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 4,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_56",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 56,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:57",
+      "state": "MainHair",
+      "value": 57,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 5,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_57",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 57,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:50",
+      "state": "MainHair",
+      "value": 50,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 6,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_50",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 50,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:53",
+      "state": "MainHair",
+      "value": 53,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 7,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_53",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 53,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:54",
+      "state": "MainHair",
+      "value": 54,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 8,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_54",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 54,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:52",
+      "state": "MainHair",
+      "value": 52,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 9,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_52",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 52,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:49",
+      "state": "MainHair",
+      "value": 49,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 10,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_49",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 49,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:51",
+      "state": "MainHair",
+      "value": 51,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 11,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_51",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 51,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:46",
+      "state": "MainHair",
+      "value": 46,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 12,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_46",
+        "short_hair",
+        "neat_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 46,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:47",
+      "state": "MainHair",
+      "value": 47,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 13,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_47",
+        "short_hair",
+        "neat_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 47,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:48",
+      "state": "MainHair",
+      "value": 48,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 14,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_48",
+        "short_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 48,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:63",
+      "state": "MainHair",
+      "value": 63,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 15,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_63",
+        "short_hair",
+        "neat_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 63,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:61",
+      "state": "MainHair",
+      "value": 61,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 16,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_61",
+        "short_hair",
+        "neat_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 61,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:64",
+      "state": "MainHair",
+      "value": 64,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 17,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_64",
+        "short_hair",
+        "neat_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 64,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:66",
+      "state": "MainHair",
+      "value": 66,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 18,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_66",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 66,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:62",
+      "state": "MainHair",
+      "value": 62,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 19,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_62",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 62,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:65",
+      "state": "MainHair",
+      "value": 65,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 20,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_65",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 65,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:43",
+      "state": "MainHair",
+      "value": 43,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 21,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_43",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 43,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:44",
+      "state": "MainHair",
+      "value": 44,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 22,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_44",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 44,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:45",
+      "state": "MainHair",
+      "value": 45,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 23,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_45",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 45,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:7",
+      "state": "MainHair",
+      "value": 7,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 24,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_7",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 7,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:8",
+      "state": "MainHair",
+      "value": 8,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 25,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_8",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 8,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:9",
+      "state": "MainHair",
+      "value": 9,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 26,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_9",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 9,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:10",
+      "state": "MainHair",
+      "value": 10,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 27,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_10",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 10,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:11",
+      "state": "MainHair",
+      "value": 11,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 28,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_11",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 11,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:12",
+      "state": "MainHair",
+      "value": 12,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 29,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_12",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 12,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:1",
+      "state": "MainHair",
+      "value": 1,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 30,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_1",
+        "medium_hair",
+        "receding_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 1,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:68",
+      "state": "MainHair",
+      "value": 68,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 31,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_68",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 68,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:69",
+      "state": "MainHair",
+      "value": 69,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 32,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_69",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 69,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:5",
+      "state": "MainHair",
+      "value": 5,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 33,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_5",
+        "medium_hair",
+        "receding_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 5,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:70",
+      "state": "MainHair",
+      "value": 70,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 34,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_70",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 70,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:2",
+      "state": "MainHair",
+      "value": 2,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 35,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_2",
+        "medium_hair",
+        "receding_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 2,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:34",
+      "state": "MainHair",
+      "value": 34,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 36,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_34",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 34,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:4",
+      "state": "MainHair",
+      "value": 4,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 37,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_4",
+        "medium_hair",
+        "receding_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 4,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:6",
+      "state": "MainHair",
+      "value": 6,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 38,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_6",
+        "medium_hair",
+        "receding_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 6,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:3",
+      "state": "MainHair",
+      "value": 3,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 39,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_3",
+        "medium_hair",
+        "receding_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 3,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:29",
+      "state": "MainHair",
+      "value": 29,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 40,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_29",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 29,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:30",
+      "state": "MainHair",
+      "value": 30,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 41,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_30",
+        "medium_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 30,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:37",
+      "state": "MainHair",
+      "value": 37,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 42,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_37",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 37,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:38",
+      "state": "MainHair",
+      "value": 38,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 43,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_38",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 38,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:39",
+      "state": "MainHair",
+      "value": 39,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 44,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_39",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 39,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:32",
+      "state": "MainHair",
+      "value": 32,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 45,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_32",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 32,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:33",
+      "state": "MainHair",
+      "value": 33,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 46,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_33",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 33,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:31",
+      "state": "MainHair",
+      "value": 31,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 47,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_31",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 31,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:71",
+      "state": "MainHair",
+      "value": 71,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 48,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_71",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 71,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:72",
+      "state": "MainHair",
+      "value": 72,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 49,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_72",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 72,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:73",
+      "state": "MainHair",
+      "value": 73,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 50,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_73",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 73,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:40",
+      "state": "MainHair",
+      "value": 40,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 51,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_40",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 40,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:41",
+      "state": "MainHair",
+      "value": 41,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 52,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_41",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 41,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:42",
+      "state": "MainHair",
+      "value": 42,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 53,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_42",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 42,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:35",
+      "state": "MainHair",
+      "value": 35,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 54,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_35",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 35,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:36",
+      "state": "MainHair",
+      "value": 36,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 55,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_36",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 36,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:28",
+      "state": "MainHair",
+      "value": 28,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 56,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_28",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 28,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:25",
+      "state": "MainHair",
+      "value": 25,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 57,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_25",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 25,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:26",
+      "state": "MainHair",
+      "value": 26,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 58,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_26",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 26,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:27",
+      "state": "MainHair",
+      "value": 27,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 59,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_27",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 27,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:19",
+      "state": "MainHair",
+      "value": 19,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 60,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_19",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 19,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:20",
+      "state": "MainHair",
+      "value": 20,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 61,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_20",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 20,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:21",
+      "state": "MainHair",
+      "value": 21,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 62,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_21",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 21,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:22",
+      "state": "MainHair",
+      "value": 22,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 63,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_22",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 22,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:23",
+      "state": "MainHair",
+      "value": 23,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 64,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_23",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 23,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:24",
+      "state": "MainHair",
+      "value": 24,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 65,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_24",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 24,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:13",
+      "state": "MainHair",
+      "value": 13,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 66,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_13",
+        "long_hair",
+        "receding_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 13,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:14",
+      "state": "MainHair",
+      "value": 14,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 67,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_14",
+        "long_hair",
+        "receding_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 14,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:15",
+      "state": "MainHair",
+      "value": 15,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 68,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_15",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 15,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:16",
+      "state": "MainHair",
+      "value": 16,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 69,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_16",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 16,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:17",
+      "state": "MainHair",
+      "value": 17,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 70,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_17",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 17,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "MainHair:18",
+      "state": "MainHair",
+      "value": 18,
+      "tab": "Hair",
+      "section": "Hairstyle",
+      "kind": "feature",
+      "group": "main_hair",
+      "index": 71,
+      "color": null,
+      "tags": [
+        "hair",
+        "main_hair",
+        "hair_18",
+        "long_hair"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "MainHair": 18,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "GlassesColor:2",
+      "state": "GlassesColor",
+      "value": 2,
+      "tab": "Face",
+      "section": "Glasses color",
+      "kind": "color",
+      "group": "glasses_color",
+      "index": 0,
+      "color": "#9069CD",
+      "tags": [
+        "color",
+        "purple",
+        "medium",
+        "#9069CD"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Glasses",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "GlassesColor": 2
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "GlassesColor:1",
+      "state": "GlassesColor",
+      "value": 1,
+      "tab": "Face",
+      "section": "Glasses color",
+      "kind": "color",
+      "group": "glasses_color",
+      "index": 1,
+      "color": "#1453A3",
+      "tags": [
+        "color",
+        "blue",
+        "dark",
+        "#1453A3"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Glasses",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "GlassesColor": 1
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "GlassesColor:3",
+      "state": "GlassesColor",
+      "value": 3,
+      "tab": "Face",
+      "section": "Glasses color",
+      "kind": "color",
+      "group": "glasses_color",
+      "index": 2,
+      "color": "#5F8428",
+      "tags": [
+        "color",
+        "green",
+        "medium",
+        "#5F8428"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Glasses",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "GlassesColor": 3
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "GlassesColor:4",
+      "state": "GlassesColor",
+      "value": 4,
+      "tab": "Face",
+      "section": "Glasses color",
+      "kind": "color",
+      "group": "glasses_color",
+      "index": 3,
+      "color": "#EA7E00",
+      "tags": [
+        "color",
+        "orange",
+        "medium",
+        "#EA7E00"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Glasses",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "GlassesColor": 4
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "GlassesColor:5",
+      "state": "GlassesColor",
+      "value": 5,
+      "tab": "Face",
+      "section": "Glasses color",
+      "kind": "color",
+      "group": "glasses_color",
+      "index": 4,
+      "color": "#FF4B4B",
+      "tags": [
+        "color",
+        "red",
+        "medium",
+        "#FF4B4B"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Glasses",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "GlassesColor": 5
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "GlassesColor:6",
+      "state": "GlassesColor",
+      "value": 6,
+      "tab": "Face",
+      "section": "Glasses color",
+      "kind": "color",
+      "group": "glasses_color",
+      "index": 5,
+      "color": "#FF9BD8",
+      "tags": [
+        "color",
+        "pink",
+        "medium",
+        "#FF9BD8"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Glasses",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "GlassesColor": 6
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "GlassesColor:7",
+      "state": "GlassesColor",
+      "value": 7,
+      "tab": "Face",
+      "section": "Glasses color",
+      "kind": "color",
+      "group": "glasses_color",
+      "index": 6,
+      "color": "#EAD5C6",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#EAD5C6"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Glasses",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "GlassesColor": 7
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "GlassesColor:8",
+      "state": "GlassesColor",
+      "value": 8,
+      "tab": "Face",
+      "section": "Glasses color",
+      "kind": "color",
+      "group": "glasses_color",
+      "index": 7,
+      "color": "#434343",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#434343"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Glasses",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "GlassesColor": 8
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "Glasses:0",
+      "state": "Glasses",
+      "value": 0,
+      "tab": "Face",
+      "section": "Glasses",
+      "kind": "feature",
+      "group": "glasses",
+      "index": 0,
+      "color": null,
+      "tags": [
+        "none",
+        "no_glasses"
+      ],
+      "confidence": 0.78,
+      "visible": false,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Glasses": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Glasses:1",
+      "state": "Glasses",
+      "value": 1,
+      "tab": "Face",
+      "section": "Glasses",
+      "kind": "feature",
+      "group": "glasses",
+      "index": 1,
+      "color": null,
+      "tags": [
+        "glasses",
+        "glasses_1",
+        "round_glasses"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Glasses": 1
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Glasses:2",
+      "state": "Glasses",
+      "value": 2,
+      "tab": "Face",
+      "section": "Glasses",
+      "kind": "feature",
+      "group": "glasses",
+      "index": 2,
+      "color": null,
+      "tags": [
+        "glasses",
+        "glasses_2",
+        "round_glasses"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Glasses": 2
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Glasses:3",
+      "state": "Glasses",
+      "value": 3,
+      "tab": "Face",
+      "section": "Glasses",
+      "kind": "feature",
+      "group": "glasses",
+      "index": 3,
+      "color": null,
+      "tags": [
+        "glasses",
+        "glasses_3",
+        "square_glasses"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Glasses": 3
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Glasses:4",
+      "state": "Glasses",
+      "value": 4,
+      "tab": "Face",
+      "section": "Glasses",
+      "kind": "feature",
+      "group": "glasses",
+      "index": 4,
+      "color": null,
+      "tags": [
+        "glasses",
+        "glasses_4",
+        "square_glasses"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Glasses": 4
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Glasses:5",
+      "state": "Glasses",
+      "value": 5,
+      "tab": "Face",
+      "section": "Glasses",
+      "kind": "feature",
+      "group": "glasses",
+      "index": 5,
+      "color": null,
+      "tags": [
+        "glasses",
+        "glasses_5",
+        "bold_glasses"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Glasses": 5
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Glasses:6",
+      "state": "Glasses",
+      "value": 6,
+      "tab": "Face",
+      "section": "Glasses",
+      "kind": "feature",
+      "group": "glasses",
+      "index": 6,
+      "color": null,
+      "tags": [
+        "glasses",
+        "glasses_6",
+        "bold_glasses"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Glasses": 6
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Wrinkles:0",
+      "state": "Wrinkles",
+      "value": 0,
+      "tab": "Face",
+      "section": "Face details",
+      "kind": "feature",
+      "group": "face_details",
+      "index": 0,
+      "color": null,
+      "tags": [
+        "none",
+        "no_wrinkles"
+      ],
+      "confidence": 0.78,
+      "visible": false,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Wrinkles:1",
+      "state": "Wrinkles",
+      "value": 1,
+      "tab": "Face",
+      "section": "Face details",
+      "kind": "feature",
+      "group": "face_details",
+      "index": 1,
+      "color": null,
+      "tags": [
+        "wrinkles",
+        "older",
+        "wrinkles_1"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 1
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Wrinkles:2",
+      "state": "Wrinkles",
+      "value": 2,
+      "tab": "Face",
+      "section": "Face details",
+      "kind": "feature",
+      "group": "face_details",
+      "index": 2,
+      "color": null,
+      "tags": [
+        "wrinkles",
+        "older",
+        "wrinkles_2"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 2
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Piercings:0",
+      "state": "Piercings",
+      "value": 0,
+      "tab": "Face",
+      "section": "Earrings",
+      "kind": "feature",
+      "group": "piercings",
+      "index": 0,
+      "color": null,
+      "tags": [
+        "none",
+        "no_earrings"
+      ],
+      "confidence": 0.78,
+      "visible": false,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Piercings:1",
+      "state": "Piercings",
+      "value": 1,
+      "tab": "Face",
+      "section": "Earrings",
+      "kind": "feature",
+      "group": "piercings",
+      "index": 1,
+      "color": null,
+      "tags": [
+        "earrings",
+        "piercing",
+        "earrings_1"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 1,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Piercings:2",
+      "state": "Piercings",
+      "value": 2,
+      "tab": "Face",
+      "section": "Earrings",
+      "kind": "feature",
+      "group": "piercings",
+      "index": 2,
+      "color": null,
+      "tags": [
+        "earrings",
+        "piercing",
+        "earrings_2"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 2,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Piercings:3",
+      "state": "Piercings",
+      "value": 3,
+      "tab": "Face",
+      "section": "Earrings",
+      "kind": "feature",
+      "group": "piercings",
+      "index": 3,
+      "color": null,
+      "tags": [
+        "earrings",
+        "piercing",
+        "earrings_3"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 3,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Piercings:4",
+      "state": "Piercings",
+      "value": 4,
+      "tab": "Face",
+      "section": "Earrings",
+      "kind": "feature",
+      "group": "piercings",
+      "index": 4,
+      "color": null,
+      "tags": [
+        "earrings",
+        "piercing",
+        "earrings_4"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 4,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Piercings:5",
+      "state": "Piercings",
+      "value": 5,
+      "tab": "Face",
+      "section": "Earrings",
+      "kind": "feature",
+      "group": "piercings",
+      "index": 5,
+      "color": null,
+      "tags": [
+        "earrings",
+        "piercing",
+        "earrings_5"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 5,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Piercings:6",
+      "state": "Piercings",
+      "value": 6,
+      "tab": "Face",
+      "section": "Earrings",
+      "kind": "feature",
+      "group": "piercings",
+      "index": 6,
+      "color": null,
+      "tags": [
+        "earrings",
+        "piercing",
+        "earrings_6"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 6,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Nose Piercing:0",
+      "state": "Nose Piercing",
+      "value": 0,
+      "tab": "Face",
+      "section": "Nose rings",
+      "kind": "feature",
+      "group": "nose_piercing",
+      "index": 0,
+      "color": null,
+      "tags": [
+        "none",
+        "no_nose_piercing"
+      ],
+      "confidence": 0.78,
+      "visible": false,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Nose Piercing:1",
+      "state": "Nose Piercing",
+      "value": 1,
+      "tab": "Face",
+      "section": "Nose rings",
+      "kind": "feature",
+      "group": "nose_piercing",
+      "index": 1,
+      "color": null,
+      "tags": [
+        "nose_piercing",
+        "nose_piercing_1"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Nose Piercing": 1,
+        "Piercings": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Nose Piercing:2",
+      "state": "Nose Piercing",
+      "value": 2,
+      "tab": "Face",
+      "section": "Nose rings",
+      "kind": "feature",
+      "group": "nose_piercing",
+      "index": 2,
+      "color": null,
+      "tags": [
+        "nose_piercing",
+        "nose_piercing_2"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Nose Piercing": 2,
+        "Piercings": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Nose Piercing:3",
+      "state": "Nose Piercing",
+      "value": 3,
+      "tab": "Face",
+      "section": "Nose rings",
+      "kind": "feature",
+      "group": "nose_piercing",
+      "index": 3,
+      "color": null,
+      "tags": [
+        "nose_piercing",
+        "nose_piercing_3"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Nose Piercing": 3,
+        "Piercings": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "FacialHairColor:1",
+      "state": "FacialHairColor",
+      "value": 1,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 0,
+      "color": "#434343",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#434343"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 1
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:2",
+      "state": "FacialHairColor",
+      "value": 2,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 1,
+      "color": "#5D3B2D",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#5D3B2D"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 2
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:3",
+      "state": "FacialHairColor",
+      "value": 3,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 2,
+      "color": "#592615",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#592615"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 3
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:4",
+      "state": "FacialHairColor",
+      "value": 4,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 3,
+      "color": "#703030",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#703030"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 4
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:6",
+      "state": "FacialHairColor",
+      "value": 6,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 4,
+      "color": "#785B56",
+      "tags": [
+        "color",
+        "brown",
+        "medium",
+        "#785B56"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 6
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:7",
+      "state": "FacialHairColor",
+      "value": 7,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 5,
+      "color": "#A44D13",
+      "tags": [
+        "color",
+        "brown",
+        "medium",
+        "#A44D13"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 7
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:9",
+      "state": "FacialHairColor",
+      "value": 9,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 6,
+      "color": "#F09647",
+      "tags": [
+        "color",
+        "orange",
+        "medium",
+        "#F09647"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 9
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:10",
+      "state": "FacialHairColor",
+      "value": 10,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 7,
+      "color": "#FFD1A4",
+      "tags": [
+        "color",
+        "pink",
+        "light",
+        "#FFD1A4"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 10
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:11",
+      "state": "FacialHairColor",
+      "value": 11,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 8,
+      "color": "#D9D0C7",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#D9D0C7"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 11
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:12",
+      "state": "FacialHairColor",
+      "value": 12,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 9,
+      "color": "#E4EAEB",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#E4EAEB"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 12
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:14",
+      "state": "FacialHairColor",
+      "value": 14,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 10,
+      "color": "#7D46FF",
+      "tags": [
+        "color",
+        "purple",
+        "medium",
+        "#7D46FF"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 14
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:15",
+      "state": "FacialHairColor",
+      "value": 15,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 11,
+      "color": "#2A66C8",
+      "tags": [
+        "color",
+        "blue",
+        "medium",
+        "#2A66C8"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 15
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHairColor:16",
+      "state": "FacialHairColor",
+      "value": 16,
+      "tab": "Beard",
+      "section": "Facial hair color",
+      "kind": "color",
+      "group": "facial_hair_color",
+      "index": 12,
+      "color": "#167856",
+      "tags": [
+        "color",
+        "green",
+        "medium",
+        "#167856"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "FacialHair",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "FacialHairColor": 16
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "FacialHair:0",
+      "state": "FacialHair",
+      "value": 0,
+      "tab": "Beard",
+      "section": "Facial hair",
+      "kind": "feature",
+      "group": "facial_hair",
+      "index": 0,
+      "color": null,
+      "tags": [
+        "facial_hair",
+        "none",
+        "no_facial_hair"
+      ],
+      "confidence": 0.78,
+      "visible": false,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "FacialHair:1",
+      "state": "FacialHair",
+      "value": 1,
+      "tab": "Beard",
+      "section": "Facial hair",
+      "kind": "feature",
+      "group": "facial_hair",
+      "index": 1,
+      "color": null,
+      "tags": [
+        "facial_hair",
+        "mustache",
+        "short",
+        "classic"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 1,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "FacialHair:2",
+      "state": "FacialHair",
+      "value": 2,
+      "tab": "Beard",
+      "section": "Facial hair",
+      "kind": "feature",
+      "group": "facial_hair",
+      "index": 2,
+      "color": null,
+      "tags": [
+        "facial_hair",
+        "goatee",
+        "short"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 2,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "FacialHair:3",
+      "state": "FacialHair",
+      "value": 3,
+      "tab": "Beard",
+      "section": "Facial hair",
+      "kind": "feature",
+      "group": "facial_hair",
+      "index": 3,
+      "color": null,
+      "tags": [
+        "facial_hair",
+        "mustache",
+        "thick"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 3,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "FacialHair:4",
+      "state": "FacialHair",
+      "value": 4,
+      "tab": "Beard",
+      "section": "Facial hair",
+      "kind": "feature",
+      "group": "facial_hair",
+      "index": 4,
+      "color": null,
+      "tags": [
+        "facial_hair",
+        "full_beard",
+        "beard"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 4,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "FacialHair:5",
+      "state": "FacialHair",
+      "value": 5,
+      "tab": "Beard",
+      "section": "Facial hair",
+      "kind": "feature",
+      "group": "facial_hair",
+      "index": 5,
+      "color": null,
+      "tags": [
+        "facial_hair",
+        "full_beard",
+        "rounded_beard"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 5,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "FacialHair:6",
+      "state": "FacialHair",
+      "value": 6,
+      "tab": "Beard",
+      "section": "Facial hair",
+      "kind": "feature",
+      "group": "facial_hair",
+      "index": 6,
+      "color": null,
+      "tags": [
+        "facial_hair",
+        "sideburns",
+        "beard"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 6,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "HeadwearColor:1",
+      "state": "HeadwearColor",
+      "value": 1,
+      "tab": "Hat",
+      "section": "Headwear color",
+      "kind": "color",
+      "group": "headwear_color",
+      "index": 0,
+      "color": "#9069CD",
+      "tags": [
+        "color",
+        "purple",
+        "medium",
+        "#9069CD"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Headwear",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "HeadwearColor": 1
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "HeadwearColor:2",
+      "state": "HeadwearColor",
+      "value": 2,
+      "tab": "Hat",
+      "section": "Headwear color",
+      "kind": "color",
+      "group": "headwear_color",
+      "index": 1,
+      "color": "#0084C2",
+      "tags": [
+        "color",
+        "blue",
+        "medium",
+        "#0084C2"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Headwear",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "HeadwearColor": 2
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "HeadwearColor:3",
+      "state": "HeadwearColor",
+      "value": 3,
+      "tab": "Hat",
+      "section": "Headwear color",
+      "kind": "color",
+      "group": "headwear_color",
+      "index": 2,
+      "color": "#58A700",
+      "tags": [
+        "color",
+        "green",
+        "medium",
+        "#58A700"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Headwear",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "HeadwearColor": 3
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "HeadwearColor:4",
+      "state": "HeadwearColor",
+      "value": 4,
+      "tab": "Hat",
+      "section": "Headwear color",
+      "kind": "color",
+      "group": "headwear_color",
+      "index": 3,
+      "color": "#FFC700",
+      "tags": [
+        "color",
+        "yellow",
+        "medium",
+        "#FFC700"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Headwear",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "HeadwearColor": 4
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "HeadwearColor:5",
+      "state": "HeadwearColor",
+      "value": 5,
+      "tab": "Hat",
+      "section": "Headwear color",
+      "kind": "color",
+      "group": "headwear_color",
+      "index": 4,
+      "color": "#FF9600",
+      "tags": [
+        "color",
+        "orange",
+        "medium",
+        "#FF9600"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Headwear",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "HeadwearColor": 5
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "HeadwearColor:6",
+      "state": "HeadwearColor",
+      "value": 6,
+      "tab": "Hat",
+      "section": "Headwear color",
+      "kind": "color",
+      "group": "headwear_color",
+      "index": 5,
+      "color": "#BC0038",
+      "tags": [
+        "color",
+        "red",
+        "dark",
+        "#BC0038"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Headwear",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "HeadwearColor": 6
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "HeadwearColor:7",
+      "state": "HeadwearColor",
+      "value": 7,
+      "tab": "Hat",
+      "section": "Headwear color",
+      "kind": "color",
+      "group": "headwear_color",
+      "index": 6,
+      "color": "#FFB7E3",
+      "tags": [
+        "color",
+        "pink",
+        "light",
+        "#FFB7E3"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Headwear",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "HeadwearColor": 7
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "HeadwearColor:8",
+      "state": "HeadwearColor",
+      "value": 8,
+      "tab": "Hat",
+      "section": "Headwear color",
+      "kind": "color",
+      "group": "headwear_color",
+      "index": 7,
+      "color": "#ECF0F1",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#ECF0F1"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Headwear",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "HeadwearColor": 8
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "HeadwearColor:9",
+      "state": "HeadwearColor",
+      "value": 9,
+      "tab": "Hat",
+      "section": "Headwear color",
+      "kind": "color",
+      "group": "headwear_color",
+      "index": 8,
+      "color": "#575757",
+      "tags": [
+        "color",
+        "brown",
+        "medium",
+        "#575757"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [
+        {
+          "state": "Headwear",
+          "notValue": 0
+        }
+      ],
+      "statesToOverride": {
+        "HeadwearColor": 9
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "Headwear:0",
+      "state": "Headwear",
+      "value": 0,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 0,
+      "color": null,
+      "tags": [
+        "none",
+        "no_headwear"
+      ],
+      "confidence": 0.78,
+      "visible": false,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 0,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:10",
+      "state": "Headwear",
+      "value": 10,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 1,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_10",
+        "bowler_like",
+        "brimmed_hat"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 10,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:11",
+      "state": "Headwear",
+      "value": 11,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 2,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_11",
+        "bowler_like",
+        "brimmed_hat"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 11,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:7",
+      "state": "Headwear",
+      "value": 7,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 3,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_7",
+        "cap"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 7,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:8",
+      "state": "Headwear",
+      "value": 8,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 4,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_8",
+        "cap"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 8,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:9",
+      "state": "Headwear",
+      "value": 9,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 5,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_9",
+        "cap"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 9,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:1",
+      "state": "Headwear",
+      "value": 1,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 6,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_1",
+        "brimmed_hat"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 1,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:2",
+      "state": "Headwear",
+      "value": 2,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 7,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_2",
+        "brimmed_hat"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 2,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:3",
+      "state": "Headwear",
+      "value": 3,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 8,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_3",
+        "brimmed_hat"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 3,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:4",
+      "state": "Headwear",
+      "value": 4,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 9,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_4",
+        "soft_hat"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 4,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:5",
+      "state": "Headwear",
+      "value": 5,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 10,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_5",
+        "soft_hat"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 5,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "Headwear:6",
+      "state": "Headwear",
+      "value": 6,
+      "tab": "Hat",
+      "section": "Headwear",
+      "kind": "feature",
+      "group": "headwear",
+      "index": 11,
+      "color": null,
+      "tags": [
+        "headwear",
+        "hat",
+        "headwear_6",
+        "soft_hat"
+      ],
+      "confidence": 0.78,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 0,
+        "Body": 0,
+        "ENG_ONLY_Animation": 0,
+        "ENG_ONLY_Zoom": 0,
+        "Expression": 0,
+        "FacialHair": 0,
+        "Glasses": 0,
+        "Headwear": 6,
+        "Nose Piercing": 0,
+        "Piercings": 0,
+        "Wrinkles": 0
+      },
+      "labelSource": "deterministic"
+    },
+    {
+      "optionId": "ClothingColor:1",
+      "state": "ClothingColor",
+      "value": 1,
+      "tab": "Shirt",
+      "section": "Clothing color",
+      "kind": "color",
+      "group": "clothing_color",
+      "index": 0,
+      "color": "#B782C2",
+      "tags": [
+        "color",
+        "purple",
+        "medium",
+        "#B782C2",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "ClothingColor": 1
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "ClothingColor:2",
+      "state": "ClothingColor",
+      "value": 2,
+      "tab": "Shirt",
+      "section": "Clothing color",
+      "kind": "color",
+      "group": "clothing_color",
+      "index": 1,
+      "color": "#44A1CD",
+      "tags": [
+        "color",
+        "blue",
+        "medium",
+        "#44A1CD",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "ClothingColor": 2
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "ClothingColor:3",
+      "state": "ClothingColor",
+      "value": 3,
+      "tab": "Shirt",
+      "section": "Clothing color",
+      "kind": "color",
+      "group": "clothing_color",
+      "index": 2,
+      "color": "#78B13B",
+      "tags": [
+        "color",
+        "green",
+        "medium",
+        "#78B13B",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "ClothingColor": 3
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "ClothingColor:4",
+      "state": "ClothingColor",
+      "value": 4,
+      "tab": "Shirt",
+      "section": "Clothing color",
+      "kind": "color",
+      "group": "clothing_color",
+      "index": 3,
+      "color": "#F3CB3F",
+      "tags": [
+        "color",
+        "yellow",
+        "light",
+        "#F3CB3F",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "ClothingColor": 4
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "ClothingColor:5",
+      "state": "ClothingColor",
+      "value": 5,
+      "tab": "Shirt",
+      "section": "Clothing color",
+      "kind": "color",
+      "group": "clothing_color",
+      "index": 4,
+      "color": "#F3A13F",
+      "tags": [
+        "color",
+        "yellow",
+        "medium",
+        "#F3A13F",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "ClothingColor": 5
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "ClothingColor:6",
+      "state": "ClothingColor",
+      "value": 6,
+      "tab": "Shirt",
+      "section": "Clothing color",
+      "kind": "color",
+      "group": "clothing_color",
+      "index": 5,
+      "color": "#C03C64",
+      "tags": [
+        "color",
+        "red",
+        "medium",
+        "#C03C64",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "ClothingColor": 6
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "ClothingColor:7",
+      "state": "ClothingColor",
+      "value": 7,
+      "tab": "Shirt",
+      "section": "Clothing color",
+      "kind": "color",
+      "group": "clothing_color",
+      "index": 6,
+      "color": "#FBC8DE",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#FBC8DE",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "ClothingColor": 7
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "ClothingColor:8",
+      "state": "ClothingColor",
+      "value": 8,
+      "tab": "Shirt",
+      "section": "Clothing color",
+      "kind": "color",
+      "group": "clothing_color",
+      "index": 7,
+      "color": "#ECF0F1",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#ECF0F1",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "ClothingColor": 8
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "ClothingColor:9",
+      "state": "ClothingColor",
+      "value": 9,
+      "tab": "Shirt",
+      "section": "Clothing color",
+      "kind": "color",
+      "group": "clothing_color",
+      "index": 8,
+      "color": "#424242",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#424242",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "ClothingColor": 9
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:1",
+      "state": "BackgroundColor",
+      "value": 1,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 0,
+      "color": "#E5E5E5",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#E5E5E5",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 1
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:2",
+      "state": "BackgroundColor",
+      "value": 2,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 1,
+      "color": "#AFAFAF",
+      "tags": [
+        "color",
+        "gray",
+        "medium",
+        "#AFAFAF",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 2
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:3",
+      "state": "BackgroundColor",
+      "value": 3,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 2,
+      "color": "#4B4B4B",
+      "tags": [
+        "color",
+        "brown",
+        "dark",
+        "#4B4B4B",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 3
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:4",
+      "state": "BackgroundColor",
+      "value": 4,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 3,
+      "color": "#F3E0FF",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#F3E0FF",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 4
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:5",
+      "state": "BackgroundColor",
+      "value": 5,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 4,
+      "color": "#DDB1F9",
+      "tags": [
+        "color",
+        "pink",
+        "medium",
+        "#DDB1F9",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 5
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:6",
+      "state": "BackgroundColor",
+      "value": 6,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 5,
+      "color": "#9069CD",
+      "tags": [
+        "color",
+        "purple",
+        "medium",
+        "#9069CD",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 6
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:7",
+      "state": "BackgroundColor",
+      "value": 7,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 6,
+      "color": "#B9E8FF",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#B9E8FF",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 7
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:8",
+      "state": "BackgroundColor",
+      "value": 8,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 7,
+      "color": "#84D7FF",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#84D7FF",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 8
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:9",
+      "state": "BackgroundColor",
+      "value": 9,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 8,
+      "color": "#2561AC",
+      "tags": [
+        "color",
+        "blue",
+        "medium",
+        "#2561AC",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 9
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:10",
+      "state": "BackgroundColor",
+      "value": 10,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 9,
+      "color": "#C6FDE7",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#C6FDE7",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 10
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:11",
+      "state": "BackgroundColor",
+      "value": 11,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 10,
+      "color": "#5AEAB1",
+      "tags": [
+        "color",
+        "gray",
+        "light",
+        "#5AEAB1",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 11
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:12",
+      "state": "BackgroundColor",
+      "value": 12,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 11,
+      "color": "#43B487",
+      "tags": [
+        "color",
+        "green",
+        "medium",
+        "#43B487",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 12
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:13",
+      "state": "BackgroundColor",
+      "value": 13,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 12,
+      "color": "#D7FFB8",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#D7FFB8",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 13
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:14",
+      "state": "BackgroundColor",
+      "value": 14,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 13,
+      "color": "#B8F28B",
+      "tags": [
+        "color",
+        "gray",
+        "light",
+        "#B8F28B",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 14
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:15",
+      "state": "BackgroundColor",
+      "value": 15,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 14,
+      "color": "#7DB84F",
+      "tags": [
+        "color",
+        "green",
+        "medium",
+        "#7DB84F",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 15
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:16",
+      "state": "BackgroundColor",
+      "value": 16,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 15,
+      "color": "#FFF1A7",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#FFF1A7",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 16
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:17",
+      "state": "BackgroundColor",
+      "value": 17,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 16,
+      "color": "#FFCB80",
+      "tags": [
+        "color",
+        "yellow",
+        "light",
+        "#FFCB80",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 17
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:18",
+      "state": "BackgroundColor",
+      "value": 18,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 17,
+      "color": "#E5A259",
+      "tags": [
+        "color",
+        "yellow",
+        "medium",
+        "#E5A259",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 18
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:19",
+      "state": "BackgroundColor",
+      "value": 19,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 18,
+      "color": "#FFDFE0",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#FFDFE0",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 19
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:20",
+      "state": "BackgroundColor",
+      "value": 20,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 19,
+      "color": "#FFB2B2",
+      "tags": [
+        "color",
+        "pink",
+        "medium",
+        "#FFB2B2",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 20
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:21",
+      "state": "BackgroundColor",
+      "value": 21,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 20,
+      "color": "#E56464",
+      "tags": [
+        "color",
+        "red",
+        "medium",
+        "#E56464",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 21
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:22",
+      "state": "BackgroundColor",
+      "value": 22,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 21,
+      "color": "#FFD0F2",
+      "tags": [
+        "color",
+        "white",
+        "light",
+        "#FFD0F2",
+        "neutral"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 22
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:23",
+      "state": "BackgroundColor",
+      "value": 23,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 22,
+      "color": "#F9A3D7",
+      "tags": [
+        "color",
+        "pink",
+        "medium",
+        "#F9A3D7",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 23
+      },
+      "labelSource": "config"
+    },
+    {
+      "optionId": "BackgroundColor:24",
+      "state": "BackgroundColor",
+      "value": 24,
+      "tab": "BG",
+      "section": "Background color",
+      "kind": "color",
+      "group": "background_color",
+      "index": 23,
+      "color": "#D45DA6",
+      "tags": [
+        "color",
+        "pink",
+        "medium",
+        "#D45DA6",
+        "accent"
+      ],
+      "confidence": 1.0,
+      "visible": true,
+      "needsReview": false,
+      "requires": [],
+      "statesToOverride": {
+        "BackgroundColor": 24
+      },
+      "labelSource": "config"
+    }
+  ]
+}

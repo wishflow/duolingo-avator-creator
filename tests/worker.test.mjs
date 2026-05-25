@@ -4,18 +4,99 @@ import worker, { normalizeCatalog, sanitizeModelResult } from '../worker/index.t
 
 const API_URL = 'https://duolingo-avator-creator.wei-shi-ws.workers.dev';
 
+function sem({
+  state,
+  value,
+  group,
+  tags,
+  kind = 'feature',
+  color,
+  visible = true,
+  needsReview = false,
+  requires = [],
+  index = 0,
+}) {
+  return {
+    optionId: `${state}:${value}`,
+    state,
+    value,
+    tab: group,
+    section: group,
+    kind,
+    color,
+    index,
+    group,
+    tags,
+    confidence: 0.9,
+    visible,
+    needsReview,
+    requires,
+    statesToOverride: { [state]: value },
+  };
+}
+
 const TEST_CATALOG = {
+  semanticVersion: 1,
+  sourceVersion: 'test-rive',
+  configSourceVersion: 'test-rive',
   states: {
     Body: [
       { value: 1, tab: 'Body', section: 'Body', kind: 'feature', index: 0 },
       { value: 5, tab: 'Body', section: 'Body', kind: 'feature', index: 1 },
     ],
+    ClothingColor: [
+      { value: 1, tab: 'Shirt', section: 'Clothing', kind: 'color', color: '#B782C2', index: 0 },
+      { value: 9, tab: 'Shirt', section: 'Clothing', kind: 'color', color: '#424242', index: 1 },
+    ],
     BackgroundColor: [
       { value: 1, tab: 'BG', section: 'Background', kind: 'color', color: '#E5E5E5', index: 0 },
       { value: 6, tab: 'BG', section: 'Background', kind: 'color', color: '#9069CD', index: 1 },
     ],
+    FacialHair: [
+      { value: 0, tab: 'Beard', section: 'Facial hair', kind: 'feature', index: 0 },
+      { value: 1, tab: 'Beard', section: 'Facial hair', kind: 'feature', index: 1 },
+    ],
+    FacialHairColor: [
+      { value: 1, tab: 'Beard', section: 'Facial hair color', kind: 'color', color: '#434343', index: 0 },
+    ],
+    Headwear: [
+      { value: 0, tab: 'Hat', section: 'Headwear', kind: 'feature', index: 0 },
+      { value: 10, tab: 'Hat', section: 'Headwear', kind: 'feature', index: 1 },
+    ],
+    Expression: [
+      { value: 1, tab: 'Eyes', section: 'Expression', kind: 'feature', index: 0 },
+      { value: 31, tab: 'Eyes', section: 'Expression', kind: 'feature', index: 1 },
+    ],
+    MainHair: [
+      { value: 58, tab: 'Hair', section: 'Hairstyle', kind: 'feature', index: 0 },
+      { value: 48, tab: 'Hair', section: 'Hairstyle', kind: 'feature', index: 1 },
+    ],
+    MainHairColor: [
+      { value: 1, tab: 'Hair', section: 'Main hair color', kind: 'color', color: '#3D3D3D', index: 0 },
+    ],
+    Glasses: [
+      { value: 0, tab: 'Face', section: 'Glasses', kind: 'feature', index: 0 },
+      { value: 1, tab: 'Face', section: 'Glasses', kind: 'feature', index: 1 },
+    ],
+    GlassesColor: [
+      { value: 1, tab: 'Face', section: 'Glasses color', kind: 'color', color: '#1453A3', index: 0 },
+      { value: 2, tab: 'Face', section: 'Glasses color', kind: 'color', color: '#9069CD', index: 1 },
+    ],
   },
 };
+TEST_CATALOG.semanticOptions = [
+  sem({ state: 'Body', value: 5, group: 'body', tags: ['body_5', 'silhouette'] }),
+  sem({ state: 'ClothingColor', value: 9, group: 'clothing_color', tags: ['dark', 'black', 'color'], kind: 'color', color: '#424242' }),
+  sem({ state: 'BackgroundColor', value: 6, group: 'background_color', tags: ['purple', 'color'], kind: 'color', color: '#9069CD' }),
+  sem({ state: 'FacialHair', value: 1, group: 'facial_hair', tags: ['mustache', 'short', 'classic'] }),
+  sem({ state: 'FacialHairColor', value: 1, group: 'facial_hair_color', tags: ['dark', 'black'], kind: 'color', color: '#434343', requires: [{ state: 'FacialHair', notValue: 0 }] }),
+  sem({ state: 'Headwear', value: 10, group: 'headwear', tags: ['hat', 'bowler_like', 'brimmed_hat'] }),
+  sem({ state: 'Expression', value: 31, group: 'expression', tags: ['serious', 'stern'] }),
+  sem({ state: 'MainHair', value: 48, group: 'main_hair', tags: ['short_hair', 'receding_hair'] }),
+  sem({ state: 'MainHairColor', value: 1, group: 'main_hair_color', tags: ['dark', 'black'], kind: 'color', color: '#3D3D3D' }),
+  sem({ state: 'Glasses', value: 1, group: 'glasses', tags: ['glasses', 'round_glasses'] }),
+  sem({ state: 'GlassesColor', value: 2, group: 'glasses_color', tags: ['purple'], kind: 'color', color: '#9069CD', requires: [{ state: 'Glasses', notValue: 0 }] }),
+];
 
 function makeAiMock(result = {}) {
   const calls = [];
@@ -41,12 +122,11 @@ function makeAiMock(result = {}) {
         response: {
           summary: 'Generated editable avatar.',
           confidence: 0.82,
-          avatarState: [
-            { state: 'Body', valueNumber: 5, reason: 'Requested stronger body silhouette.' },
-            { state: 'BackgroundColor', valueNumber: 6, reason: 'Requested purple background.' },
+          selectionIntent: [
+            { group: 'body', tags: ['body_5'], required: false },
+            { group: 'background_color', tags: ['purple'], required: true },
             ...(result.extraChanges || []),
           ],
-          steps: ['Open Body and choose option 5.', 'Open BG and choose the purple swatch.'],
           warnings: result.warnings || [],
         },
       };
@@ -96,6 +176,35 @@ async function createSession(env = testEnv(), origin = 'http://127.0.0.1:8775') 
   assert.equal(response.status, 200);
   assert.ok(body.sessionToken);
   return body.sessionToken;
+}
+
+async function generateAvatar(env, {
+  prompt = '@current make a purple avatar',
+  contextMode = 'current',
+  baselineState = { Body: 1, BackgroundColor: 1 },
+  catalog = TEST_CATALOG,
+} = {}) {
+  const sessionToken = await createSession(env);
+  const response = await fetchWorker('/api/avatar/generate', {
+    method: 'POST',
+    headers: {
+      Origin: 'http://127.0.0.1:8775',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      prompt,
+      contextMode,
+      baselineState,
+      sessionToken,
+      catalog,
+    }),
+  }, env);
+  const events = await readSse(response);
+  return {
+    response,
+    events,
+    final: events.find((item) => item.event === 'final')?.data,
+  };
 }
 
 describe('Cloudflare Worker API', () => {
@@ -190,23 +299,7 @@ describe('Cloudflare Worker API', () => {
   it('streams final editable avatar state and applied edit notes', async () => {
     const ai = makeAiMock();
     const env = testEnv({ AI: ai });
-    const sessionToken = await createSession(env);
-    const response = await fetchWorker('/api/avatar/generate', {
-      method: 'POST',
-      headers: {
-        Origin: 'http://127.0.0.1:8775',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        prompt: '@current make a purple avatar',
-        contextMode: 'current',
-        baselineState: { Body: 1, BackgroundColor: 1 },
-        sessionToken,
-        catalog: TEST_CATALOG,
-      }),
-    }, env);
-    const events = await readSse(response);
-    const final = events.find((item) => item.event === 'final')?.data;
+    const { response, events, final } = await generateAvatar(env);
 
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('Content-Type'), 'text/event-stream; charset=utf-8');
@@ -220,8 +313,12 @@ describe('Cloudflare Worker API', () => {
     assert.equal(typeof final.usedFallback, 'boolean');
     assert.ok(Array.isArray(final.steps));
     assert.ok(Array.isArray(final.warnings));
+    assert.ok(Array.isArray(final.selectionTrace));
+    assert.deepEqual(final.selectionTrace.map((item) => item.matchedOptionId), ['Body:5', 'BackgroundColor:6']);
     assert.equal(ai.calls.length, 2);
     assert.equal(ai.calls[0].input.response_format.type, 'json_schema');
+    assert.ok(ai.calls[0].input.response_format.json_schema.required.includes('selectionIntent'));
+    assert.equal(ai.calls[0].input.response_format.json_schema.properties.avatarState, undefined);
     assert.equal(ai.calls[1].input.stream, true);
   });
 
@@ -303,46 +400,80 @@ describe('Cloudflare Worker API', () => {
     }, env);
     const invalidCatalogBody = await invalidCatalog.json();
     assert.equal(invalidCatalog.status, 400);
-    assert.equal(invalidCatalogBody.error, 'catalog_required');
+    assert.equal(invalidCatalogBody.error, 'semantic_catalog_required');
     assert.equal(ai.calls.length, 0);
   });
 
-  it('filters dirty model output before sending final payload', async () => {
-    const dirtyWarnings = Array.from({ length: 12 }, (_, index) => `dirty warning ${index + 1}`);
-    const ai = makeAiMock({
-      response: {
-        summary: 'Dirty model output still produced valid edits.',
-        confidence: 1.5,
-        avatarState: [
-          { state: 'Body', valueNumber: 5 },
-          { state: 'Body', valueNumber: 999 },
-          { state: 'BackgroundColor', valueNumber: 6 },
-          { state: 'UnknownState', valueNumber: 1 },
-          { state: 'BackgroundColor', valueBoolean: true },
-          { state: 'Body', value: 'bad' },
-        ],
-        steps: Array.from({ length: 20 }, (_, index) => `dirty step ${index + 1}`),
-        warnings: dirtyWarnings,
-      },
-    });
+  it('requires semantic catalog and matching source version before generation', async () => {
+    const ai = makeAiMock();
     const env = testEnv({ AI: ai });
-    const sessionToken = await createSession(env);
-    const response = await fetchWorker('/api/avatar/generate', {
+    const baseBody = {
+      prompt: 'green hoodie',
+      sessionToken: 'unused-session',
+    };
+
+    const missingCatalog = await fetchWorker('/api/avatar/generate', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://127.0.0.1:8775',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(baseBody),
+    }, env);
+    const missingCatalogBody = await missingCatalog.json();
+    assert.equal(missingCatalog.status, 400);
+    assert.equal(missingCatalogBody.error, 'semantic_catalog_required');
+
+    const emptySemanticCatalog = await fetchWorker('/api/avatar/generate', {
       method: 'POST',
       headers: {
         Origin: 'http://127.0.0.1:8775',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        prompt: '@current make a purple avatar',
-        contextMode: 'current',
-        baselineState: { Body: 1, BackgroundColor: 1 },
-        sessionToken,
-        catalog: TEST_CATALOG,
+        ...baseBody,
+        catalog: { ...TEST_CATALOG, semanticOptions: [] },
       }),
     }, env);
-    const events = await readSse(response);
-    const final = events.find((item) => item.event === 'final')?.data;
+    const emptySemanticCatalogBody = await emptySemanticCatalog.json();
+    assert.equal(emptySemanticCatalog.status, 400);
+    assert.equal(emptySemanticCatalogBody.error, 'semantic_catalog_required');
+
+    const mismatchedCatalog = await fetchWorker('/api/avatar/generate', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://127.0.0.1:8775',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...baseBody,
+        catalog: { ...TEST_CATALOG, configSourceVersion: 'other-rive' },
+      }),
+    }, env);
+    const mismatchedCatalogBody = await mismatchedCatalog.json();
+    assert.equal(mismatchedCatalog.status, 400);
+    assert.equal(mismatchedCatalogBody.error, 'semantic_catalog_version_mismatch');
+    assert.equal(ai.calls.length, 0);
+  });
+
+  it('filters dirty semantic model output before sending final payload', async () => {
+    const dirtyWarnings = Array.from({ length: 12 }, (_, index) => `dirty warning ${index + 1}`);
+    const ai = makeAiMock({
+      response: {
+        summary: 'Dirty model output still produced valid edits.',
+        confidence: 1.5,
+        selectionIntent: [
+          { group: 'body', tags: ['body_5', 'unsupported_tag'], required: true },
+          { group: 'background_color', tags: ['purple'], required: true },
+          { group: 'glasses_color', tags: ['purple'], required: true },
+          { group: 'unknown_group', tags: ['dark'], required: true },
+          { group: 'clothing_color', tags: ['unsupported_tag'], required: true },
+        ],
+        warnings: dirtyWarnings,
+      },
+    });
+    const env = testEnv({ AI: ai });
+    const { response, final } = await generateAvatar(env);
 
     assert.equal(response.status, 200);
     assert.equal(final.ok, true);
@@ -350,8 +481,59 @@ describe('Cloudflare Worker API', () => {
     assert.equal(final.confidence, 1);
     assert.equal(final.usedFallback, false);
     assert.ok(final.warnings.length <= 10);
-    assert.ok(final.warnings.some((warning) => warning.includes('UnknownState')));
+    assert.ok(final.warnings.some((warning) => warning.includes('glasses_color')));
+    assert.equal(final.avatarState.GlassesColor, undefined);
     assert.ok(final.steps.every((step) => step.startsWith('Open ')));
+    assert.deepEqual(final.selectionTrace.map((item) => item.state), ['Body', 'BackgroundColor']);
+  });
+
+  it('does not treat no-op default traits as successful visible edits', async () => {
+    const ai = makeAiMock({
+      response: {
+        summary: 'The model selected an option that is already active.',
+        confidence: 0.9,
+        selectionIntent: [
+          { group: 'body', tags: ['body_5'], required: true },
+        ],
+        warnings: [],
+      },
+    });
+    const env = testEnv({ AI: ai });
+    const { response, final } = await generateAvatar(env, {
+      prompt: '@current make a dark avatar',
+      baselineState: { Body: 5, ClothingColor: 1 },
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.equal(final.usedFallback, true);
+    assert.deepEqual(final.avatarState, { ClothingColor: 9 });
+    assert.deepEqual(final.selectionTrace.map((item) => item.matchedOptionId), ['ClothingColor:9']);
+  });
+
+  it('does not treat dependency-only glasses color as a successful visible edit', async () => {
+    const ai = makeAiMock({
+      response: {
+        summary: 'Only a glasses color was selected.',
+        confidence: 0.88,
+        selectionIntent: [
+          { group: 'glasses_color', tags: ['purple'], required: true },
+        ],
+        warnings: [],
+      },
+    });
+    const env = testEnv({ AI: ai });
+    const { response, final } = await generateAvatar(env, {
+      prompt: '@current make purple glasses',
+      baselineState: { Glasses: 0, GlassesColor: 1 },
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.equal(final.usedFallback, true);
+    assert.equal(final.avatarState.GlassesColor, undefined);
+    assert.equal(final.avatarState.Glasses, 1);
+    assert.deepEqual(final.selectionTrace.map((item) => item.matchedOptionId), ['Glasses:1']);
   });
 
   it('rejects sessions from a different origin', async () => {
@@ -380,29 +562,106 @@ describe('Cloudflare Worker API', () => {
   it('falls back to deterministic editable changes if structured AI output fails', async () => {
     const ai = makeAiMock({ throwStructured: true });
     const env = testEnv({ AI: ai });
-    const sessionToken = await createSession(env);
-    const response = await fetchWorker('/api/avatar/generate', {
-      method: 'POST',
-      headers: {
-        Origin: 'http://127.0.0.1:8775',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        prompt: 'make a dark avatar',
-        baselineState: { Body: 1, BackgroundColor: 1 },
-        sessionToken,
-        catalog: TEST_CATALOG,
-      }),
-    }, env);
-    const events = await readSse(response);
-    const final = events.find((item) => item.event === 'final')?.data;
+    const { response, final } = await generateAvatar(env, {
+      prompt: 'make a dark avatar',
+      baselineState: { Body: 1, BackgroundColor: 1 },
+    });
 
     assert.equal(response.status, 200);
     assert.equal(final.ok, true);
     assert.ok(Object.keys(final.avatarState).length > 0);
     assert.ok(final.steps.length > 0);
     assert.equal(final.usedFallback, true);
-    assert.ok(final.warnings.some((warning) => warning.includes('safe editor mapping')));
+    assert.ok(final.warnings.some((warning) => warning.includes('Structured semantic output failed')));
+  });
+
+  it('maps mocked Chaplin traits to visible semantic avatar edits', async () => {
+    const ai = makeAiMock({
+      response: {
+        summary: 'Chaplin-like visual traits.',
+        confidence: 0.86,
+        selectionIntent: [
+          { group: 'facial_hair', tags: ['mustache'], required: true },
+          { group: 'facial_hair_color', tags: ['dark'], required: true },
+          { group: 'headwear', tags: ['bowler_like', 'hat'], required: true },
+          { group: 'clothing_color', tags: ['dark'], required: true },
+        ],
+        warnings: [],
+      },
+    });
+    const env = testEnv({ AI: ai });
+    const { response, final } = await generateAvatar(env, {
+      prompt: '生成一个卓别林 @default',
+      contextMode: 'default',
+      baselineState: {
+        FacialHair: 0,
+        FacialHairColor: 1,
+        Headwear: 0,
+        ClothingColor: 1,
+      },
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.equal(final.usedFallback, false);
+    assert.deepEqual(final.avatarState, {
+      FacialHair: 1,
+      Headwear: 10,
+      ClothingColor: 9,
+    });
+    assert.deepEqual(final.selectionTrace.map((item) => item.matchedOptionId), [
+      'FacialHair:1',
+      'Headwear:10',
+      'ClothingColor:9',
+    ]);
+    assert.ok(final.selectionTrace.every((item) => item.reason.includes('matched tags')));
+  });
+
+  it('maps mocked Stalin traits to visible semantic avatar edits', async () => {
+    const ai = makeAiMock({
+      response: {
+        summary: 'Stalin-like visual traits.',
+        confidence: 0.84,
+        selectionIntent: [
+          { group: 'main_hair', tags: ['short_hair', 'receding_hair'], required: true },
+          { group: 'main_hair_color', tags: ['dark'], required: true },
+          { group: 'facial_hair', tags: ['mustache'], required: true },
+          { group: 'facial_hair_color', tags: ['dark'], required: true },
+          { group: 'expression', tags: ['serious'], required: true },
+          { group: 'clothing_color', tags: ['dark'], required: true },
+        ],
+        warnings: [],
+      },
+    });
+    const env = testEnv({ AI: ai });
+    const { response, final } = await generateAvatar(env, {
+      prompt: '生成一个斯大林 @default',
+      contextMode: 'default',
+      baselineState: {
+        MainHair: 58,
+        MainHairColor: 1,
+        FacialHair: 0,
+        FacialHairColor: 1,
+        Expression: 1,
+        ClothingColor: 1,
+      },
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.equal(final.usedFallback, false);
+    assert.deepEqual(final.avatarState, {
+      MainHair: 48,
+      FacialHair: 1,
+      Expression: 31,
+      ClothingColor: 9,
+    });
+    assert.deepEqual(final.selectionTrace.map((item) => item.matchedOptionId), [
+      'MainHair:48',
+      'FacialHair:1',
+      'Expression:31',
+      'ClothingColor:9',
+    ]);
   });
 
   it('filters unsupported model state values', () => {
@@ -420,6 +679,7 @@ describe('Cloudflare Worker API', () => {
     assert.deepEqual(clean.avatarState, { Body: 5 });
     assert.ok(clean.warnings.some((warning) => warning.includes('Body')));
     assert.ok(clean.warnings.some((warning) => warning.includes('UnknownState')));
+    assert.deepEqual(clean.selectionTrace, []);
   });
 
   it('returns clear errors when AI or Turnstile config is missing', async () => {

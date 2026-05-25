@@ -104,6 +104,25 @@ flowchart TD
 
 - `docs/agent-steps/03-security-verification-flow.md`
 
+### 03.1 语义生成链路修复
+
+目标：
+
+- 不 hardcode 固定人物名单，用离线 semantic catalog 描述 Rive 选项的通用视觉特征。
+- 运行时模型只输出目标特征，由 Worker 匹配合法 `state/value` 并组装 `avatarState`。
+- 阻止默认值、不可见依赖项和低置信度选项进入成功结果。
+- `final` 返回 `selectionTrace`，便于排查每个选项的匹配来源。
+
+验收重点：
+
+- `斯大林 @default`、`卓别林 @default` 不再生成默认头像或不可见改动。
+- semantic catalog 缺失或版本不匹配时阻止生成，而不是回到旧的裸 option 猜测。
+- 离线视觉标注只在人工显式运行脚本时发生，不接入部署、CI 或用户 Generate。
+
+独立文档：
+
+- `docs/agent-steps/03.1-semantic-generation-flow.md`
+
 ### 04. SSE Agent 协议、语言策略与结构化 schema
 
 目标：

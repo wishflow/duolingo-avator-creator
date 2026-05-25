@@ -24,6 +24,7 @@ INDEX_PATH = SITE_DIR / "index.html"
 
 REQUIRED_SOURCE_ASSETS = [
     "avatar_builder_config.json",
+    "avatar_semantic_catalog.json",
     "avatar_builder_25_sept2025.riv",
     "manifest.webmanifest",
     "avatar-icon-192.png",
@@ -43,6 +44,7 @@ REQUIRED_SITE_FILES = [
     ".nojekyll",
     "avatar_explorer.html",
     "avatar_builder_config.json",
+    "avatar_semantic_catalog.json",
     "avatar_builder_25_sept2025.riv",
     "manifest.webmanifest",
     "avatar-icon-192.png",
