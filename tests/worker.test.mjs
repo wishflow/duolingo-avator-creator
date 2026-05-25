@@ -319,6 +319,8 @@ describe('Cloudflare Worker API', () => {
     assert.equal(ai.calls[0].input.response_format.type, 'json_schema');
     assert.ok(ai.calls[0].input.response_format.json_schema.required.includes('selectionIntent'));
     assert.equal(ai.calls[0].input.response_format.json_schema.properties.avatarState, undefined);
+    assert.equal(ai.calls[0].input.response_format.json_schema.properties.targetTraits, undefined);
+    assert.equal(ai.calls[0].input.response_format.json_schema.properties.selectionIntent.maxItems, 8);
     assert.equal(ai.calls[1].input.stream, true);
   });
 
@@ -485,6 +487,35 @@ describe('Cloudflare Worker API', () => {
     assert.equal(final.avatarState.GlassesColor, undefined);
     assert.ok(final.steps.every((step) => step.startsWith('Open ')));
     assert.deepEqual(final.selectionTrace.map((item) => item.state), ['Body', 'BackgroundColor']);
+  });
+
+  it('recovers complete trait intents from malformed model JSON', async () => {
+    const ai = makeAiMock({
+      response: '{"summary":"Recovered traits","confidence":0.77,"selectionIntent":['
+        + '{"group":"facial_hair","tags":["mustache"],"required":true},'
+        + '{"group":"expression","tags":["serious"],"required":true},'
+        + '{"group":"clothing_color","tags":["dark"],"required":true}',
+    });
+    const env = testEnv({ AI: ai });
+    const { response, final } = await generateAvatar(env, {
+      prompt: '生成一个华盛顿 @default',
+      contextMode: 'default',
+      baselineState: {
+        FacialHair: 0,
+        Expression: 1,
+        ClothingColor: 1,
+      },
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.equal(final.usedFallback, false);
+    assert.deepEqual(final.avatarState, {
+      FacialHair: 1,
+      Expression: 31,
+      ClothingColor: 9,
+    });
+    assert.ok(final.warnings.some((warning) => warning.includes('Recovered complete selectionIntent')));
   });
 
   it('does not treat no-op default traits as successful visible edits', async () => {

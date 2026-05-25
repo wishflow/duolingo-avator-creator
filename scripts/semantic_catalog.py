@@ -246,6 +246,16 @@ def enumerate_options(config: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def limited_options(options: list[dict[str, Any]], args: argparse.Namespace) -> list[dict[str, Any]]:
+    option_ids = set(getattr(args, "option_id", []) or [])
+    sample = getattr(args, "sample", "")
+    if sample:
+        option_ids.add(sample)
+    if option_ids:
+        by_id = {option["optionId"]: option for option in options}
+        missing = sorted(option_id for option_id in option_ids if option_id not in by_id)
+        if missing:
+            raise RuntimeError(f"Unknown optionId: {', '.join(missing)}")
+        options = [by_id[option_id] for option_id in sorted(option_ids)]
     if args.limit and args.limit > 0:
         return options[: args.limit]
     return options
@@ -337,7 +347,17 @@ def call_cloudflare_vision(model: str, image_path: Path, option: dict[str, Any])
     match = re.search(r"\{.*\}", text, re.S)
     if not match:
         return None
-    parsed = json.loads(match.group(0))
+    raw_response_text = text
+    try:
+        parsed = json.loads(match.group(0))
+    except json.JSONDecodeError as error:
+        return {
+            "tags": ["unclear"],
+            "confidence": 0,
+            "evidence": "vision response JSON parse failed",
+            "rawResponseText": raw_response_text,
+            "parseError": str(error),
+        }
     tags = [parsed.get("primaryTag"), *parsed.get("secondaryTags", [])]
     clean_tags = [str(tag) for tag in tags if isinstance(tag, str) and tag]
     confidence = float(parsed.get("confidence", 0))
@@ -345,6 +365,7 @@ def call_cloudflare_vision(model: str, image_path: Path, option: dict[str, Any])
         "tags": clean_tags,
         "confidence": max(0, min(1, confidence)),
         "evidence": str(parsed.get("evidence", ""))[:180],
+        "rawResponseText": raw_response_text,
     }
 
 
@@ -582,6 +603,50 @@ def build_catalog(config: dict[str, Any], args: argparse.Namespace) -> dict[str,
     }
 
 
+def run_sample(config: dict[str, Any], args: argparse.Namespace) -> int:
+    options = enumerate_options(config)
+    selected = limited_options(options, args)
+    if len(selected) != 1:
+        print("--sample requires exactly one optionId", file=sys.stderr)
+        return 2
+    option = selected[0]
+    avatar_config = config["avatarBuilderConfig"]
+    capture_state = build_capture_state(option, avatar_config.get("defaultBuiltAvatarState", {}))
+    image_path = CACHE_DIR / "options" / f"{safe_filename(option['optionId'])}.png"
+    prompt = build_prompt(option)
+    sample: dict[str, Any] = {
+        "optionId": option["optionId"],
+        "cloudflareCalled": bool(args.run),
+        "imagePath": str(image_path.relative_to(PROJECT_DIR)),
+        "captureState": capture_state,
+        "optionBefore": option,
+        "visionInput": {
+            "model": args.model,
+            "prompt": json.loads(prompt),
+        },
+    }
+    if args.run:
+        ensure_screenshot_cache([option], args, avatar_config.get("defaultBuiltAvatarState", {}))
+        result = call_cloudflare_vision(args.model, image_path, option)
+        sample["visionResult"] = result
+        if result:
+            option_after = dict(option)
+            option_after["tags"] = add_unique([], *result["tags"])
+            option_after["confidence"] = result["confidence"]
+            option_after["needsReview"] = option_after["confidence"] < 0.65 or "unclear" in option_after["tags"]
+            option_after["labelSource"] = "vision_ai"
+            if result.get("evidence"):
+                option_after["evidence"] = result["evidence"]
+            sample["optionAfter"] = option_after
+    output_path = CACHE_DIR / "samples" / f"{safe_filename(option['optionId'])}.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(sample, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"Wrote {output_path.relative_to(PROJECT_DIR)}")
+    if not args.run:
+        print("Sample dry-run: Cloudflare AI was not called. Add --run to spend exactly one vision call.")
+    return 0
+
+
 def write_review(catalog: dict[str, Any]) -> None:
     rows = []
     for option in catalog["options"]:
@@ -658,7 +723,10 @@ def run_check() -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build avatar semantic catalog")
     parser.add_argument("--run", action="store_true", help="Call Cloudflare Workers AI for available cached screenshots")
+    parser.add_argument("--all", action="store_true", help="Allow --run to process every option")
     parser.add_argument("--limit", type=int, default=0, help="Limit AI-enriched options")
+    parser.add_argument("--option-id", action="append", default=[], help="Only process this optionId; repeatable")
+    parser.add_argument("--sample", default="", help="Write one sample input/output report for this optionId")
     parser.add_argument("--resume", action="store_true", help="Reuse existing screenshots and vision labels where possible")
     parser.add_argument("--model", default=os.environ.get("AI_VISION_MODEL", DEFAULT_MODEL))
     parser.add_argument("--chrome-exec", default=None, help="Chrome/Chromium executable for --run screenshot capture")
@@ -671,6 +739,12 @@ def main() -> int:
         return run_check()
 
     config = load_config()
+    if args.run and not (args.all or args.limit > 0 or args.option_id or args.sample):
+        print("Refusing unbounded --run. Use --sample OPTION_ID, --limit N, --option-id OPTION_ID, or --all.", file=sys.stderr)
+        return 2
+    if args.sample:
+        return run_sample(config, args)
+
     catalog = build_catalog(config, args)
     errors = validate_catalog(catalog, config)
     if errors:

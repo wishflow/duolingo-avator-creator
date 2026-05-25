@@ -443,41 +443,40 @@ function parseJsonModeResponse(response: unknown): unknown {
   const value = response && typeof response === 'object' && 'response' in response
     ? response.response
     : response;
-  if (typeof value === 'string') return JSON.parse(value);
+  if (typeof value === 'string') return parseTraitJsonString(value);
   return value;
 }
 
-function avatarJsonSchema(catalog: AvatarCatalog): Record<string, unknown> {
+function parseTraitJsonString(value: string): unknown {
+  const trimmed = value.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+  try {
+    return JSON.parse(trimmed);
+  } catch (error) {
+    const repaired = parsePartialTraitJson(trimmed);
+    if (repaired.selectionIntent.length) return repaired;
+    throw error;
+  }
+}
+
+function parsePartialTraitJson(value: string): SanitizedTraitResult {
+  const intents: TraitIntent[] = [];
+  const intentMatcher = /\{[^{}]*"group"\s*:\s*"([^"]+)"[^{}]*"tags"\s*:\s*\[([^\]]*)\][^{}]*\}/g;
+  for (const match of value.matchAll(intentMatcher)) {
+    const objectText = match[0];
+    const tags = [...match[2].matchAll(/"([^"]+)"/g)].map((item) => item[1]).slice(0, 8);
+    if (!tags.length) continue;
+    intents.push({
+      group: match[1],
+      tags,
+      color: objectText.match(/"color"\s*:\s*"([^"]+)"/)?.[1],
+      required: /"required"\s*:\s*true/.test(objectText),
+    });
+  }
   return {
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      summary: { type: 'string' },
-      confidence: { type: 'number', minimum: 0, maximum: 1 },
-      avatarState: {
-        type: 'array',
-        items: {
-          type: 'object',
-          additionalProperties: false,
-          properties: {
-            state: { type: 'string', enum: Object.keys(catalog.states) },
-            valueNumber: { type: 'number' },
-            valueBoolean: { type: 'boolean' },
-            reason: { type: 'string' },
-          },
-          required: ['state'],
-        },
-      },
-      steps: {
-        type: 'array',
-        items: { type: 'string' },
-      },
-      warnings: {
-        type: 'array',
-        items: { type: 'string' },
-      },
-    },
-    required: ['summary', 'confidence', 'avatarState', 'steps', 'warnings'],
+    summary: value.match(/"summary"\s*:\s*"([^"]{0,280})"/)?.[1] || '',
+    confidence: Math.max(0, Math.min(1, Number(value.match(/"confidence"\s*:\s*([0-9.]+)/)?.[1] || 0.45))),
+    selectionIntent: intents.slice(0, 12),
+    warnings: ['Recovered complete selectionIntent items from malformed model JSON.'],
   };
 }
 
@@ -487,26 +486,18 @@ function traitJsonSchema(catalog: AvatarCatalog): Record<string, unknown> {
     type: 'object',
     additionalProperties: false,
     properties: {
-      summary: { type: 'string' },
+      summary: { type: 'string', maxLength: 160 },
       confidence: { type: 'number', minimum: 0, maximum: 1 },
-      targetTraits: {
-        type: 'object',
-        additionalProperties: {
-          oneOf: [
-            { type: 'string' },
-            { type: 'array', items: { type: 'string' } },
-          ],
-        },
-      },
       selectionIntent: {
         type: 'array',
+        maxItems: 8,
         items: {
           type: 'object',
           additionalProperties: false,
           properties: {
             group: { type: 'string', enum: groups },
-            tags: { type: 'array', items: { type: 'string' }, minItems: 1 },
-            color: { type: 'string' },
+            tags: { type: 'array', items: { type: 'string', maxLength: 48 }, minItems: 1, maxItems: 4 },
+            color: { type: 'string', maxLength: 40 },
             required: { type: 'boolean' },
           },
           required: ['group', 'tags'],
@@ -514,7 +505,8 @@ function traitJsonSchema(catalog: AvatarCatalog): Record<string, unknown> {
       },
       warnings: {
         type: 'array',
-        items: { type: 'string' },
+        maxItems: 4,
+        items: { type: 'string', maxLength: 140 },
       },
     },
     required: ['summary', 'confidence', 'selectionIntent', 'warnings'],
@@ -579,6 +571,7 @@ function buildTraitMessages({ prompt, contextMode, baselineState, catalog }: Val
         'For real or fictional people, infer a small set of recognizable visual traits, but treat the result as a stylized approximation.',
         'Prefer visible traits such as facial hair, headwear, hair shape, expression, clothing color, background color, glasses, wrinkles, and skin tone.',
         'Do not output traits for unavailable or unsupported details.',
+        'Keep the JSON compact. Return at most 8 selectionIntent items and at most 4 tags per item.',
       ].join(' '),
     },
     {
@@ -590,7 +583,6 @@ function buildTraitMessages({ prompt, contextMode, baselineState, catalog }: Val
         semanticTaxonomy: buildTraitCatalog(catalog),
         outputRules: {
           selectionIntent: 'Array of { group, tags, required }. Tags must come from semanticTaxonomy[group].',
-          targetTraits: 'Optional human-readable trait map using the same groups and tags.',
           warnings: 'Mention approximation limits or traits that cannot be represented.',
         },
       }),
@@ -1071,7 +1063,7 @@ async function buildEditableAvatarResult(
   try {
     const structured = await env.AI.run(model, {
       messages: buildTraitMessages(validated),
-      max_tokens: 900,
+      max_tokens: 1300,
       temperature: 0.2,
       response_format: {
         type: 'json_schema',
