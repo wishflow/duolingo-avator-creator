@@ -223,6 +223,13 @@ let hasAvatarChanges = false;
 let statusTimer = null;
 
 const STORAGE_KEY = 'duolingoAvatarCreator.avatarState.v1';
+const API_BASE_URL = 'https://duolingo-avator-creator.wei-shi-ws.workers.dev';
+let backendConfig = {
+  baseUrl: API_BASE_URL,
+  available: false,
+  config: null,
+};
+window.avatarBackend = backendConfig;
 
 const TAB_DEFS = [
   { icon: 'avatar_builder_body_unselected_dark.svg', label: 'Body', idx: 0 },
@@ -662,6 +669,23 @@ function closeMoreSheet() {
   sheet.setAttribute('aria-hidden', 'true');
 }
 
+async function loadBackendConfig() {
+  try {
+    const resp = await fetch(`${API_BASE_URL}/api/config`, {
+      headers: { 'Accept': 'application/json' },
+    });
+    if (!resp.ok) return;
+    backendConfig = {
+      baseUrl: API_BASE_URL,
+      available: true,
+      config: await resp.json(),
+    };
+    window.avatarBackend = backendConfig;
+  } catch(e) {
+    window.avatarBackend = backendConfig;
+  }
+}
+
 window.addEventListener('beforeunload', (e) => {
   if (!hasAvatarChanges) return;
   e.preventDefault();
@@ -963,6 +987,7 @@ document.addEventListener('change', async (e) => {
 
 // ===================== INIT =====================
 async function init() {
+  loadBackendConfig();
   try {
     const resp = await fetch('avatar_builder_config.json');
     if (resp.ok) { builderConfig = await resp.json(); buildBgColorMap(); }

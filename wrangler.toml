@@ -1,0 +1,8 @@
+name = "duolingo-avator-creator"
+main = "worker/index.js"
+compatibility_date = "2026-05-25"
+workers_dev = true
+
+[vars]
+SERVICE_NAME = "duolingo-avator-creator"
+SERVICE_VERSION = "0.1.0"
