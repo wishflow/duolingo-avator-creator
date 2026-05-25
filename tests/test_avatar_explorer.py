@@ -134,14 +134,20 @@ class TestRunner:
             [
                 self.chrome_exec,
                 f"--remote-debugging-port={self.debug_port}",
+                "--remote-debugging-address=127.0.0.1",
                 f"--user-data-dir={CHROME_USER_DATA}",
                 "--no-first-run",
                 "--no-default-browser-check",
                 "--headless=new",
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-gpu",
+                "--disable-background-networking",
                 "--window-size=1440,900",
                 page_url(),
             ],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
+            text=True,
         )
 
         # 4. Wait for Chrome to start and get the page's WS URL
@@ -165,7 +171,11 @@ class TestRunner:
             except Exception:
                 pass
         else:
-            raise RuntimeError("Chrome did not start in time")
+            stderr = ""
+            if self.chrome_proc and self.chrome_proc.poll() is not None:
+                _, stderr = self.chrome_proc.communicate(timeout=2)
+            detail = f"Chrome did not start in time: {stderr[-1000:]}" if stderr else "Chrome did not start in time"
+            raise RuntimeError(detail)
 
         ok(f"Chrome ready, WS: {self._ws_url[:60]}...")
 
