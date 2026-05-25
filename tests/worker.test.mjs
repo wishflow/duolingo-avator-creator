@@ -33,13 +33,14 @@ function makeAiMock(result = {}) {
           },
         });
       }
+      if (result.throwStructured) throw new Error('mock structured failure');
       return {
         response: {
           summary: 'Generated editable avatar.',
           confidence: 0.82,
           avatarState: [
-            { state: 'Body', value: 5, reason: 'Requested stronger body silhouette.' },
-            { state: 'BackgroundColor', value: 6, reason: 'Requested purple background.' },
+            { state: 'Body', valueNumber: 5, reason: 'Requested stronger body silhouette.' },
+            { state: 'BackgroundColor', valueNumber: 6, reason: 'Requested purple background.' },
             ...(result.extraChanges || []),
           ],
           steps: ['Open Body and choose option 5.', 'Open BG and choose the purple swatch.'],
@@ -79,6 +80,21 @@ async function readSse(response) {
   return events;
 }
 
+async function createSession(env = testEnv(), origin = 'http://127.0.0.1:8775') {
+  const response = await fetchWorker('/api/avatar/session', {
+    method: 'POST',
+    headers: {
+      Origin: origin,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ turnstileToken: 'token' }),
+  }, env);
+  const body = await response.json();
+  assert.equal(response.status, 200);
+  assert.ok(body.sessionToken);
+  return body.sessionToken;
+}
+
 describe('Cloudflare Worker API', () => {
   it('returns health payload', async () => {
     const response = await fetchWorker('/health', {
@@ -105,19 +121,20 @@ describe('Cloudflare Worker API', () => {
     assert.equal(body.features.avatarGeneration, true);
     assert.equal(body.features.llmProxy, true);
     assert.equal(body.generation.turnstileSiteKey, '1x00000000000000000000AA');
+    assert.equal(body.generation.sessionTtlSeconds, 1800);
     assert.deepEqual(body.generation.supportedMentions, ['current', 'default']);
     assert.equal(response.headers.get('Access-Control-Allow-Origin'), 'https://duolingo-avator-creator.pages.dev');
   });
 
-  it('requires Turnstile token before calling AI', async () => {
+  it('requires Turnstile token before creating an AI session', async () => {
     const ai = makeAiMock();
-    const response = await fetchWorker('/api/avatar/generate', {
+    const response = await fetchWorker('/api/avatar/session', {
       method: 'POST',
       headers: {
         Origin: 'http://127.0.0.1:8775',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ prompt: 'green hoodie', catalog: TEST_CATALOG }),
+      body: JSON.stringify({}),
     }, testEnv({ AI: ai }));
     const body = await response.json();
 
@@ -128,16 +145,14 @@ describe('Cloudflare Worker API', () => {
 
   it('rejects failed Turnstile validation', async () => {
     const ai = makeAiMock();
-    const response = await fetchWorker('/api/avatar/generate', {
+    const response = await fetchWorker('/api/avatar/session', {
       method: 'POST',
       headers: {
         Origin: 'http://127.0.0.1:8775',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        prompt: 'green hoodie',
         turnstileToken: 'token',
-        catalog: TEST_CATALOG,
       }),
     }, testEnv({ AI: ai, TURNSTILE_TEST_RESULT: 'fail' }));
     const body = await response.json();
@@ -147,7 +162,7 @@ describe('Cloudflare Worker API', () => {
     assert.equal(ai.calls.length, 0);
   });
 
-  it('streams planning text and final editable avatar state', async () => {
+  it('requires a verified AI session before calling AI', async () => {
     const ai = makeAiMock();
     const response = await fetchWorker('/api/avatar/generate', {
       method: 'POST',
@@ -159,10 +174,34 @@ describe('Cloudflare Worker API', () => {
         prompt: '@current make a purple avatar',
         contextMode: 'current',
         baselineState: { Body: 1, BackgroundColor: 1 },
-        turnstileToken: 'token',
         catalog: TEST_CATALOG,
       }),
     }, testEnv({ AI: ai }));
+    const body = await response.json();
+
+    assert.equal(response.status, 401);
+    assert.equal(body.error, 'session_required');
+    assert.equal(ai.calls.length, 0);
+  });
+
+  it('streams final editable avatar state and applied edit notes', async () => {
+    const ai = makeAiMock();
+    const env = testEnv({ AI: ai });
+    const sessionToken = await createSession(env);
+    const response = await fetchWorker('/api/avatar/generate', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://127.0.0.1:8775',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: '@current make a purple avatar',
+        contextMode: 'current',
+        baselineState: { Body: 1, BackgroundColor: 1 },
+        sessionToken,
+        catalog: TEST_CATALOG,
+      }),
+    }, env);
     const events = await readSse(response);
     const final = events.find((item) => item.event === 'final')?.data;
 
@@ -173,15 +212,66 @@ describe('Cloudflare Worker API', () => {
     assert.deepEqual(final.avatarState, { Body: 5, BackgroundColor: 6 });
     assert.equal(final.contextMode, 'current');
     assert.equal(ai.calls.length, 2);
-    assert.equal(ai.calls[0].input.stream, true);
-    assert.equal(ai.calls[1].input.response_format.type, 'json_schema');
+    assert.equal(ai.calls[0].input.response_format.type, 'json_schema');
+    assert.equal(ai.calls[1].input.stream, true);
+  });
+
+  it('rejects sessions from a different origin', async () => {
+    const ai = makeAiMock();
+    const env = testEnv({ AI: ai });
+    const sessionToken = await createSession(env, 'http://127.0.0.1:8775');
+    const response = await fetchWorker('/api/avatar/generate', {
+      method: 'POST',
+      headers: {
+        Origin: 'https://wishflow.github.io',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: 'green hoodie',
+        sessionToken,
+        catalog: TEST_CATALOG,
+      }),
+    }, env);
+    const body = await response.json();
+
+    assert.equal(response.status, 403);
+    assert.equal(body.error, 'session_origin_mismatch');
+    assert.equal(ai.calls.length, 0);
+  });
+
+  it('falls back to deterministic editable changes if structured AI output fails', async () => {
+    const ai = makeAiMock({ throwStructured: true });
+    const env = testEnv({ AI: ai });
+    const sessionToken = await createSession(env);
+    const response = await fetchWorker('/api/avatar/generate', {
+      method: 'POST',
+      headers: {
+        Origin: 'http://127.0.0.1:8775',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        prompt: 'make a dark avatar',
+        baselineState: { Body: 1, BackgroundColor: 1 },
+        sessionToken,
+        catalog: TEST_CATALOG,
+      }),
+    }, env);
+    const events = await readSse(response);
+    const final = events.find((item) => item.event === 'final')?.data;
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.ok(Object.keys(final.avatarState).length > 0);
+    assert.ok(final.steps.length > 0);
+    assert.equal(final.usedFallback, true);
+    assert.ok(final.warnings.some((warning) => warning.includes('safe editor mapping')));
   });
 
   it('filters unsupported model state values', () => {
     const clean = sanitizeModelResult({
       avatarState: [
         { state: 'Body', value: 5 },
-        { state: 'Body', value: 999 },
+        { state: 'Body', valueNumber: 999 },
         { state: 'UnknownState', value: 1 },
       ],
       steps: ['Pick a valid body.'],
@@ -203,12 +293,21 @@ describe('Cloudflare Worker API', () => {
       },
       body: JSON.stringify({
         prompt: 'green hoodie',
-        turnstileToken: 'token',
+        sessionToken: 'invalid-session',
         catalog: TEST_CATALOG,
       }),
     };
 
-    const noAi = await fetchWorker('/api/avatar/generate', baseRequest, testEnv({ AI: undefined }));
+    const noAiEnv = testEnv({ AI: undefined });
+    const noAiSession = await createSession(noAiEnv);
+    const noAi = await fetchWorker('/api/avatar/generate', {
+      ...baseRequest,
+      body: JSON.stringify({
+        prompt: 'green hoodie',
+        sessionToken: noAiSession,
+        catalog: TEST_CATALOG,
+      }),
+    }, noAiEnv);
     const noAiBody = await noAi.json();
     assert.equal(noAi.status, 503);
     assert.equal(noAiBody.error, 'ai_not_configured');

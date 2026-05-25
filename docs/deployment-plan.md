@@ -43,15 +43,18 @@ sequenceDiagram
   participant T as Turnstile
   participant A as Workers AI
 
-  U->>W: POST /api/avatar/generate
+  U->>W: POST /api/avatar/session
   W->>T: 校验 turnstileToken
   T-->>W: success/failure
-  W->>A: streaming 调用，生成用户可读计划
-  W-->>U: SSE plan_delta
+  W-->>U: 返回短时 AI sessionToken
+  U->>W: POST /api/avatar/generate + sessionToken
+  W->>W: 校验 session 签名、过期时间和 Origin
   W->>A: JSON Mode 调用，生成结构化 avatarState
   W->>W: 白名单校验 state/value
   W-->>U: SSE final
   U->>U: 应用到 Rive 预览并保存本地状态
+  W->>A: streaming 调用，解释已应用的编辑
+  W-->>U: SSE plan_delta
 ```
 
 Worker API：
@@ -60,8 +63,23 @@ Worker API：
 | --- | --- | --- |
 | `/health` | `GET` | 服务健康检查 |
 | `/api/config` | `GET` | 返回公开功能开关、Turnstile sitekey、prompt 长度等 |
-| `/api/avatar/generate` | `POST` | SSE 流式返回生成计划和最终头像配置 |
+| `/api/avatar/session` | `POST` | 使用 Turnstile token 换取短时 AI session |
+| `/api/avatar/generate` | `POST` | 校验 AI session 后，SSE 返回最终头像配置和说明 |
 | `OPTIONS *` | `OPTIONS` | CORS preflight |
+
+`/api/avatar/session` 请求体：
+
+| 字段 | 说明 |
+| --- | --- |
+| `turnstileToken` | 前端 Turnstile 校验得到的 token，仅用于换取短时 session |
+
+`/api/avatar/session` 返回体：
+
+| 字段 | 说明 |
+| --- | --- |
+| `sessionToken` | HMAC 签名的短时 AI session token |
+| `expiresAt` | 过期时间，毫秒时间戳 |
+| `ttlSeconds` | 默认 1800 秒，可通过 Worker env 调整 |
 
 `/api/avatar/generate` 请求体：
 
@@ -71,16 +89,23 @@ Worker API：
 | `contextMode` | `default` 或 `current` |
 | `baselineState` | 默认头像或当前头像的 state 快照 |
 | `catalog` | 前端从 `avatar_builder_config.json` 生成的精简组件目录 |
-| `turnstileToken` | 前端 Turnstile 校验得到的 token |
+| `sessionToken` | `/api/avatar/session` 返回的短时 token |
 
 SSE 事件：
 
 | event | data |
 | --- | --- |
 | `status` | 当前阶段文案 |
-| `plan_delta` | 用户可读的流式生成计划 |
-| `final` | `{ ok, avatarState, steps, warnings, confidence }` |
+| `final` | `{ ok, avatarState, steps, warnings, confidence, usedFallback }` |
+| `plan_delta` | 根据已应用配置生成的用户可读说明 |
 | `error` | 生成失败原因 |
+
+生成策略：
+
+1. Worker 先使用 Workers AI JSON Mode 生成结构化 `avatarState`。
+2. Worker 对 `state/value` 做白名单校验，只保留当前前端 catalog 中存在的选项。
+3. 若模型结构化输出失败、为空、或只有无变化值，Worker 使用确定性 fallback 映射，保证返回可编辑且可见的头像改动。
+4. Worker 先发送 `final`，前端立即应用头像变化；随后再流式输出说明文字，避免用户只看到“聊天文本”但头像没有变化。
 
 默认模型：
 
@@ -114,7 +139,9 @@ Generate 页面包含：
 - `@` 弹窗，支持 `@current` 和 `@default`。
 - 手动插入 `@current` / `@default` 的按钮。
 - Turnstile 校验区域。
-- 流式生成计划。
+- `Verify` 按钮：必须显式点击后才会换取短时 AI session。
+- `Generate editable avatar` 按钮：只有 AI session 有效且 prompt 非空时才可点击。
+- 已应用编辑说明。
 - 最终复刻步骤、warnings、confidence。
 
 上下文规则：
@@ -168,17 +195,19 @@ Worker secrets：
 | --- | --- |
 | `TURNSTILE_SITE_KEY` | 前端可公开使用，但通过 `/api/config` 返回，避免静态站硬编码 |
 | `TURNSTILE_SECRET_KEY` | Worker 调用 Turnstile `siteverify` 使用，必须保密 |
+| `AI_SESSION_SECRET` | 可选，用于签名短时 AI session；未配置时复用 `TURNSTILE_SECRET_KEY` |
 
 本地开发使用 `.env` 保存 Turnstile 配置，`.env` 不提交仓库，仓库只提交 `.env.example`：
 
 ```text
 TURNSTILE_SITE_KEY=...
 TURNSTILE_SECRET_KEY=...
+AI_SESSION_SECRET=...
 CLOUDFLARE_API_TOKEN=...
 CLOUDFLARE_ACCOUNT_ID=...
 ```
 
-写入 Worker secrets 时，从 `.env` 读取 `TURNSTILE_SITE_KEY` 和 `TURNSTILE_SECRET_KEY`；不要把 secret key 写进源码、文档正文或静态前端。`CLOUDFLARE_API_TOKEN` 和 `CLOUDFLARE_ACCOUNT_ID` 只用于本地 Wrangler 操作或 GitHub Secrets。
+写入 Worker secrets 时，从 `.env` 读取 `TURNSTILE_SITE_KEY` 和 `TURNSTILE_SECRET_KEY`；如需要独立 session 签名密钥，再写入 `AI_SESSION_SECRET`。不要把 secret key 写进源码、文档正文或静态前端。`CLOUDFLARE_API_TOKEN` 和 `CLOUDFLARE_ACCOUNT_ID` 只用于本地 Wrangler 操作或 GitHub Secrets。
 
 ## 5. GitHub Actions 门禁
 

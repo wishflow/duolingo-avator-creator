@@ -753,13 +753,39 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
                     generation: {
                         turnstileSiteKey: 'test-site-key',
                         maxPromptLength: 800,
+                        sessionTtlSeconds: 1800,
                         supportedMentions: ['current', 'default']
+                    },
+                    endpoints: {
+                        avatarSession: '/api/avatar/session',
+                        avatarGenerate: '/api/avatar/generate'
                     }
                 }
             };
             window.avatarBackend = backendConfig;
             window.fetch = function(url, init) {
+                if (String(url).indexOf('/api/avatar/session') !== -1) {
+                    return Promise.resolve(new Response(JSON.stringify({
+                        ok: true,
+                        sessionToken: 'test-ai-session',
+                        expiresAt: Date.now() + 1800000,
+                        ttlSeconds: 1800
+                    }), {
+                        status: 200,
+                        headers: { 'Content-Type': 'application/json' }
+                    }));
+                }
                 if (String(url).indexOf('/api/avatar/generate') !== -1) {
+                    var payload = JSON.parse(init.body || '{}');
+                    if (payload.sessionToken !== 'test-ai-session') {
+                        return Promise.resolve(new Response(JSON.stringify({
+                            ok: false,
+                            error: 'session_required'
+                        }), {
+                            status: 401,
+                            headers: { 'Content-Type': 'application/json' }
+                        }));
+                    }
                     var final = {
                         ok: true,
                         contextMode: 'current',
@@ -785,6 +811,10 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
             await new Promise(function(resolve) { setTimeout(resolve, 100); });
             aiPrompt.value = '@current make it bold';
             aiPrompt.dispatchEvent(new Event('input', { bubbles: true }));
+            var disabledBeforeVerify = generateBtn.disabled;
+            await verifyAiSession();
+            await new Promise(function(resolve) { setTimeout(resolve, 100); });
+            var disabledAfterVerify = generateBtn.disabled;
             await startAvatarGeneration();
             await new Promise(function(resolve) { setTimeout(resolve, 300); });
             var after = currentInputValues['Body'];
@@ -806,6 +836,8 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
                 after: after,
                 undone: undone,
                 redone: redone,
+                disabledBeforeVerify: disabledBeforeVerify,
+                disabledAfterVerify: disabledAfterVerify,
                 streamText: streamText,
                 stepCount: stepCount,
                 modeGenerate: document.body.classList.contains('mode-generate'),
@@ -818,6 +850,8 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
     info(f"Mocked AI result: {result}")
 
     assert result["modeGenerate"], "Generate route should activate mode-generate"
+    assert result["disabledBeforeVerify"], "Generate should be disabled before explicit Verify"
+    assert not result["disabledAfterVerify"], "Generate should be enabled after a verified AI session"
     assert result["after"] == result["target"], "AI final state should apply to current avatar"
     assert result["undone"] == result["before"], "Undo should restore the pre-AI avatar state"
     assert result["redone"] == result["target"], "Redo should restore the AI avatar state"
