@@ -1,0 +1,158 @@
+name: Semantic catalog full labeling
+
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Cloudflare Workers AI vision model."
+        required: false
+        default: "@cf/meta/llama-4-scout-17b-16e-instruct"
+      confirm_phrase:
+        description: "Type RUN_FULL_SEMANTIC_CATALOG to run all options and open a Draft PR."
+        required: true
+        default: ""
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: semantic-catalog-full
+  cancel-in-progress: false
+
+jobs:
+  full:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check confirmation
+        shell: bash
+        env:
+          CONFIRM_PHRASE: ${{ inputs.confirm_phrase }}
+        run: |
+          if [ "$CONFIRM_PHRASE" != "RUN_FULL_SEMANTIC_CATALOG" ]; then
+            echo "confirm_phrase must be RUN_FULL_SEMANTIC_CATALOG" >&2
+            exit 2
+          fi
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - run: npm ci
+
+      - run: python3 -m pip install -r requirements.txt
+
+      - uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+        with:
+          chrome-version: stable
+          install-dependencies: true
+
+      - name: Run full semantic catalog labeling
+        shell: bash
+        env:
+          MODEL: ${{ inputs.model }}
+          CHROME_EXEC: ${{ steps.setup-chrome.outputs.chrome-path }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          mkdir -p .cache/avatar-semantic/runs
+          set -o pipefail
+          python3 scripts/semantic_catalog.py --run --all --resume --max-calls 282 --model "$MODEL" 2>&1 \
+            | tee .cache/avatar-semantic/runs/semantic-catalog-full.log
+
+      - run: npm run semantic:check
+
+      - run: git diff --check
+
+      - name: Create Draft PR
+        id: create-pr
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch="semantic-catalog/full-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add assets/avatar_semantic_catalog.json docs/agent-steps/03.1-semantic-catalog-review.md
+          if git diff --cached --quiet; then
+            echo "created=false" >> "$GITHUB_OUTPUT"
+            echo "No semantic catalog changes to commit."
+            exit 0
+          fi
+
+          report="$(ls -t .cache/avatar-semantic/runs/semantic_catalog_*.json | head -n 1)"
+          {
+            echo "# Full semantic catalog labeling"
+            echo
+            echo "- source run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "- report: \`${report}\`"
+            echo
+            echo "This is a Draft PR. Review catalog labels and the generated review Markdown before marking ready."
+          } > .cache/avatar-semantic/runs/pr-body.md
+
+          git commit -m "Update semantic catalog labels"
+          git push origin "$branch"
+          pr_url="$(gh pr create --draft --base master --head "$branch" --title "Update semantic catalog labels" --body-file .cache/avatar-semantic/runs/pr-body.md)"
+          echo "created=true" >> "$GITHUB_OUTPUT"
+          echo "pr_url=$pr_url" >> "$GITHUB_OUTPUT"
+
+      - name: Write summary
+        if: always()
+        shell: bash
+        env:
+          PR_URL: ${{ steps.create-pr.outputs.pr_url }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          summary = Path(os.environ["GITHUB_STEP_SUMMARY"])
+          run_reports = sorted(Path(".cache/avatar-semantic/runs").glob("semantic_catalog_*.json"))
+          lines = ["# Semantic catalog full labeling", ""]
+          if run_reports:
+              report = json.loads(run_reports[-1].read_text(encoding="utf-8"))
+              lines.extend([
+                  f"- status: `{report.get('status')}`",
+                  f"- model: `{report.get('model')}`",
+                  f"- selectedCount: `{report.get('selectedCount')}`",
+                  f"- processedCount: `{report.get('processedCount')}`",
+                  f"- maxCalls: `{report.get('maxCalls')}`",
+              ])
+          else:
+              log = Path(".cache/avatar-semantic/runs/semantic-catalog-full.log")
+              lines.extend([
+                  "- status: `failed before run report`",
+                  "",
+                  "```text",
+                  log.read_text(encoding="utf-8", errors="ignore")[-4000:] if log.exists() else "No log found.",
+                  "```",
+              ])
+          pr_url = os.environ.get("PR_URL", "")
+          if pr_url:
+              lines.extend(["", f"- Draft PR: {pr_url}"])
+          summary.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: semantic-catalog-full-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: |
+            .cache/avatar-semantic/options/**
+            .cache/avatar-semantic/samples/**
+            .cache/avatar-semantic/runs/**
+            assets/avatar_semantic_catalog.json
+            docs/agent-steps/03.1-semantic-catalog-review.md

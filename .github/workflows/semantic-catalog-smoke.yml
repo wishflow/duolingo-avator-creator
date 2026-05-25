@@ -1,0 +1,138 @@
+name: Semantic catalog smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      option_ids:
+        description: "Comma or whitespace separated optionIds. Takes precedence over group/offset/limit."
+        required: false
+        default: "FacialHair:1"
+      group:
+        description: "Semantic group to label when option_ids is empty."
+        required: false
+        default: ""
+      offset:
+        description: "Matched option offset for group-based runs."
+        required: false
+        default: "0"
+      limit:
+        description: "Maximum matched options for group-based runs."
+        required: false
+        default: "1"
+      max_calls:
+        description: "Hard maximum Cloudflare vision calls for this run."
+        required: false
+        default: "20"
+      model:
+        description: "Cloudflare Workers AI vision model."
+        required: false
+        default: "@cf/meta/llama-4-scout-17b-16e-instruct"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - run: npm ci
+
+      - run: python3 -m pip install -r requirements.txt
+
+      - uses: browser-actions/setup-chrome@v2
+        id: setup-chrome
+        with:
+          chrome-version: stable
+          install-dependencies: true
+
+      - name: Run semantic catalog smoke
+        shell: bash
+        env:
+          OPTION_IDS: ${{ inputs.option_ids }}
+          GROUP: ${{ inputs.group }}
+          OFFSET: ${{ inputs.offset }}
+          LIMIT: ${{ inputs.limit }}
+          MAX_CALLS: ${{ inputs.max_calls }}
+          MODEL: ${{ inputs.model }}
+          CHROME_EXEC: ${{ steps.setup-chrome.outputs.chrome-path }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          mkdir -p .cache/avatar-semantic/runs
+          cmd=(python3 scripts/semantic_catalog.py --run --model "$MODEL" --offset "$OFFSET" --max-calls "$MAX_CALLS")
+          if [ -n "$OPTION_IDS" ]; then
+            normalized_ids="${OPTION_IDS//,/ }"
+            for option_id in $normalized_ids; do
+              cmd+=(--option-id "$option_id")
+            done
+          else
+            [ -n "$GROUP" ] && cmd+=(--group "$GROUP")
+            [ -n "$LIMIT" ] && [ "$LIMIT" != "0" ] && cmd+=(--limit "$LIMIT")
+          fi
+          printf 'Running: %q ' "${cmd[@]}" | tee .cache/avatar-semantic/runs/semantic-catalog-smoke.log
+          printf '\n' | tee -a .cache/avatar-semantic/runs/semantic-catalog-smoke.log
+          set -o pipefail
+          "${cmd[@]}" 2>&1 | tee -a .cache/avatar-semantic/runs/semantic-catalog-smoke.log
+
+      - name: Write summary
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          summary = Path(os.environ["GITHUB_STEP_SUMMARY"])
+          run_reports = sorted(Path(".cache/avatar-semantic/runs").glob("semantic_catalog_*.json"))
+          lines = ["# Semantic catalog smoke", ""]
+          if run_reports:
+              report = json.loads(run_reports[-1].read_text(encoding="utf-8"))
+              lines.extend([
+                  f"- status: `{report.get('status')}`",
+                  f"- mode: `{report.get('mode')}`",
+                  f"- model: `{report.get('model')}`",
+                  f"- selectedCount: `{report.get('selectedCount')}`",
+                  f"- processedCount: `{report.get('processedCount')}`",
+                  f"- maxCalls: `{report.get('maxCalls')}`",
+                  "",
+                  "## optionIds",
+                  "",
+              ])
+              lines.extend(f"- `{option_id}`" for option_id in report.get("optionIds", []))
+          else:
+              log = Path(".cache/avatar-semantic/runs/semantic-catalog-smoke.log")
+              lines.extend([
+                  "- status: `failed before run report`",
+                  "",
+                  "```text",
+                  log.read_text(encoding="utf-8", errors="ignore")[-4000:] if log.exists() else "No log found.",
+                  "```",
+              ])
+          summary.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: semantic-catalog-smoke-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: |
+            .cache/avatar-semantic/options/**
+            .cache/avatar-semantic/samples/**
+            .cache/avatar-semantic/runs/**
+            assets/avatar_semantic_catalog.json
+            docs/agent-steps/03.1-semantic-catalog-review.md

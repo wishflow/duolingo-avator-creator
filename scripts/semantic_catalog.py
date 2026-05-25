@@ -42,6 +42,7 @@ CACHE_DIR = PROJECT_DIR / ".cache" / "avatar-semantic"
 SITE_DIR = PROJECT_DIR / "_site"
 DEFAULT_MODEL = "@cf/meta/llama-4-scout-17b-16e-instruct"
 SEMANTIC_VERSION = 1
+DEFAULT_MAX_CALLS = 20
 CHROME_CANDIDATES = [
     "google-chrome",
     "google-chrome-stable",
@@ -245,8 +246,17 @@ def enumerate_options(config: dict[str, Any]) -> list[dict[str, Any]]:
     return options
 
 
+def split_option_ids(values: list[str]) -> list[str]:
+    result: list[str] = []
+    for value in values:
+        for item in re.split(r"[\s,]+", value.strip()):
+            if item:
+                result.append(item)
+    return result
+
+
 def limited_options(options: list[dict[str, Any]], args: argparse.Namespace) -> list[dict[str, Any]]:
-    option_ids = set(getattr(args, "option_id", []) or [])
+    option_ids = set(split_option_ids(getattr(args, "option_id", []) or []))
     sample = getattr(args, "sample", "")
     if sample:
         option_ids.add(sample)
@@ -255,10 +265,60 @@ def limited_options(options: list[dict[str, Any]], args: argparse.Namespace) -> 
         missing = sorted(option_id for option_id in option_ids if option_id not in by_id)
         if missing:
             raise RuntimeError(f"Unknown optionId: {', '.join(missing)}")
-        options = [by_id[option_id] for option_id in sorted(option_ids)]
+        return [by_id[option_id] for option_id in sorted(option_ids)]
+
+    group = getattr(args, "group", "") or ""
+    if group:
+        options = [option for option in options if option["group"] == group]
+    offset = max(0, int(getattr(args, "offset", 0) or 0))
+    if offset:
+        options = options[offset:]
     if args.limit and args.limit > 0:
         return options[: args.limit]
     return options
+
+
+def write_run_report(args: argparse.Namespace, selected: list[dict[str, Any]], processed: int, mode: str, status: str, error: str = "") -> None:
+    run_id = os.environ.get("GITHUB_RUN_ID") or str(int(time.time()))
+    report = {
+        "status": status,
+        "mode": mode,
+        "model": args.model,
+        "selectedCount": len(selected),
+        "processedCount": processed,
+        "maxCalls": args.max_calls,
+        "group": args.group,
+        "offset": args.offset,
+        "limit": args.limit,
+        "all": args.all,
+        "optionIds": [option["optionId"] for option in selected],
+        "error": error,
+    }
+    output_path = CACHE_DIR / "runs" / f"semantic_catalog_{run_id}.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def require_run_preflight(args: argparse.Namespace, selected: list[dict[str, Any]]) -> None:
+    errors: list[str] = []
+    if not selected:
+        raise RuntimeError("No semantic options matched the requested selector.")
+    max_calls = int(args.max_calls or DEFAULT_MAX_CALLS)
+    if max_calls < 1:
+        raise RuntimeError("--max-calls must be at least 1.")
+    if len(selected) > max_calls:
+        raise RuntimeError(f"Selected {len(selected)} options but --max-calls is {max_calls}. Narrow the selector or raise --max-calls.")
+    if not os.environ.get("CLOUDFLARE_ACCOUNT_ID") or not os.environ.get("CLOUDFLARE_API_TOKEN"):
+        errors.append("CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN are required with --run.")
+    if Image is None:
+        errors.append("Pillow is required for --run. Install requirements.txt first.")
+    if not find_chrome_exec(args.chrome_exec):
+        errors.append(
+            "Chrome/Chromium is required for --run screenshot capture. "
+            "Run the semantic catalog GitHub Action, install Chrome locally, or set CHROME_EXEC."
+        )
+    if errors:
+        raise RuntimeError(" ".join(errors))
 
 
 def make_option(button: dict[str, Any], tab: str, section: str, kind: str, index: int) -> dict[str, Any]:
@@ -367,6 +427,38 @@ def call_cloudflare_vision(model: str, image_path: Path, option: dict[str, Any])
         "evidence": str(parsed.get("evidence", ""))[:180],
         "rawResponseText": raw_response_text,
     }
+
+
+def sample_report_path(option_id: str) -> Path:
+    return CACHE_DIR / "samples" / f"{safe_filename(option_id)}.json"
+
+
+def write_sample_report(
+    option_before: dict[str, Any],
+    args: argparse.Namespace,
+    default_state: dict[str, Any],
+    result: dict[str, Any] | None = None,
+    option_after: dict[str, Any] | None = None,
+) -> None:
+    image_path = CACHE_DIR / "options" / f"{safe_filename(option_before['optionId'])}.png"
+    sample: dict[str, Any] = {
+        "optionId": option_before["optionId"],
+        "cloudflareCalled": bool(args.run),
+        "imagePath": str(image_path.relative_to(PROJECT_DIR)),
+        "captureState": build_capture_state(option_before, default_state),
+        "optionBefore": option_before,
+        "visionInput": {
+            "model": args.model,
+            "prompt": json.loads(build_prompt(option_before)),
+        },
+    }
+    if result is not None:
+        sample["visionResult"] = result
+    if option_after is not None:
+        sample["optionAfter"] = option_after
+    output_path = sample_report_path(option_before["optionId"])
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(sample, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def apply_resume_annotations(options: list[dict[str, Any]], args: argparse.Namespace) -> None:
@@ -510,7 +602,7 @@ async def capture_screenshots_async(options: list[dict[str, Any]], args: argpars
         else:
             raise RuntimeError("Avatar editor did not become ready for screenshot capture")
 
-        for option in limited_options(options, args):
+        for option in options:
             image_path = CACHE_DIR / "options" / f"{safe_filename(option['optionId'])}.png"
             if args.resume and image_path.exists():
                 continue
@@ -541,7 +633,7 @@ async def capture_screenshots_async(options: list[dict[str, Any]], args: argpars
 def ensure_screenshot_cache(options: list[dict[str, Any]], args: argparse.Namespace, default_state: dict[str, Any]) -> None:
     targets = [
         option
-        for option in limited_options(options, args)
+        for option in options
         if not (args.resume and option.get("labelSource") == "vision_ai")
     ]
     missing = [
@@ -554,21 +646,21 @@ def ensure_screenshot_cache(options: list[dict[str, Any]], args: argparse.Namesp
     asyncio.run(capture_screenshots_async(missing, args, default_state))
 
 
-def maybe_enrich_with_ai(options: list[dict[str, Any]], args: argparse.Namespace) -> None:
+def maybe_enrich_with_ai(options: list[dict[str, Any]], args: argparse.Namespace, default_state: dict[str, Any]) -> int:
     if not args.run:
-        return
+        return 0
     processed = 0
-    for option in limited_options(options, args):
+    for option in options:
         if args.resume and option.get("labelSource") == "vision_ai":
             continue
-        if args.limit and processed >= args.limit:
-            break
         image_path = CACHE_DIR / "options" / f"{safe_filename(option['optionId'])}.png"
         if not image_path.exists():
             continue
+        option_before = json.loads(json.dumps(option))
         ai_result = call_cloudflare_vision(args.model, image_path, option)
         processed += 1
         if not ai_result:
+            write_sample_report(option_before, args, default_state, None, None)
             continue
         option["tags"] = add_unique([], *ai_result["tags"])
         option["confidence"] = ai_result["confidence"]
@@ -576,7 +668,9 @@ def maybe_enrich_with_ai(options: list[dict[str, Any]], args: argparse.Namespace
         option["labelSource"] = "vision_ai"
         if ai_result.get("evidence"):
             option["evidence"] = ai_result["evidence"]
+        write_sample_report(option_before, args, default_state, ai_result, json.loads(json.dumps(option)))
         time.sleep(0.15)
+    return processed
 
 
 def safe_filename(value: str) -> str:
@@ -586,11 +680,14 @@ def safe_filename(value: str) -> str:
 def build_catalog(config: dict[str, Any], args: argparse.Namespace) -> dict[str, Any]:
     options = enumerate_options(config)
     avatar_config = config["avatarBuilderConfig"]
+    default_state = avatar_config.get("defaultBuiltAvatarState", {})
     apply_resume_annotations(options, args)
+    selected = limited_options(options, args)
     if args.run:
-        ensure_screenshot_cache(options, args, avatar_config.get("defaultBuiltAvatarState", {}))
-    maybe_enrich_with_ai(options, args)
-    return {
+        require_run_preflight(args, selected)
+        ensure_screenshot_cache(selected, args, default_state)
+    processed = maybe_enrich_with_ai(selected, args, default_state)
+    catalog = {
         "semanticVersion": SEMANTIC_VERSION,
         "sourceVersion": avatar_config.get("riveFileVersion", ""),
         "generatedAt": "manual-dry-run" if not args.run else time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -601,6 +698,9 @@ def build_catalog(config: dict[str, Any], args: argparse.Namespace) -> dict[str,
         },
         "options": options,
     }
+    if args.run:
+        write_run_report(args, selected, processed, "catalog", "success")
+    return catalog
 
 
 def run_sample(config: dict[str, Any], args: argparse.Namespace) -> int:
@@ -611,36 +711,25 @@ def run_sample(config: dict[str, Any], args: argparse.Namespace) -> int:
         return 2
     option = selected[0]
     avatar_config = config["avatarBuilderConfig"]
-    capture_state = build_capture_state(option, avatar_config.get("defaultBuiltAvatarState", {}))
-    image_path = CACHE_DIR / "options" / f"{safe_filename(option['optionId'])}.png"
-    prompt = build_prompt(option)
-    sample: dict[str, Any] = {
-        "optionId": option["optionId"],
-        "cloudflareCalled": bool(args.run),
-        "imagePath": str(image_path.relative_to(PROJECT_DIR)),
-        "captureState": capture_state,
-        "optionBefore": option,
-        "visionInput": {
-            "model": args.model,
-            "prompt": json.loads(prompt),
-        },
-    }
+    default_state = avatar_config.get("defaultBuiltAvatarState", {})
+    result = None
+    option_after = None
     if args.run:
-        ensure_screenshot_cache([option], args, avatar_config.get("defaultBuiltAvatarState", {}))
+        require_run_preflight(args, selected)
+        ensure_screenshot_cache(selected, args, default_state)
+        image_path = CACHE_DIR / "options" / f"{safe_filename(option['optionId'])}.png"
         result = call_cloudflare_vision(args.model, image_path, option)
-        sample["visionResult"] = result
         if result:
-            option_after = dict(option)
+            option_after = json.loads(json.dumps(option))
             option_after["tags"] = add_unique([], *result["tags"])
             option_after["confidence"] = result["confidence"]
             option_after["needsReview"] = option_after["confidence"] < 0.65 or "unclear" in option_after["tags"]
             option_after["labelSource"] = "vision_ai"
             if result.get("evidence"):
                 option_after["evidence"] = result["evidence"]
-            sample["optionAfter"] = option_after
-    output_path = CACHE_DIR / "samples" / f"{safe_filename(option['optionId'])}.json"
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(sample, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        write_run_report(args, selected, 1, "sample", "success")
+    write_sample_report(option, args, default_state, result, option_after)
+    output_path = sample_report_path(option["optionId"])
     print(f"Wrote {output_path.relative_to(PROJECT_DIR)}")
     if not args.run:
         print("Sample dry-run: Cloudflare AI was not called. Add --run to spend exactly one vision call.")
@@ -725,6 +814,9 @@ def main() -> int:
     parser.add_argument("--run", action="store_true", help="Call Cloudflare Workers AI for available cached screenshots")
     parser.add_argument("--all", action="store_true", help="Allow --run to process every option")
     parser.add_argument("--limit", type=int, default=0, help="Limit AI-enriched options")
+    parser.add_argument("--offset", type=int, default=0, help="Skip this many matched options before applying --limit")
+    parser.add_argument("--group", default="", help="Only process options from this semantic group")
+    parser.add_argument("--max-calls", type=int, default=DEFAULT_MAX_CALLS, help="Maximum Cloudflare vision calls allowed")
     parser.add_argument("--option-id", action="append", default=[], help="Only process this optionId; repeatable")
     parser.add_argument("--sample", default="", help="Write one sample input/output report for this optionId")
     parser.add_argument("--resume", action="store_true", help="Reuse existing screenshots and vision labels where possible")
@@ -739,13 +831,17 @@ def main() -> int:
         return run_check()
 
     config = load_config()
-    if args.run and not (args.all or args.limit > 0 or args.option_id or args.sample):
-        print("Refusing unbounded --run. Use --sample OPTION_ID, --limit N, --option-id OPTION_ID, or --all.", file=sys.stderr)
+    if args.run and not (args.all or args.limit > 0 or args.option_id or args.sample or args.group):
+        print("Refusing unbounded --run. Use --sample OPTION_ID, --limit N, --group GROUP, --option-id OPTION_ID, or --all.", file=sys.stderr)
         return 2
-    if args.sample:
-        return run_sample(config, args)
+    try:
+        if args.sample:
+            return run_sample(config, args)
+        catalog = build_catalog(config, args)
+    except RuntimeError as error:
+        print(f"semantic catalog error: {error}", file=sys.stderr)
+        return 2
 
-    catalog = build_catalog(config, args)
     errors = validate_catalog(catalog, config)
     if errors:
         for error in errors:
