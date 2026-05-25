@@ -2,6 +2,11 @@
   "name": "duolingo-avatar-extractor",
   "private": true,
   "type": "module",
+  "scripts": {
+    "test:static": "python3 tests/test_static_site.py",
+    "test:e2e": "python3 tests/test_avatar_explorer.py --port 8775 --debug-port 9228",
+    "test:ci": "npm run test:static && python3 tests/test_avatar_explorer.py --port 8775 --debug-port 9228 --require-browser"
+  },
   "dependencies": {
     "@rive-app/canvas": "^2.37.8"
   }

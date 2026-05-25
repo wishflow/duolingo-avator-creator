@@ -11,7 +11,7 @@ Usage:
   python3 tests/test_avatar_explorer.py --test 3 # run only test #3
 """
 
-import asyncio, json, sys, os, time, signal, subprocess, base64, hashlib
+import asyncio, json, sys, os, time, signal, subprocess, base64, hashlib, shutil
 from pathlib import Path
 from io import BytesIO
 
@@ -28,9 +28,15 @@ except ImportError:
 # === CONFIG ============================================================
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 ASSETS_DIR = PROJECT_DIR / "assets"
-CHROME_EXEC = "google-chrome"
+CHROME_EXEC = None
 CHROME_USER_DATA = "/tmp/chrome-test-profile"
 TEST_TIMEOUT = 30  # seconds per test
+CHROME_CANDIDATES = [
+    "google-chrome",
+    "google-chrome-stable",
+    "chromium",
+    "chromium-browser",
+]
 
 # These can be overridden via CLI args
 http_port = 8769
@@ -38,6 +44,25 @@ chrome_debug_port = 9223
 
 def page_url():
     return f"http://127.0.0.1:{http_port}/avatar_explorer.html"
+
+def find_chrome_exec(explicit=None):
+    candidates = []
+    if explicit:
+        candidates.append(explicit)
+    env_chrome = os.environ.get("CHROME_EXEC")
+    if env_chrome:
+        candidates.append(env_chrome)
+    candidates.extend(CHROME_CANDIDATES)
+
+    for candidate in candidates:
+        if not candidate:
+            continue
+        if os.path.isabs(candidate) and os.access(candidate, os.X_OK):
+            return candidate
+        resolved = shutil.which(candidate)
+        if resolved:
+            return resolved
+    return None
 
 # === HELPERS ===========================================================
 
@@ -65,10 +90,11 @@ def warn(msg):
 # === TEST RUNNER =======================================================
 
 class TestRunner:
-    def __init__(self, keep_browser=False, http_port=8769, debug_port=9223):
+    def __init__(self, keep_browser=False, http_port=8769, debug_port=9223, chrome_exec=None):
         self.keep_browser = keep_browser
         self.http_port = http_port
         self.debug_port = debug_port
+        self.chrome_exec = chrome_exec
         self.http_proc = None
         self.chrome_proc = None
         self.cdp = None
@@ -106,7 +132,7 @@ class TestRunner:
         os.makedirs(CHROME_USER_DATA, exist_ok=True)
         self.chrome_proc = subprocess.Popen(
             [
-                CHROME_EXEC,
+                self.chrome_exec,
                 f"--remote-debugging-port={self.debug_port}",
                 f"--user-data-dir={CHROME_USER_DATA}",
                 "--no-first-run",
@@ -636,17 +662,34 @@ async def main():
                         help="HTTP server port (default: 8769)")
     parser.add_argument("--debug-port", type=int, default=9223,
                         help="Chrome debug port (default: 9223)")
+    parser.add_argument("--chrome-exec", default=None,
+                        help="Path or command for Chrome/Chromium")
+    parser.add_argument("--require-browser", action="store_true",
+                        help="Fail instead of skipping when Chrome/Chromium is unavailable")
     args = parser.parse_args()
 
+    chrome_exec = find_chrome_exec(args.chrome_exec)
+    if not chrome_exec:
+        if args.require_browser:
+            msg = "No Chrome/Chromium found"
+            fail(msg)
+            sys.exit(1)
+        msg = "SKIP: no Chrome/Chromium found"
+        warn(msg)
+        sys.exit(0)
+    ok(f"Using browser: {chrome_exec}")
+
     # Update module-level config so page_url() works
-    global http_port, chrome_debug_port
+    global http_port, chrome_debug_port, CHROME_EXEC
     http_port = args.port
     chrome_debug_port = args.debug_port
+    CHROME_EXEC = chrome_exec
 
     runner = TestRunner(
         keep_browser=args.keep,
         http_port=args.port,
         debug_port=args.debug_port,
+        chrome_exec=chrome_exec,
     )
 
     # Register all tests
