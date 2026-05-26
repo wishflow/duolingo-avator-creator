@@ -49,6 +49,12 @@ CHROME_CANDIDATES = [
     "chromium",
     "chromium-browser",
 ]
+PLAYWRIGHT_CHROMIUM_PATTERNS = [
+    "chromium-*/chrome-linux/chrome",
+    "chromium_headless_shell-*/chrome-linux/headless_shell",
+    "chromium-*/chrome-mac/Chromium.app/Contents/MacOS/Chromium",
+    "chromium-*/chrome-win/chrome.exe",
+]
 
 TAB_LABELS = ["Body", "Eyes", "Hair", "Face", "Beard", "Hat", "Shirt", "BG"]
 
@@ -372,11 +378,15 @@ def make_option(button: dict[str, Any], tab: str, section: str, kind: str, index
 
 def allowed_tags_for_option(option: dict[str, Any]) -> list[str]:
     return {
+        "body": ["body", "silhouette", "slim_body", "broad_body", "unclear"],
         "facial_hair": ["none", "mustache", "goatee", "full_beard", "sideburns", "short", "thick", "unclear"],
         "headwear": ["none", "hat", "bowler_like", "brimmed_hat", "cap", "soft_hat", "unclear"],
         "main_hair": ["short_hair", "medium_hair", "long_hair", "receding_hair", "neat_hair", "unclear"],
         "expression": ["serious", "stern", "calm", "smile", "friendly", "surprised", "playful", "neutral", "unclear"],
-        "glasses": ["none", "round_glasses", "square_glasses", "bold_glasses", "unclear"],
+        "glasses": ["none", "glasses", "round_glasses", "square_glasses", "bold_glasses", "unclear"],
+        "face_details": ["none", "wrinkles", "older", "unclear"],
+        "piercings": ["none", "earrings", "piercing", "unclear"],
+        "nose_piercing": ["none", "nose_piercing", "unclear"],
     }.get(option["group"], ["unclear"])
 
 
@@ -602,6 +612,26 @@ def find_chrome_exec(explicit: str | None = None) -> str | None:
         resolved = shutil.which(candidate)
         if resolved:
             return resolved
+    playwright_chrome = find_playwright_chromium()
+    if playwright_chrome:
+        return playwright_chrome
+    return None
+
+
+def find_playwright_chromium() -> str | None:
+    roots: list[Path] = []
+    env_path = os.environ.get("PLAYWRIGHT_BROWSERS_PATH")
+    if env_path and env_path != "0":
+        roots.append(Path(env_path).expanduser())
+    elif env_path == "0":
+        roots.append(PROJECT_DIR / "node_modules" / "playwright-core" / ".local-browsers")
+    roots.append(Path.home() / ".cache" / "ms-playwright")
+
+    for root in roots:
+        for pattern in PLAYWRIGHT_CHROMIUM_PATTERNS:
+            for candidate in sorted(root.glob(pattern), reverse=True):
+                if candidate.is_file() and os.access(candidate, os.X_OK):
+                    return str(candidate)
     return None
 
 
