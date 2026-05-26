@@ -443,6 +443,39 @@ def summarize_capture_metrics(records: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def load_existing_capture_metrics(prefix: str) -> dict[str, dict[str, Any]]:
+    metrics_by_id: dict[str, dict[str, Any]] = {}
+    for task_path in sorted(TASKS_DIR.glob(f"{prefix}-*.json")):
+        try:
+            task = read_json(task_path)
+        except (json.JSONDecodeError, OSError):
+            continue
+        options = task.get("options") if isinstance(task.get("options"), list) else []
+        for option in options:
+            if not isinstance(option, dict):
+                continue
+            option_id = option.get("optionId")
+            metrics = option.get("captureMetrics")
+            if isinstance(option_id, str) and isinstance(metrics, dict):
+                metrics_by_id[option_id] = metrics
+    return metrics_by_id
+
+
+def restore_resume_capture_metrics(records: list[dict[str, Any]], metrics_by_id: dict[str, dict[str, Any]]) -> int:
+    restored = 0
+    for record in records:
+        if isinstance(record.get("captureMetrics"), dict):
+            continue
+        if not all(path.exists() for path in record["paths"].values()):
+            continue
+        metrics = metrics_by_id.get(record["option"]["optionId"])
+        if not isinstance(metrics, dict):
+            continue
+        record["captureMetrics"] = metrics
+        restored += 1
+    return restored
+
+
 def task_option_record(record: dict[str, Any]) -> dict[str, Any]:
     option = record["option"]
     paths = record["paths"]
@@ -542,7 +575,12 @@ def run_tasks(args: argparse.Namespace) -> int:
         raise RuntimeError("No feature options matched the requested selector.")
     default_state = config["avatarBuilderConfig"].get("defaultBuiltAvatarState", {})
     records = build_capture_records(selected, default_state)
+    existing_metrics = load_existing_capture_metrics(task_prefix(args)) if args.resume else {}
     asyncio.run(capture_compare_images_async(records, args))
+    if args.resume and existing_metrics:
+        restored_count = restore_resume_capture_metrics(records, existing_metrics)
+        if restored_count:
+            print(f"Restored capture metrics for {restored_count} resumed option(s)")
     task_paths = write_task_batches(records, args)
     print(f"Wrote {len(task_paths)} Codex task package(s)")
     for path in task_paths:
@@ -750,15 +788,65 @@ def write_merge_report(report: dict[str, Any]) -> None:
     write_json(MERGE_REPORT_PATH, report)
 
 
+def merge_label_inputs(args: argparse.Namespace) -> tuple[list[Path], list[str], list[str]]:
+    if not getattr(args, "all_labels", False):
+        return [Path(args.input)], [], []
+
+    task_files, warnings = load_task_files(args)
+    errors: list[str] = []
+    input_paths: list[Path] = []
+    if not task_files:
+        errors.append("No Codex task package found. Run `npm run semantic:codex:tasks` first or pass --task.")
+        return input_paths, errors, warnings
+    for task_file in task_files:
+        if not task_file.exists():
+            errors.append(f"task file not found: {task_file}")
+            continue
+        try:
+            task = read_json(task_file)
+        except json.JSONDecodeError as error:
+            errors.append(f"{task_file}: JSON parse failed: {error}")
+            continue
+        input_paths.append(task_label_path(task))
+    return input_paths, errors, warnings
+
+
+def validate_merge_inputs(
+    input_paths: list[Path],
+    enum_by_id: dict[str, dict[str, Any]],
+    task_options: dict[str, dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[str], list[str]]:
+    labels: list[dict[str, Any]] = []
+    errors: list[str] = []
+    warnings: list[str] = []
+    seen: set[str] = set()
+    for input_path in input_paths:
+        input_labels, input_errors, input_warnings = validate_labels(input_path, enum_by_id, task_options)
+        errors.extend(f"{relpath(input_path)}: {error}" for error in input_errors)
+        warnings.extend(f"{relpath(input_path)}: {warning}" for warning in input_warnings)
+        for label in input_labels:
+            option_id = label["optionId"]
+            if option_id in seen:
+                errors.append(f"duplicate optionId across merge inputs: {option_id}")
+                continue
+            seen.add(option_id)
+            labels.append(label)
+    return labels, errors, warnings
+
+
 def run_merge(args: argparse.Namespace) -> int:
     _, enum_by_id = option_maps()
     task_options, task_errors, task_warnings = load_task_scope(args)
-    labels, label_errors, label_warnings = validate_labels(Path(args.input), enum_by_id, task_options)
-    errors = task_errors + label_errors
-    warnings = task_warnings + label_warnings
+    input_paths, input_errors, input_warnings = merge_label_inputs(args)
+    labels, label_errors, label_warnings = validate_merge_inputs(input_paths, enum_by_id, task_options)
+    errors = task_errors + input_errors + label_errors
+    warnings = task_warnings + input_warnings + label_warnings
     report = {
         "status": "failed" if errors else "ok",
         "input": str(args.input),
+        "inputs": [relpath(path) for path in input_paths],
+        "allLabels": bool(getattr(args, "all_labels", False)),
+        "allowPending": bool(getattr(args, "allow_pending", False)),
         "checkOnly": args.check_only,
         "labelCount": len(labels),
         "taskOptionCount": len(task_options),
@@ -774,7 +862,22 @@ def run_merge(args: argparse.Namespace) -> int:
         print(f"Wrote {relpath(MERGE_REPORT_PATH)}", file=sys.stderr)
         return 1
 
+    rejected = [label["optionId"] for label in labels if label.get("reviewStatus") == "rejected"]
+    if rejected:
+        report["status"] = "failed"
+        report["errors"] = [
+            f"merge rejects reviewStatus=rejected optionIds: {', '.join(rejected)}"
+        ]
+        write_merge_report(report)
+        for error in report["errors"]:
+            print(f"codex semantic merge error: {error}", file=sys.stderr)
+        print(f"Wrote {relpath(MERGE_REPORT_PATH)}", file=sys.stderr)
+        return 1
+
+    allow_pending = bool(getattr(args, "allow_pending", False))
     unapproved = [label["optionId"] for label in labels if label.get("reviewStatus") != "approved"]
+    if allow_pending:
+        unapproved = []
     if unapproved:
         report["status"] = "failed"
         report["errors"] = [
@@ -1231,8 +1334,10 @@ def build_parser() -> argparse.ArgumentParser:
 
     merge_parser = subparsers.add_parser("merge", help="Validate and merge Codex JSONL labels")
     merge_parser.add_argument("--input", default=str(DEFAULT_LABELS_PATH), help="Codex labels JSONL")
+    merge_parser.add_argument("--all-labels", action="store_true", help="Merge every labelsPath referenced by the current task set")
     merge_parser.add_argument("--task", action="append", default=[], help="Task package JSON to validate against; repeatable")
     merge_parser.add_argument("--check-only", action="store_true", help="Validate without modifying the catalog")
+    merge_parser.add_argument("--allow-pending", action="store_true", help="Allow pending rows to merge; rejected rows are still blocked")
 
     compare_parser = subparsers.add_parser("compare", help="Compare Codex labels with Cloudflare labels")
     compare_parser.add_argument("--codex", required=True, help="Codex JSONL or catalog/report JSON")

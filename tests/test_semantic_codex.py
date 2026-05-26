@@ -123,6 +123,22 @@ def test_merge_rejects_pending_labels(tmp_path):
     assert code == 1
 
 
+def test_merge_allows_pending_with_explicit_flag(tmp_path):
+    input_path = tmp_path / "labels.jsonl"
+    write_jsonl(input_path, [valid_label(reviewStatus="pending")])
+    task_path = task_file(tmp_path)
+
+    code = semantic_codex.run_merge(Namespace(
+        input=str(input_path),
+        all_labels=False,
+        task=[str(task_path)],
+        check_only=True,
+        allow_pending=True,
+    ))
+
+    assert code == 0
+
+
 def test_merge_accepts_approved_labels_in_check_only(tmp_path):
     input_path = tmp_path / "labels.jsonl"
     write_jsonl(input_path, [valid_label(reviewStatus="approved")])
@@ -154,6 +170,33 @@ def test_report_issue_rows_explain_missing_labels(tmp_path):
     }]
 
 
+def test_restore_resume_capture_metrics_keeps_existing_task_metrics(tmp_path):
+    paths = {
+        "baseline": tmp_path / "baseline.png",
+        "option": tmp_path / "option.png",
+        "diff": tmp_path / "diff.png",
+        "compare": tmp_path / "compare.png",
+    }
+    for path in paths.values():
+        path.write_bytes(b"image")
+    records = [{
+        "option": {"optionId": "Body:1"},
+        "paths": paths,
+    }]
+    metrics = {
+        "Body:1": {
+            "totalMs": 12.5,
+            "baseline": {"fallbackUsed": False, "stable": True},
+            "option": {"fallbackUsed": False, "stable": True},
+        }
+    }
+
+    restored_count = semantic_codex.restore_resume_capture_metrics(records, metrics)
+
+    assert restored_count == 1
+    assert records[0]["captureMetrics"] == metrics["Body:1"]
+
+
 def main():
     tests = [
         test_validate_labels_accepts_open_tags_and_attributes,
@@ -162,8 +205,10 @@ def main():
         test_validate_labels_rejects_duplicate_option_id,
         test_validate_labels_requires_current_task_scope,
         test_merge_rejects_pending_labels,
+        test_merge_allows_pending_with_explicit_flag,
         test_merge_accepts_approved_labels_in_check_only,
         test_report_issue_rows_explain_missing_labels,
+        test_restore_resume_capture_metrics_keeps_existing_task_metrics,
     ]
     for test in tests:
         with tempfile.TemporaryDirectory() as tmp:

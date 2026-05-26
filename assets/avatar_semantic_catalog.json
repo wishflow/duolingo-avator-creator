@@ -3,7 +3,7 @@
   "sourceVersion": "avatar_builder_25_sept2025",
   "generatedAt": "manual-dry-run",
   "labeling": {
-    "mode": "deterministic_seed",
+    "mode": "deterministic_seed_with_codex_manual",
     "model": "@cf/meta/llama-4-scout-17b-16e-instruct",
     "reviewThreshold": 0.65
   },
@@ -395,10 +395,14 @@
       "color": null,
       "tags": [
         "body",
-        "silhouette",
-        "body_3"
+        "torso_shape",
+        "narrow_torso",
+        "trapezoid_body",
+        "narrow_neck",
+        "straight_sides",
+        "small_waist_detail"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -414,7 +418,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff replace the rounded baseline torso with a much narrower straight-sided purple body.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Body_3.compare.png"
     },
     {
       "optionId": "Body:4",
@@ -428,10 +434,14 @@
       "color": null,
       "tags": [
         "body",
-        "silhouette",
-        "body_4"
+        "torso_shape",
+        "rounded_shoulders",
+        "narrow_torso",
+        "curved_waist",
+        "small_waist_detail",
+        "soft_body"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -447,7 +457,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff show a narrower purple body with rounded shoulders and a small lower-center detail.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Body_4.compare.png"
     },
     {
       "optionId": "Body:1",
@@ -461,10 +473,13 @@
       "color": null,
       "tags": [
         "body",
-        "silhouette",
-        "body_1"
+        "default_body",
+        "rounded_torso",
+        "rounded_shoulders",
+        "medium_torso",
+        "baseline_match"
       ],
-      "confidence": 0.78,
+      "confidence": 0.98,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -480,7 +495,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline and option appear visually identical, matching the default rounded torso.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Body_1.compare.png"
     },
     {
       "optionId": "Body:5",
@@ -494,10 +511,13 @@
       "color": null,
       "tags": [
         "body",
-        "silhouette",
-        "body_5"
+        "torso_shape",
+        "broad_torso",
+        "rounded_shoulders",
+        "wide_body",
+        "large_rounded_chest"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -513,7 +533,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff widen the torso and shoulders into a larger rounded purple body.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Body_5.compare.png"
     },
     {
       "optionId": "Body:6",
@@ -527,10 +549,14 @@
       "color": null,
       "tags": [
         "body",
-        "silhouette",
-        "body_6"
+        "torso_shape",
+        "very_broad_body",
+        "square_shoulders",
+        "blocky_torso",
+        "wide_lower_body",
+        "straight_sides"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -546,7 +572,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff show the body expanding into a very wide blocky torso and side panels.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Body_6.compare.png"
     },
     {
       "optionId": "Body:2",
@@ -560,10 +588,14 @@
       "color": null,
       "tags": [
         "body",
-        "silhouette",
-        "body_2"
+        "torso_shape",
+        "wide_shoulders",
+        "broad_body",
+        "low_wide_torso",
+        "rounded_lower_body",
+        "large_body"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -579,7 +611,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff replace the baseline torso with a much wider low purple body and broad shoulders.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Body_2.compare.png"
     },
     {
       "optionId": "EyeColor:1",
@@ -918,11 +952,14 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_17",
-        "smile",
-        "friendly"
+        "mouth_change",
+        "closed_smile",
+        "friendly_smile",
+        "curved_mouth",
+        "asymmetric_smile",
+        "subtle_smile"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -933,7 +970,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 17
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff lengthen the dark closed mouth into a clearer curved smile.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_17.compare.png"
     },
     {
       "optionId": "Expression:54",
@@ -947,13 +986,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_54",
-        "smile",
-        "friendly"
+        "closed_mouth",
+        "side_smile",
+        "subtle_smile",
+        "neutral_soft_smile",
+        "baseline_match"
       ],
-      "confidence": 0.78,
+      "confidence": 0.86,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -962,7 +1003,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 54
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline and option appear visually identical, so this expression may be a duplicate of the default mouth.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_54.compare.png"
     },
     {
       "optionId": "Expression:55",
@@ -976,11 +1019,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_55",
-        "smile",
-        "friendly"
+        "mouth_change",
+        "open_mouth",
+        "open_smile",
+        "red_lips",
+        "tongue_visible",
+        "playful_smile",
+        "small_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -991,7 +1038,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 55
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add a red open mouth with a pink tongue in place of the closed baseline smile.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_55.compare.png"
     },
     {
       "optionId": "Expression:5",
@@ -1005,13 +1054,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_5",
-        "smile",
-        "friendly"
+        "closed_mouth",
+        "side_smile",
+        "subtle_smile",
+        "neutral_soft_smile",
+        "baseline_match"
       ],
-      "confidence": 0.78,
+      "confidence": 0.87,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -1020,7 +1071,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 5
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline and option look the same, with no visible mouth or face change in the diff.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_5.compare.png"
     },
     {
       "optionId": "Expression:31",
@@ -1034,12 +1087,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_31",
-        "serious",
-        "stern",
-        "calm"
+        "mouth_change",
+        "side_open_smile",
+        "red_lips",
+        "tongue_visible",
+        "playful",
+        "small_mouth",
+        "asymmetric_smile"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1050,7 +1106,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 31
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff show a small red open side-smile replacing the baseline closed mouth.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_31.compare.png"
     },
     {
       "optionId": "Expression:32",
@@ -1064,12 +1122,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_32",
-        "serious",
-        "stern",
-        "calm"
+        "mouth_change",
+        "open_mouth",
+        "toothy_smile",
+        "tongue_visible",
+        "laughing",
+        "happy",
+        "large_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1080,7 +1141,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 32
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add a wide open mouth with white teeth and red tongue compared with baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_32.compare.png"
     },
     {
       "optionId": "Expression:1",
@@ -1094,12 +1157,16 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_1",
-        "neutral"
+        "neutral",
+        "closed_mouth",
+        "side_smile",
+        "baseline_match",
+        "subtle_smile",
+        "small_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.83,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -1108,7 +1175,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 1
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline and option appear visually identical, with no meaningful diff visible.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_1.compare.png"
     },
     {
       "optionId": "Expression:21",
@@ -1122,11 +1191,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_21",
-        "smile",
-        "friendly"
+        "mouth_change",
+        "side_open_smile",
+        "red_lips",
+        "tongue_visible",
+        "friendly",
+        "small_mouth",
+        "asymmetric_smile"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1137,7 +1210,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 21
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff show a red open side-smile with tongue in place of the baseline line smile.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_21.compare.png"
     },
     {
       "optionId": "Expression:20",
@@ -1151,10 +1226,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_20",
-        "neutral"
+        "mouth_change",
+        "open_mouth",
+        "toothy_smile",
+        "tongue_visible",
+        "laughing",
+        "happy",
+        "large_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1165,7 +1245,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 20
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add a wide open toothy mouth with tongue compared with the baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_20.compare.png"
     },
     {
       "optionId": "Expression:22",
@@ -1179,11 +1261,14 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_22",
-        "smile",
-        "friendly"
+        "mouth_change",
+        "wide_closed_smile",
+        "big_smile",
+        "friendly",
+        "upturned_mouth",
+        "dark_line_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1194,7 +1279,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 22
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff show a wide dark closed smile stretching across the lower face.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_22.compare.png"
     },
     {
       "optionId": "Expression:23",
@@ -1208,10 +1295,14 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_23",
-        "neutral"
+        "mouth_change",
+        "frown",
+        "sad",
+        "downturned_mouth",
+        "red_lips",
+        "small_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.89,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1222,7 +1313,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 23
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff replace the baseline smile with a small red downturned mouth.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_23.compare.png"
     },
     {
       "optionId": "Expression:24",
@@ -1236,12 +1329,16 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_24",
-        "neutral"
+        "mouth_change",
+        "puckered_mouth",
+        "round_mouth",
+        "side_pout",
+        "small_mouth",
+        "ambiguous_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.68,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -1250,7 +1347,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 24
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff show a small round red mouth mark, but the exact expression is ambiguous.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_24.compare.png"
     },
     {
       "optionId": "Expression:11",
@@ -1264,11 +1363,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_11",
-        "surprised",
-        "playful"
+        "mouth_change",
+        "huge_toothy_grin",
+        "broad_smile",
+        "teeth_visible",
+        "joyful",
+        "large_mouth",
+        "open_smile"
       ],
-      "confidence": 0.78,
+      "confidence": 0.97,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1279,7 +1382,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 11
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add a huge white toothy grin across the lower face.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_11.compare.png"
     },
     {
       "optionId": "Expression:43",
@@ -1293,14 +1398,16 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_43",
-        "serious",
-        "stern",
-        "calm"
+        "mouth_change",
+        "puckered_mouth",
+        "small_curled_mouth",
+        "side_mouth",
+        "ambiguous_expression",
+        "dark_line_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.72,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -1309,7 +1416,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 43
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff show a small curled mouth near the nose, but the intended expression is unclear.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_43.compare.png"
     },
     {
       "optionId": "Expression:44",
@@ -1323,12 +1432,13 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_44",
-        "serious",
-        "stern",
-        "calm"
+        "closed_mouth_smile",
+        "subtle_smile",
+        "curved_mouth",
+        "calm_expression",
+        "mouth_only_change"
       ],
-      "confidence": 0.78,
+      "confidence": 0.86,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1339,7 +1449,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 44
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 显示嘴部从较短侧向弧线变为更宽的闭合微笑弧线。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_44.compare.png"
     },
     {
       "optionId": "Expression:16",
@@ -1353,10 +1465,13 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_16",
-        "neutral"
+        "open_mouth_smile",
+        "red_lips",
+        "small_smile",
+        "playful_expression",
+        "mouth_only_change"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1367,7 +1482,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 16
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 中新增红色开口笑嘴，替代 baseline 的深色闭合小弧线。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_16.compare.png"
     },
     {
       "optionId": "Expression:18",
@@ -1381,12 +1498,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_18",
-        "neutral"
+        "puckered_mouth",
+        "round_red_mouth",
+        "side_mouth",
+        "ambiguous_expression",
+        "small_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.62,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -1395,7 +1515,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 18
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 显示右侧圆形红色嘴部和短弧线，但视觉含义在亲吻、吹气或小开口之间不够明确。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_18.compare.png"
     },
     {
       "optionId": "Expression:53",
@@ -1409,10 +1531,13 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_53",
-        "neutral"
+        "scrunched_mouth",
+        "pursed_smile",
+        "cheek_lines",
+        "symmetrical_mouth",
+        "tense_expression"
       ],
-      "confidence": 0.78,
+      "confidence": 0.82,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1423,7 +1548,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 53
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 显示嘴两侧新增对称弧线和中央闭合曲线，形成皱起的紧绷嘴形。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_53.compare.png"
     },
     {
       "optionId": "Expression:8",
@@ -1437,11 +1564,13 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_8",
-        "surprised",
-        "playful"
+        "open_mouth",
+        "teeth",
+        "drooping_mouth",
+        "surprised_expression",
+        "large_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.86,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1452,7 +1581,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 8
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 中嘴部扩大为白色露齿和红色填充的开口形，相比 baseline 变化明显。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_8.compare.png"
     },
     {
       "optionId": "Expression:37",
@@ -1466,12 +1597,13 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_37",
-        "serious",
-        "stern",
-        "calm"
+        "downturned_mouth",
+        "small_frown",
+        "red_lip",
+        "sad_expression",
+        "mouth_only_change"
       ],
-      "confidence": 0.78,
+      "confidence": 0.86,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1482,7 +1614,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 37
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 显示嘴部移到下方并形成红色高光的下弯小嘴。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_37.compare.png"
     },
     {
       "optionId": "Expression:38",
@@ -1496,12 +1630,13 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_38",
-        "serious",
-        "stern",
-        "calm"
+        "closed_mouth_smile",
+        "centered_smile",
+        "subtle_smile",
+        "calm_expression",
+        "mouth_only_change"
       ],
-      "confidence": 0.78,
+      "confidence": 0.8,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1512,7 +1647,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 38
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 中嘴部由 baseline 的左侧弧线变为鼻下居中的短闭合微笑。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_38.compare.png"
     },
     {
       "optionId": "Expression:9",
@@ -1526,13 +1663,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_9",
-        "surprised",
-        "playful"
+        "asymmetric_smile",
+        "closed_eye_lines",
+        "playful_expression",
+        "small_open_mouth",
+        "subtle_eye_detail"
       ],
-      "confidence": 0.78,
+      "confidence": 0.68,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -1541,7 +1680,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 9
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 显示嘴形和极淡闭眼线条变化，但 diff 对眼线显示很弱，需复核。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_9.compare.png"
     },
     {
       "optionId": "Expression:39",
@@ -1555,10 +1696,11 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_39",
-        "serious",
-        "stern",
-        "calm"
+        "open_mouth_smile",
+        "red_lips",
+        "closed_eye_lines",
+        "playful_expression",
+        "squint_smile"
       ],
       "confidence": 0.78,
       "visible": true,
@@ -1571,7 +1713,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 39
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 中红色开口笑嘴清晰可见，并伴随 option 上方很淡的闭眼弧线。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_39.compare.png"
     },
     {
       "optionId": "Expression:40",
@@ -1585,12 +1729,13 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_40",
-        "serious",
-        "stern",
-        "calm"
+        "wide_open_smile",
+        "teeth",
+        "tongue",
+        "happy_expression",
+        "closed_eye_lines"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1601,7 +1746,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 40
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 显示大幅红色开口笑嘴、白色牙齿和粉色舌部，差异明显。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_40.compare.png"
     },
     {
       "optionId": "Expression:3",
@@ -1614,11 +1761,14 @@
       "index": 24,
       "color": null,
       "tags": [
-        "expression",
-        "expression_3",
-        "neutral"
+        "scrunched_face",
+        "pursed_lips",
+        "closed_eyes",
+        "blush_marks",
+        "playful_expression",
+        "central_mouth_detail"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1629,7 +1779,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 3
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds closed oval eye marks and a puckered curved mouth; diff highlights the central mouth change.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_3.compare.png"
     },
     {
       "optionId": "Expression:27",
@@ -1642,9 +1794,11 @@
       "index": 25,
       "color": null,
       "tags": [
-        "expression",
-        "expression_27",
-        "neutral"
+        "subtle_smile",
+        "closed_mouth_smile",
+        "mouth_only_change",
+        "calm_expression",
+        "small_curved_mouth"
       ],
       "confidence": 0.78,
       "visible": true,
@@ -1657,7 +1811,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 27
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "diff shows a small change in the mouth curve while the rest of the face remains unchanged.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_27.compare.png"
     },
     {
       "optionId": "Expression:28",
@@ -1670,11 +1826,14 @@
       "index": 26,
       "color": null,
       "tags": [
-        "expression",
-        "expression_28",
-        "neutral"
+        "open_smile",
+        "tongue_visible",
+        "playful_expression",
+        "wide_mouth",
+        "happy_expression",
+        "mouth_only_change"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1685,7 +1844,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 28
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option replaces the small smile with an open red tongue mouth, and diff highlights the mouth area.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_28.compare.png"
     },
     {
       "optionId": "Expression:2",
@@ -1698,11 +1859,13 @@
       "index": 27,
       "color": null,
       "tags": [
-        "expression",
-        "expression_2",
-        "neutral"
+        "large_dark_eyes",
+        "sunglasses_like_eyes",
+        "closed_mouth_smile",
+        "cool_expression",
+        "upper_face_coverage"
       ],
-      "confidence": 0.78,
+      "confidence": 0.86,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1713,7 +1876,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 2
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds two large dark eye blocks and keeps a small smile; diff strongly highlights both eye areas.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_2.compare.png"
     },
     {
       "optionId": "Expression:25",
@@ -1726,11 +1891,13 @@
       "index": 28,
       "color": null,
       "tags": [
-        "expression",
-        "expression_25",
-        "neutral"
+        "large_dark_eyes",
+        "sunglasses_like_eyes",
+        "downturned_frown",
+        "sad_expression",
+        "upper_face_coverage"
       ],
-      "confidence": 0.78,
+      "confidence": 0.89,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1741,7 +1908,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 25
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option shows large dark eye blocks plus a downturned mouth; diff highlights the eyes and frown.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_25.compare.png"
     },
     {
       "optionId": "Expression:26",
@@ -1754,11 +1923,14 @@
       "index": 29,
       "color": null,
       "tags": [
-        "expression",
-        "expression_26",
-        "neutral"
+        "large_dark_eyes",
+        "sunglasses_like_eyes",
+        "grimace",
+        "straight_frown",
+        "worried_expression",
+        "upper_face_coverage"
       ],
-      "confidence": 0.78,
+      "confidence": 0.89,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1769,7 +1941,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 26
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds large dark eye blocks and a flat grimacing mouth; diff marks both regions.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_26.compare.png"
     },
     {
       "optionId": "Expression:4",
@@ -1782,11 +1956,13 @@
       "index": 30,
       "color": null,
       "tags": [
-        "expression",
-        "expression_4",
-        "neutral"
+        "large_closed_eyes",
+        "soft_smile",
+        "happy_expression",
+        "relaxed_expression",
+        "rounded_eye_shapes"
       ],
-      "confidence": 0.78,
+      "confidence": 0.87,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1797,7 +1973,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 4
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option shows broad closed-eye shapes with a small smile; diff shows a visible mouth change and faint eye changes.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_4.compare.png"
     },
     {
       "optionId": "Expression:29",
@@ -1810,11 +1988,13 @@
       "index": 31,
       "color": null,
       "tags": [
-        "expression",
-        "expression_29",
-        "neutral"
+        "large_closed_eyes",
+        "asymmetric_frown",
+        "confused_expression",
+        "uncertain_expression",
+        "rounded_eye_shapes"
       ],
-      "confidence": 0.78,
+      "confidence": 0.84,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1825,7 +2005,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 29
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option combines large closed-eye shapes with an uneven downturned mouth; diff highlights the changed mouth curve.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_29.compare.png"
     },
     {
       "optionId": "Expression:30",
@@ -1838,11 +2020,13 @@
       "index": 32,
       "color": null,
       "tags": [
-        "expression",
-        "expression_30",
-        "neutral"
+        "large_closed_eyes",
+        "open_frown",
+        "sad_expression",
+        "pouting_mouth",
+        "rounded_eye_shapes"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1853,7 +2037,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 30
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds rounded closed-eye shapes and an open downturned mouth; diff highlights both mouth segments.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_30.compare.png"
     },
     {
       "optionId": "Expression:45",
@@ -1866,11 +2052,13 @@
       "index": 33,
       "color": null,
       "tags": [
-        "expression",
-        "expression_45",
-        "neutral"
+        "large_closed_eyes",
+        "cheek_lines",
+        "gentle_smile",
+        "content_expression",
+        "relaxed_expression"
       ],
-      "confidence": 0.78,
+      "confidence": 0.82,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1881,7 +2069,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 45
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option shows large closed eyes, side cheek lines, and a gentle smile; diff presents these changes faintly.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_45.compare.png"
     },
     {
       "optionId": "Expression:46",
@@ -1895,10 +2085,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_46",
-        "neutral"
+        "joyful",
+        "open_mouth_smile",
+        "toothy_smile",
+        "tongue_visible",
+        "oval_eyes",
+        "cheek_smile_lines",
+        "excited_face"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1909,7 +2104,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 46
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds large oval eyes and an open toothy red smile; diff highlights the mouth and eye-region changes.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_46.compare.png"
     },
     {
       "optionId": "Expression:12",
@@ -1923,11 +2120,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_12",
-        "surprised",
-        "playful"
+        "uneasy",
+        "small_open_mouth",
+        "worried_pout",
+        "oval_eyes",
+        "cheek_lines",
+        "subtle_frown",
+        "concerned_face"
       ],
-      "confidence": 0.78,
+      "confidence": 0.89,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1938,7 +2139,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 12
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option changes the baseline smirk into oval eyes with a small downturned open mouth; diff marks mouth and cheek-line changes.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_12.compare.png"
     },
     {
       "optionId": "Expression:10",
@@ -1952,11 +2155,14 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_10",
-        "surprised",
-        "playful"
+        "broad_smile",
+        "closed_mouth_grin",
+        "oval_eyes",
+        "cheek_to_cheek_mouth",
+        "playful",
+        "happy_face"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1967,7 +2173,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 10
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option replaces the baseline small smirk with large oval eyes and a very wide upturned grin; diff emphasizes the long mouth curve.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_10.compare.png"
     },
     {
       "optionId": "Expression:41",
@@ -1981,10 +2189,14 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_41",
-        "neutral"
+        "puckered_lips",
+        "kiss_face",
+        "pursed_mouth",
+        "oval_eyes",
+        "playful",
+        "small_curled_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1995,7 +2207,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 41
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option shows oval eyes plus a compact curled puckered mouth; diff highlights the new lip curl below the nose.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_41.compare.png"
     },
     {
       "optionId": "Expression:42",
@@ -2009,10 +2223,14 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_42",
-        "neutral"
+        "sad",
+        "frown",
+        "downturned_mouth",
+        "oval_eyes",
+        "unhappy_face",
+        "simple_sad_mouth"
       ],
-      "confidence": 0.78,
+      "confidence": 0.96,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2023,7 +2241,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 42
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds oval eyes and a clear downturned frown; diff marks the mouth arc as the main change from baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_42.compare.png"
     },
     {
       "optionId": "Expression:19",
@@ -2037,10 +2257,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_19",
-        "neutral"
+        "wink",
+        "smirk",
+        "raised_eyebrow",
+        "one_eye_closed",
+        "one_eye_open",
+        "asymmetrical_eyes",
+        "playful_face"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2051,7 +2276,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 19
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option introduces a one-open-eye wink with raised brow and smirk; diff highlights both brow/eye arcs and the mouth shift.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_19.compare.png"
     },
     {
       "optionId": "Expression:56",
@@ -2065,10 +2292,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_56",
-        "neutral"
+        "wink",
+        "skeptical",
+        "raised_eyebrow",
+        "one_eye_closed",
+        "uneasy_smirk",
+        "asymmetrical_mouth",
+        "doubtful_face"
       ],
-      "confidence": 0.78,
+      "confidence": 0.87,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2079,7 +2311,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 56
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option combines a wink and raised brow with a small uneven mouth; diff marks brow arcs, cheek curve, and mouth changes.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_56.compare.png"
     },
     {
       "optionId": "Expression:57",
@@ -2093,10 +2327,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_57",
-        "neutral"
+        "wink",
+        "tongue_out",
+        "playful",
+        "raised_eyebrow",
+        "one_eye_closed",
+        "round_red_mouth_detail",
+        "asymmetrical_eyes"
       ],
-      "confidence": 0.78,
+      "confidence": 0.86,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2107,7 +2346,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 57
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option shows the wink pattern with a round red tongue-like mouth detail; diff highlights the red mouth spot and eye/brow changes.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_57.compare.png"
     },
     {
       "optionId": "Expression:6",
@@ -2121,10 +2362,16 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_6",
-        "neutral"
+        "puckered_lips",
+        "closed_eyes",
+        "furrowed_brows",
+        "cheek_lines",
+        "chin_folds",
+        "aged_face_lines",
+        "kiss_face",
+        "concentrated_face"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2135,7 +2382,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 6
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds closed eye arcs, cheek/chin lines, and a curled puckered mouth; diff emphasizes the mouth while other facial lines remain visible in option.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_6.compare.png"
     },
     {
       "optionId": "Expression:33",
@@ -2149,10 +2398,15 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_33",
-        "neutral"
+        "gentle_smile",
+        "closed_eyes",
+        "relaxed_face",
+        "cheek_lines",
+        "chin_folds",
+        "aged_face_lines",
+        "content_smile"
       ],
-      "confidence": 0.78,
+      "confidence": 0.89,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2163,7 +2417,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 33
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option changes the baseline into closed-eye relaxed face lines with a gentle smile; diff highlights the adjusted smile curve.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_33.compare.png"
     },
     {
       "optionId": "Expression:34",
@@ -2176,11 +2432,16 @@
       "index": 44,
       "color": null,
       "tags": [
-        "expression",
-        "expression_34",
-        "neutral"
+        "worried_expression",
+        "sad_brows",
+        "closed_downturned_eyebrows",
+        "cheek_lines",
+        "red_cheek_dot",
+        "asymmetric_mouth",
+        "bashful_expression",
+        "face_lines"
       ],
-      "confidence": 0.78,
+      "confidence": 0.82,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2191,7 +2452,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 34
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds curved worried brows, cheek lines, lower marks, and a red cheek dot compared with baseline; diff highlights those changed face details.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_34.compare.png"
     },
     {
       "optionId": "Expression:13",
@@ -2204,11 +2467,15 @@
       "index": 45,
       "color": null,
       "tags": [
-        "expression",
-        "expression_13",
-        "neutral"
+        "skeptical_expression",
+        "winking_eye",
+        "raised_brow",
+        "downturned_mouth",
+        "asymmetric_face",
+        "concerned_expression",
+        "frown"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2219,7 +2486,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 13
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option replaces the baseline smile with a slanted wink, raised brow, and downturned mouth; diff isolates these facial-line changes.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_13.compare.png"
     },
     {
       "optionId": "Expression:47",
@@ -2232,11 +2501,14 @@
       "index": 46,
       "color": null,
       "tags": [
-        "expression",
-        "expression_47",
-        "neutral"
+        "skeptical_smile",
+        "winking_eye",
+        "raised_brow",
+        "asymmetric_smirk",
+        "closed_eye",
+        "playful_expression"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2247,7 +2519,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 47
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option keeps the wink-like upper face from the diff and adds a small smile where baseline only had a side smile.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_47.compare.png"
     },
     {
       "optionId": "Expression:48",
@@ -2260,11 +2534,15 @@
       "index": 47,
       "color": null,
       "tags": [
-        "expression",
-        "expression_48",
-        "neutral"
+        "wide_smile",
+        "winking_eye",
+        "raised_brow",
+        "cheek_dimples",
+        "asymmetric_grin",
+        "playful_expression",
+        "big_grin"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2275,7 +2553,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 48
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds a wide curved grin with side dimples plus a wink-like eye area; diff strongly marks the long mouth and eye changes.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_48.compare.png"
     },
     {
       "optionId": "Expression:14",
@@ -2288,11 +2568,14 @@
       "index": 48,
       "color": null,
       "tags": [
-        "expression",
-        "expression_14",
-        "neutral"
+        "sad_expression",
+        "vertical_forehead_mark",
+        "downturned_mouth",
+        "small_frown",
+        "minimal_face_lines",
+        "concerned_expression"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2303,7 +2586,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 14
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option removes the baseline side smile and adds a central vertical mark plus a small downturned mouth; diff highlights the central changes.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_14.compare.png"
     },
     {
       "optionId": "Expression:49",
@@ -2316,11 +2601,14 @@
       "index": 49,
       "color": null,
       "tags": [
-        "expression",
-        "expression_49",
-        "neutral"
+        "worried_expression",
+        "vertical_forehead_mark",
+        "wavy_frown",
+        "downturned_mouth",
+        "grimace",
+        "tense_expression"
       ],
-      "confidence": 0.78,
+      "confidence": 0.87,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2331,7 +2619,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 49
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option changes the baseline smile into a centered vertical mark and a wavy downturned mouth; diff emphasizes the frown curve and end ticks.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_49.compare.png"
     },
     {
       "optionId": "Expression:50",
@@ -2344,11 +2634,14 @@
       "index": 50,
       "color": null,
       "tags": [
-        "expression",
-        "expression_50",
-        "neutral"
+        "small_smile",
+        "vertical_forehead_mark",
+        "off_center_mouth",
+        "curled_mouth",
+        "subtle_smirk",
+        "minimal_expression"
       ],
-      "confidence": 0.78,
+      "confidence": 0.8,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2359,7 +2652,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 50
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds a central vertical mark and a compact curled mouth; diff shows the small mouth change relative to baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_50.compare.png"
     },
     {
       "optionId": "Expression:15",
@@ -2372,11 +2667,14 @@
       "index": 51,
       "color": null,
       "tags": [
-        "expression",
-        "expression_15",
-        "neutral"
+        "straight_eye_bar",
+        "closed_eyes",
+        "neutral_mouth",
+        "minimal_expression",
+        "horizontal_brow_line",
+        "calm_expression"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2387,7 +2685,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 15
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds a long straight horizontal eye bar while the baseline mouth remains; diff highlights the upper-face bar.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_15.compare.png"
     },
     {
       "optionId": "Expression:51",
@@ -2400,11 +2700,14 @@
       "index": 52,
       "color": null,
       "tags": [
-        "expression",
-        "expression_51",
-        "neutral"
+        "closed_eye_smile",
+        "straight_eye_bar",
+        "wide_smile",
+        "cheek_dimples",
+        "happy_expression",
+        "broad_grin"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2415,7 +2718,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 51
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option combines the straight eye bar with a broad upturned mouth and cheek creases; diff marks both the bar and grin.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_51.compare.png"
     },
     {
       "optionId": "Expression:52",
@@ -2428,11 +2733,14 @@
       "index": 53,
       "color": null,
       "tags": [
-        "expression",
-        "expression_52",
-        "neutral"
+        "closed_eye_frown",
+        "straight_eye_bar",
+        "downturned_mouth",
+        "sad_expression",
+        "pensive_expression",
+        "minimal_face_lines"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2443,7 +2751,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 52
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds the straight closed-eye bar and replaces baseline smile with a small downturned mouth; diff highlights both changed regions.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_52.compare.png"
     },
     {
       "optionId": "Expression:7",
@@ -2457,10 +2767,16 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_7",
-        "neutral"
+        "anxious",
+        "worried",
+        "sweating",
+        "double_sweat_drops",
+        "round_eye_outlines",
+        "downturned_frown",
+        "sad_mouth",
+        "cartoon_stress"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2471,7 +2787,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 7
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff adds two sweat drops, round eye outlines, and a downturned frown versus baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_7.compare.png"
     },
     {
       "optionId": "Expression:35",
@@ -2485,10 +2803,16 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_35",
-        "neutral"
+        "anxious",
+        "uneasy",
+        "sweating",
+        "double_sweat_drops",
+        "round_eye_outlines",
+        "pursed_mouth",
+        "curled_mouth",
+        "cartoon_stress"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2499,7 +2823,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 35
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff shows added sweat drops, round eye outlines, and a curled pursed mouth.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_35.compare.png"
     },
     {
       "optionId": "Expression:36",
@@ -2513,10 +2839,14 @@
       "color": null,
       "tags": [
         "expression",
-        "expression_36",
-        "neutral"
+        "nervous_smile",
+        "sweating",
+        "double_sweat_drops",
+        "round_eye_outlines",
+        "closed_smile",
+        "uneasy"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2527,7 +2857,9 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 36
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff mainly adds two sweat drops and faint round eye outlines while keeping the small smile.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_36.compare.png"
     },
     {
       "optionId": "MainHairColor:1",
@@ -2942,12 +3274,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_58",
-        "short_hair"
+        "bald",
+        "no_visible_hair",
+        "shaved_head",
+        "bare_scalp",
+        "baseline_match"
       ],
-      "confidence": 0.78,
+      "confidence": 0.72,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -2963,7 +3298,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline/option appear identical and diff shows no added hair, leaving a bare scalp.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_58.compare.png"
     },
     {
       "optionId": "MainHair:59",
@@ -2978,10 +3315,14 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_59",
-        "short_hair"
+        "short_hair",
+        "side_hair",
+        "temple_patches",
+        "bald_top",
+        "rounded_side_patches",
+        "low_coverage_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.86,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -2999,7 +3340,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff adds small dark rounded patches at both upper side temples with no top hair.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_59.compare.png"
     },
     {
       "optionId": "MainHair:60",
@@ -3014,10 +3357,14 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_60",
-        "short_hair"
+        "short_hair",
+        "rounded_hair_cap",
+        "cropped_hair",
+        "wavy_hairline",
+        "side_hair",
+        "top_coverage"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3035,7 +3382,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff adds a dark rounded cap across the top with a shallow wavy front hairline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_60.compare.png"
     },
     {
       "optionId": "MainHair:55",
@@ -3050,10 +3399,14 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_55",
+        "single_curl",
+        "cowlick",
+        "top_curl",
+        "spiral_tuft",
+        "minimal_hair",
         "short_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3071,7 +3424,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff adds one dark looped curl rising above the top center of the head.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_55.compare.png"
     },
     {
       "optionId": "MainHair:56",
@@ -3086,10 +3441,14 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_56",
-        "short_hair"
+        "quiff",
+        "side_swept_hair",
+        "voluminous_top",
+        "tall_hair",
+        "angular_tuft",
+        "medium_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3107,7 +3466,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff adds a tall dark swept-up top mass leaning to the right.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_56.compare.png"
     },
     {
       "optionId": "MainHair:57",
@@ -3122,10 +3483,14 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_57",
-        "short_hair"
+        "short_hair",
+        "rounded_hair_cap",
+        "helmet_hair",
+        "full_top_coverage",
+        "side_hair",
+        "cropped"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3143,7 +3508,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff adds a broad rounded cap framing the top and temples.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_57.compare.png"
     },
     {
       "optionId": "MainHair:50",
@@ -3158,10 +3525,14 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_50",
-        "short_hair"
+        "rounded_tuft",
+        "side_swept_tuft",
+        "voluminous_top",
+        "two_lobed_hair",
+        "pompadour",
+        "medium_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3179,7 +3550,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff adds a large two-lobed rounded tuft over the top, sweeping toward the right.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_50.compare.png"
     },
     {
       "optionId": "MainHair:53",
@@ -3194,10 +3567,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_53",
-        "short_hair"
+        "dark_hair",
+        "short_hair",
+        "spiky_hair",
+        "jagged_top",
+        "angular_crown",
+        "high_volume_top",
+        "temple_side_coverage"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3215,7 +3593,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds a dark jagged spiked crown over the baseline bald head, with the diff concentrated on the upper scalp.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_53.compare.png"
     },
     {
       "optionId": "MainHair:54",
@@ -3230,10 +3610,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_54",
-        "short_hair"
+        "dark_hair",
+        "short_hair",
+        "rounded_crop",
+        "scalloped_top",
+        "curly_top",
+        "vertical_sides",
+        "neat_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3251,7 +3636,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option shows a dark rounded crop with a scalloped top; the diff highlights hair only above the baseline head.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_54.compare.png"
     },
     {
       "optionId": "MainHair:52",
@@ -3266,10 +3653,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_52",
-        "short_hair"
+        "dark_hair",
+        "short_hair",
+        "smooth_cap",
+        "rounded_hair",
+        "neat_hair",
+        "low_volume",
+        "simple_hairline"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3287,7 +3679,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option replaces the baseline bald head with a smooth dark cap shape, and the diff is a clean rounded band on the scalp.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_52.compare.png"
     },
     {
       "optionId": "MainHair:49",
@@ -3302,10 +3696,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_49",
-        "short_hair"
+        "dark_hair",
+        "short_hair",
+        "side_swept_hair",
+        "pompadour",
+        "asymmetric_top",
+        "rounded_quiff",
+        "neat_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3323,7 +3722,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option differs from baseline by adding an asymmetric dark quiff, with the diff largest over the upper right side of the scalp.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_49.compare.png"
     },
     {
       "optionId": "MainHair:51",
@@ -3338,10 +3739,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_51",
-        "short_hair"
+        "dark_hair",
+        "short_hair",
+        "high_top",
+        "rounded_flat_top",
+        "scalloped_top",
+        "boxy_sides",
+        "neat_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3359,7 +3765,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds a tall dark block of hair with scalloped top bumps; the diff covers the upper scalp in a rectangular silhouette.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_51.compare.png"
     },
     {
       "optionId": "MainHair:46",
@@ -3374,11 +3782,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_46",
+        "dark_hair",
         "short_hair",
-        "neat_hair"
+        "spiky_hair",
+        "jagged_bangs",
+        "angular_fringe",
+        "messy_top",
+        "textured_crop"
       ],
-      "confidence": 0.78,
+      "confidence": 0.96,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3396,7 +3808,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds dark hair with sharp top spikes and a zigzag fringe, clearly marked by the red diff on the scalp and forehead edge.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_46.compare.png"
     },
     {
       "optionId": "MainHair:47",
@@ -3411,11 +3825,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_47",
+        "dark_hair",
         "short_hair",
-        "neat_hair"
+        "curly_hair",
+        "voluminous_hair",
+        "rounded_curls",
+        "side_locks",
+        "soft_bangs"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3433,7 +3851,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option shows large rounded dark curls and side locks compared with the bald baseline, and the diff outlines the full curly cap.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_47.compare.png"
     },
     {
       "optionId": "MainHair:48",
@@ -3448,10 +3868,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_48",
-        "short_hair"
+        "dark_hair",
+        "short_hair",
+        "wavy_hair",
+        "rounded_cap",
+        "soft_wave",
+        "side_volume",
+        "neat_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3469,7 +3894,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds a dark wavy rounded cap, while the diff shows a continuous hair band wrapping the upper head.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_48.compare.png"
     },
     {
       "optionId": "MainHair:63",
@@ -3484,11 +3911,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_63",
+        "dark_hair",
         "short_hair",
+        "bowl_cut",
+        "rounded_bangs",
+        "smooth_cap",
+        "center_notch",
         "neat_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3506,7 +3937,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds a rounded dark bowl-cut silhouette with a center dip, and the diff follows the curved bang band on the upper head.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_63.compare.png"
     },
     {
       "optionId": "MainHair:61",
@@ -3521,11 +3954,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_61",
+        "dark_hair",
         "short_hair",
-        "neat_hair"
+        "side_swept_quiff",
+        "textured_top",
+        "raised_lock",
+        "neat_sides",
+        "modern_crop"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3543,7 +3980,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option adds a compact dark quiff with a raised swept lock, visible in the diff as extra shape above the forehead.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_61.compare.png"
     },
     {
       "optionId": "MainHair:64",
@@ -3558,11 +3997,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_64",
+        "dark_hair",
         "short_hair",
-        "neat_hair"
+        "rounded_top",
+        "side_swept_bangs",
+        "high_volume_top",
+        "ear_length_sides",
+        "smooth_style",
+        "asymmetrical_fringe"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3580,7 +4024,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline has no hair; option/diff add a dark rounded cap with side-swept front fringe.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_64.compare.png"
     },
     {
       "optionId": "MainHair:66",
@@ -3595,10 +4041,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_66",
-        "medium_hair"
+        "dark_hair",
+        "short_hair",
+        "side_part",
+        "smooth_cap",
+        "rounded_square_top",
+        "asymmetrical_bangs",
+        "ear_length_side_hair",
+        "neat_style"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3616,7 +4068,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show a smooth side-part hair cap replacing the bald baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_66.compare.png"
     },
     {
       "optionId": "MainHair:62",
@@ -3631,10 +4085,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_62",
-        "medium_hair"
+        "dark_hair",
+        "short_hair",
+        "quiff",
+        "swept_back_hair",
+        "wavy_top",
+        "tapered_sides",
+        "high_volume_top",
+        "exposed_forehead"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3652,7 +4112,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add an elevated swept-back dark top with small wave ridges over the bald baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_62.compare.png"
     },
     {
       "optionId": "MainHair:65",
@@ -3667,10 +4129,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_65",
-        "medium_hair"
+        "dark_hair",
+        "medium_hair",
+        "layered_hair",
+        "shoulder_length_back",
+        "side_locks",
+        "messy_tuft",
+        "swept_up_bangs",
+        "high_volume"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3688,7 +4156,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show dark layered hair with raised tufts and side-back locks extending below the ears.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_65.compare.png"
     },
     {
       "optionId": "MainHair:43",
@@ -3703,10 +4173,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_43",
-        "medium_hair"
+        "dark_hair",
+        "long_hair",
+        "straight_hair",
+        "side_swept_hair",
+        "curtain_hair",
+        "shoulder_length_hair",
+        "asymmetrical_cover",
+        "side_profile_style"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3724,7 +4200,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add a long straight dark curtain of hair behind and along one side of the head.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_43.compare.png"
     },
     {
       "optionId": "MainHair:44",
@@ -3739,10 +4217,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_44",
-        "medium_hair"
+        "dark_hair",
+        "medium_hair",
+        "asymmetrical_hair",
+        "diagonal_fringe",
+        "face_covering_bangs",
+        "spiky_top",
+        "side_swept_bangs",
+        "high_volume"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3760,7 +4244,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show a large diagonal dark fringe and pointed top over the bald baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_44.compare.png"
     },
     {
       "optionId": "MainHair:45",
@@ -3775,10 +4261,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_45",
-        "medium_hair"
+        "dark_hair",
+        "medium_hair",
+        "curly_hair",
+        "wavy_hair",
+        "side_part",
+        "rounded_curls",
+        "ear_length_curls",
+        "asymmetrical_volume"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3796,7 +4288,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add rounded dark curls concentrated on the upper and viewer-right side.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_45.compare.png"
     },
     {
       "optionId": "MainHair:7",
@@ -3811,10 +4305,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_7",
-        "medium_hair"
+        "dark_hair",
+        "medium_hair",
+        "bob_hair",
+        "center_part",
+        "rounded_bob",
+        "ear_covering_sides",
+        "smooth_hair",
+        "symmetrical_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3832,7 +4332,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show a dark rounded bob with center-parted front curves and side panels.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_7.compare.png"
     },
     {
       "optionId": "MainHair:8",
@@ -3847,10 +4349,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_8",
-        "medium_hair"
+        "dark_hair",
+        "medium_hair",
+        "wavy_hair",
+        "center_part",
+        "flared_sides",
+        "voluminous_sides",
+        "shoulder_length_hair",
+        "layered_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3868,7 +4376,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add broad wavy dark side hair with a center part and flared lower ends.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_8.compare.png"
     },
     {
       "optionId": "MainHair:9",
@@ -3883,10 +4393,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_9",
-        "medium_hair"
+        "dark_hair",
+        "medium_hair",
+        "curly_hair",
+        "voluminous_hair",
+        "rounded_curls",
+        "side_part",
+        "fluffy_sides",
+        "layered_curls"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3904,7 +4420,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show large rounded dark curls added around the crown and both sides.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_9.compare.png"
     },
     {
       "optionId": "MainHair:10",
@@ -3919,10 +4437,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_10",
-        "medium_hair"
+        "straight_hair",
+        "medium_length_hair",
+        "rounded_bob",
+        "blunt_bangs",
+        "side_swept_bang",
+        "helmet_silhouette",
+        "dark_hair",
+        "face_framing_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3940,7 +4464,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Baseline is bare; option and diff show a rounded medium bob with blunt bangs and side coverage.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_10.compare.png"
     },
     {
       "optionId": "MainHair:11",
@@ -3955,10 +4481,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_11",
-        "medium_hair"
+        "wavy_hair",
+        "medium_length_hair",
+        "layered_bangs",
+        "side_part",
+        "voluminous_hair",
+        "curled_sides",
+        "dark_hair",
+        "face_framing_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3976,7 +4508,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option and diff add a wavy medium hairstyle with layered front locks compared with the bare baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_11.compare.png"
     },
     {
       "optionId": "MainHair:12",
@@ -3991,10 +4525,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_12",
-        "medium_hair"
+        "curly_hair",
+        "short_hair",
+        "curly_bob",
+        "rounded_volume",
+        "scalloped_edges",
+        "side_swept_bangs",
+        "dark_hair",
+        "face_framing_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4012,7 +4552,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Diff highlights short rounded curls around the option head while the baseline has no visible hair.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_12.compare.png"
     },
     {
       "optionId": "MainHair:1",
@@ -4027,11 +4569,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_1",
-        "medium_hair",
-        "receding_hair"
+        "long_hair",
+        "straight_hair",
+        "center_part",
+        "curtain_hair",
+        "rounded_top",
+        "dark_hair",
+        "shoulder_length_hair",
+        "face_framing_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4049,7 +4596,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option and diff show long straight side panels and a center-part hairline absent from baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_1.compare.png"
     },
     {
       "optionId": "MainHair:68",
@@ -4064,10 +4613,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_68",
-        "medium_hair"
+        "long_hair",
+        "straight_hair",
+        "blunt_bangs",
+        "side_swept_bang",
+        "rounded_top",
+        "dark_hair",
+        "full_side_panels",
+        "face_framing_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4085,7 +4640,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Baseline is bare; option and diff show long straight hair plus blunt forehead coverage.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_68.compare.png"
     },
     {
       "optionId": "MainHair:69",
@@ -4100,10 +4657,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_69",
-        "medium_hair"
+        "long_hair",
+        "straight_hair",
+        "side_swept_bangs",
+        "side_part",
+        "rounded_top",
+        "dark_hair",
+        "full_side_panels",
+        "face_framing_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4121,7 +4684,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option and diff replace the bare baseline with long side hair and an asymmetric swept fringe.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_69.compare.png"
     },
     {
       "optionId": "MainHair:5",
@@ -4136,11 +4701,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_5",
-        "medium_hair",
-        "receding_hair"
+        "wavy_hair",
+        "medium_length_hair",
+        "layered_bangs",
+        "side_part",
+        "voluminous_hair",
+        "curled_sides",
+        "dark_hair",
+        "face_framing_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.85,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4158,7 +4728,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option and diff show a medium wavy, layered hairstyle added over the bare baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_5.compare.png"
     },
     {
       "optionId": "MainHair:70",
@@ -4173,10 +4745,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_70",
-        "medium_hair"
+        "long_hair",
+        "straight_hair",
+        "center_part",
+        "curtain_hair",
+        "rounded_top",
+        "dark_hair",
+        "full_side_panels",
+        "face_framing_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.86,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4194,7 +4772,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Diff marks long side panels and rounded top hair in the option compared with the bare baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_70.compare.png"
     },
     {
       "optionId": "MainHair:2",
@@ -4209,11 +4789,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_2",
-        "medium_hair",
-        "receding_hair"
+        "long_hair",
+        "straight_hair",
+        "center_part",
+        "curtain_bangs",
+        "face_framing_layers",
+        "rounded_top",
+        "dark_hair",
+        "full_side_panels"
       ],
-      "confidence": 0.78,
+      "confidence": 0.89,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4231,7 +4816,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option and diff show long center-part curtain hair covering sides while the baseline is bare.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_2.compare.png"
     },
     {
       "optionId": "MainHair:34",
@@ -4246,10 +4833,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_34",
-        "medium_hair"
+        "medium_length_hair",
+        "angular_hair",
+        "side_swept_bangs",
+        "side_part",
+        "flared_sides",
+        "pointed_ends",
+        "dark_hair",
+        "face_framing_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4267,7 +4860,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "Option and diff show a side-swept angular hairstyle with flared pointed sides added to the bare baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_34.compare.png"
     },
     {
       "optionId": "MainHair:4",
@@ -4281,12 +4876,16 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_4",
-        "medium_hair",
-        "receding_hair"
+        "black_hair",
+        "long_hair",
+        "straight_hair",
+        "center_part",
+        "face_framing_hair",
+        "full_hair_coverage",
+        "shoulder_length_hair",
+        "rounded_outer_shape"
       ],
-      "confidence": 0.78,
+      "confidence": 0.96,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4304,7 +4903,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 与 diff 显示头顶和两侧新增长直黑发，覆盖耳后并延伸到肩部。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_4.compare.png"
     },
     {
       "optionId": "MainHair:6",
@@ -4318,12 +4919,16 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_6",
-        "medium_hair",
-        "receding_hair"
+        "black_hair",
+        "long_hair",
+        "wavy_hair",
+        "side_swept_bangs",
+        "voluminous_hair",
+        "rounded_side_lobes",
+        "shoulder_length_hair",
+        "asymmetric_front"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4341,7 +4946,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 与 diff 显示新增大体量波浪黑发，前额有明显侧扫弧形刘海。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_6.compare.png"
     },
     {
       "optionId": "MainHair:3",
@@ -4355,12 +4962,16 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_3",
-        "medium_hair",
-        "receding_hair"
+        "black_hair",
+        "long_hair",
+        "wavy_hair",
+        "side_swept_bangs",
+        "curved_front_lock",
+        "voluminous_hair",
+        "shoulder_length_hair",
+        "asymmetric_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4378,7 +4989,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 与 diff 显示前额新增大弧形侧扫发片，整体为长而蓬松的黑发。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_3.compare.png"
     },
     {
       "optionId": "MainHair:29",
@@ -4392,11 +5005,16 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_29",
-        "medium_hair"
+        "black_hair",
+        "medium_hair",
+        "curly_hair",
+        "rounded_curls",
+        "voluminous_hair",
+        "face_framing_curls",
+        "layered_curls",
+        "wide_hair_shape"
       ],
-      "confidence": 0.78,
+      "confidence": 0.96,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4414,7 +5032,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 与 diff 显示头顶和两侧由多个圆形发团组成，呈中长卷发轮廓。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_29.compare.png"
     },
     {
       "optionId": "MainHair:30",
@@ -4428,11 +5048,16 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_30",
-        "medium_hair"
+        "black_hair",
+        "medium_hair",
+        "wavy_hair",
+        "puffy_hair",
+        "rounded_hairline",
+        "wide_side_volume",
+        "soft_waves",
+        "ear_length_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4450,7 +5075,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 与 diff 显示新增宽大的蓬松黑发，顶部和两侧是平滑波浪外轮廓。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_30.compare.png"
     },
     {
       "optionId": "MainHair:37",
@@ -4464,11 +5091,16 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_37",
-        "long_hair"
+        "black_hair",
+        "long_hair",
+        "asymmetric_hair",
+        "side_swept_hair",
+        "one_sided_long_hair",
+        "straight_hair",
+        "left_side_drape",
+        "side_part"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4486,7 +5118,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 与 diff 显示长发主要垂在角色左侧，右侧只保留较短侧扫发片。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_37.compare.png"
     },
     {
       "optionId": "MainHair:38",
@@ -4500,11 +5134,16 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_38",
-        "long_hair"
+        "black_hair",
+        "long_hair",
+        "asymmetric_hair",
+        "side_part",
+        "side_swept_hair",
+        "left_side_drape",
+        "smooth_hair",
+        "shoulder_length_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4522,7 +5161,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 与 diff 显示左侧长发片垂到肩部，前额是较平滑的侧分发线。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_38.compare.png"
     },
     {
       "optionId": "MainHair:39",
@@ -4536,11 +5177,16 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_39",
-        "long_hair"
+        "black_hair",
+        "medium_long_hair",
+        "asymmetric_hair",
+        "side_swept_hair",
+        "rounded_top_volume",
+        "left_side_volume",
+        "smooth_hair",
+        "side_part"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4558,7 +5204,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 与 diff 显示顶部圆润隆起并向左侧形成较厚发量，右侧发片较短。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_39.compare.png"
     },
     {
       "optionId": "MainHair:32",
@@ -4572,11 +5220,16 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_32",
-        "long_hair"
+        "black_hair",
+        "long_hair",
+        "wavy_hair",
+        "asymmetric_hair",
+        "left_side_curls",
+        "side_swept_bangs",
+        "voluminous_top",
+        "shoulder_length_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4594,7 +5247,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 与 diff 显示长波浪发量集中在左侧，顶部有蓬松圆形轮廓。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_32.compare.png"
     },
     {
       "optionId": "MainHair:33",
@@ -4608,11 +5263,16 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_33",
-        "long_hair"
+        "black_hair",
+        "long_hair",
+        "asymmetric_hair",
+        "side_swept_quiff",
+        "left_side_drape",
+        "layered_hair",
+        "smooth_hair",
+        "shoulder_length_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4630,7 +5290,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 与 diff 显示左侧长发下垂，头顶有明显向右扫起的高发束。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_33.compare.png"
     },
     {
       "optionId": "MainHair:31",
@@ -4644,11 +5306,15 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_31",
-        "long_hair"
+        "black_hair",
+        "updo",
+        "high_bun",
+        "rounded_bun",
+        "voluminous_top",
+        "side_hair_panels",
+        "curved_hairline"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4666,7 +5332,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 和 diff 显示头顶新增大团圆形高发髻，侧边深色头发覆盖两侧太阳穴。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_31.compare.png"
     },
     {
       "optionId": "MainHair:71",
@@ -4680,11 +5348,15 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_71",
-        "long_hair"
+        "black_hair",
+        "updo",
+        "high_bun",
+        "wavy_bun",
+        "swept_back_hair",
+        "side_hair",
+        "rounded_hairline"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4702,7 +5374,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 和 diff 显示头顶新增波浪轮廓高发髻，侧发贴合头部上缘。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_71.compare.png"
     },
     {
       "optionId": "MainHair:72",
@@ -4716,11 +5390,15 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_72",
-        "long_hair"
+        "black_hair",
+        "updo",
+        "topknot",
+        "round_bun",
+        "compact_bun",
+        "side_hair",
+        "clean_forehead"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4738,7 +5416,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 和 diff 显示头顶中央新增圆球状发髻，侧边只有短而圆的发片。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_72.compare.png"
     },
     {
       "optionId": "MainHair:73",
@@ -4752,11 +5432,15 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_73",
-        "long_hair"
+        "black_hair",
+        "updo",
+        "top_bun",
+        "side_swept_bangs",
+        "loose_hair_strand",
+        "curved_bangs",
+        "face_framing_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4774,7 +5458,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 和 diff 显示高发髻、前额弧形刘海以及左侧突出的短发束。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_73.compare.png"
     },
     {
       "optionId": "MainHair:40",
@@ -4788,11 +5474,15 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_40",
-        "long_hair"
+        "black_hair",
+        "long_hair",
+        "center_part",
+        "long_side_panels",
+        "rounded_twin_sections",
+        "face_framing_hair",
+        "shoulder_length_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4810,7 +5500,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 和 diff 显示左右两侧新增大面积长发，从头顶圆弧延伸到肩部附近。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_40.compare.png"
     },
     {
       "optionId": "MainHair:41",
@@ -4824,11 +5516,15 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_41",
-        "long_hair"
+        "black_hair",
+        "long_hair",
+        "wavy_hair",
+        "center_part",
+        "wide_side_hair",
+        "rounded_waves",
+        "shoulder_length_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.89,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4846,7 +5542,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 和 diff 显示两侧长发轮廓带明显波浪和外扩弧线，覆盖到脖颈两侧。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_41.compare.png"
     },
     {
       "optionId": "MainHair:42",
@@ -4860,11 +5558,15 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_42",
-        "long_hair"
+        "black_hair",
+        "very_long_hair",
+        "wide_hair",
+        "full_back_hair",
+        "center_part",
+        "rounded_top_bumps",
+        "heavy_side_panels"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4882,7 +5584,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 和 diff 显示新增极宽的后发和侧发，左右发量从头顶一直延伸到肩下。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_42.compare.png"
     },
     {
       "optionId": "MainHair:35",
@@ -4896,11 +5600,15 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_35",
-        "long_hair"
+        "black_hair",
+        "long_hair",
+        "twin_tails",
+        "puffy_top",
+        "long_side_tails",
+        "center_part",
+        "blunt_center_notch"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4918,7 +5626,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 和 diff 显示左右成对的蓬松上部和长侧发，发尾垂到肩部附近。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_35.compare.png"
     },
     {
       "optionId": "MainHair:36",
@@ -4932,11 +5642,15 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_36",
-        "long_hair"
+        "black_hair",
+        "space_buns",
+        "double_bun",
+        "long_back_hair",
+        "wide_side_hair",
+        "puffy_buns",
+        "center_part"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4954,7 +5668,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 和 diff 显示高处左右两个圆形发髻，并有大面积长发包围头部两侧。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_36.compare.png"
     },
     {
       "optionId": "MainHair:28",
@@ -4968,11 +5684,15 @@
       "color": null,
       "tags": [
         "hair",
-        "main_hair",
-        "hair_28",
-        "long_hair"
+        "black_hair",
+        "space_buns",
+        "double_puff_buns",
+        "long_side_hair",
+        "puffy_hair",
+        "blunt_bangs",
+        "wide_back_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -4990,7 +5710,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 和 diff 显示左右高位蓬松发髻、平直前额发带和宽大的两侧后发。",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_28.compare.png"
     },
     {
       "optionId": "MainHair:25",
@@ -5005,10 +5727,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_25",
-        "long_hair"
+        "updo",
+        "triple_puff_buns",
+        "rounded_afro_puffs",
+        "side_buns",
+        "top_bun",
+        "curly_hair",
+        "voluminous_hair",
+        "symmetrical_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5026,7 +5754,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show three large rounded dark hair puffs added above and beside the head versus the bald baseline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_25.compare.png"
     },
     {
       "optionId": "MainHair:26",
@@ -5041,10 +5771,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_26",
-        "long_hair"
+        "updo",
+        "multiple_puff_buns",
+        "rounded_afro_puffs",
+        "side_puffs",
+        "top_puff",
+        "curly_hair",
+        "voluminous_hair",
+        "symmetrical_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5062,7 +5798,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show a rounded multi-puff hair cluster wrapping the top and both sides of the head.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_26.compare.png"
     },
     {
       "optionId": "MainHair:27",
@@ -5077,10 +5815,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_27",
-        "long_hair"
+        "short_pigtails",
+        "side_tufts",
+        "curled_ends",
+        "segmented_bangs",
+        "scalloped_bangs",
+        "curly_hair",
+        "low_volume",
+        "symmetrical_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5098,7 +5842,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show small forehead bang segments and short curled side tufts added on both lower sides.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_27.compare.png"
     },
     {
       "optionId": "MainHair:19",
@@ -5113,10 +5859,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_19",
-        "long_hair"
+        "side_braid",
+        "asymmetrical_hair",
+        "single_braid",
+        "segmented_braid",
+        "long_side_hair",
+        "scalloped_bangs",
+        "curly_hair",
+        "viewer_left_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5134,7 +5886,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show one long segmented side braid on the viewer-left side plus small dark bang arcs.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_19.compare.png"
     },
     {
       "optionId": "MainHair:20",
@@ -5149,10 +5903,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_20",
-        "long_hair"
+        "side_braid",
+        "asymmetrical_hair",
+        "large_curly_braid",
+        "puff_braid",
+        "long_side_hair",
+        "scalloped_bangs",
+        "curly_hair",
+        "viewer_left_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5170,7 +5930,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show a large puffy side braid descending on the viewer-left side and rounded bang curls at the top.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_20.compare.png"
     },
     {
       "optionId": "MainHair:21",
@@ -5185,10 +5947,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_21",
-        "long_hair"
+        "double_puffs",
+        "afro_puffs",
+        "high_pigtails",
+        "hair_ties",
+        "orange_hair_ties",
+        "curly_hair",
+        "updo",
+        "symmetrical_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5206,7 +5974,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show two large upper side puffs and orange hair ties added around the crown.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_21.compare.png"
     },
     {
       "optionId": "MainHair:22",
@@ -5221,10 +5991,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_22",
-        "long_hair"
+        "double_braids",
+        "low_pigtails",
+        "segmented_braids",
+        "pointed_ends",
+        "scalloped_bangs",
+        "curly_hair",
+        "symmetrical_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5242,7 +6017,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show matching segmented braids on both sides with pointed lower ends.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_22.compare.png"
     },
     {
       "optionId": "MainHair:23",
@@ -5257,10 +6034,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_23",
-        "long_hair"
+        "double_braids",
+        "long_pigtails",
+        "large_segmented_braids",
+        "voluminous_hair",
+        "scalloped_bangs",
+        "curly_hair",
+        "symmetrical_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5278,7 +6060,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show two large rounded segmented braids running down both sides and a scalloped top hairline.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_23.compare.png"
     },
     {
       "optionId": "MainHair:24",
@@ -5293,10 +6077,15 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_24",
-        "long_hair"
+        "short_curly_hair",
+        "side_puffs",
+        "curly_bob",
+        "low_side_volume",
+        "segmented_bangs",
+        "rounded_hair",
+        "symmetrical_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5314,7 +6103,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show broad rounded hair puffs at both sides with short curled bob-like coverage.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_24.compare.png"
     },
     {
       "optionId": "MainHair:13",
@@ -5329,11 +6120,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_13",
-        "long_hair",
-        "receding_hair"
+        "side_braid",
+        "asymmetrical_hair",
+        "smooth_top",
+        "widows_peak",
+        "single_braid",
+        "long_side_hair",
+        "viewer_left_hair",
+        "covered_hairline"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5351,7 +6147,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff show a smooth full top hair cap and one long segmented braid on the viewer-left side.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_13.compare.png"
     },
     {
       "optionId": "MainHair:14",
@@ -5366,11 +6164,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_14",
+        "black_hair",
         "long_hair",
-        "receding_hair"
+        "asymmetrical_hair",
+        "side_braid",
+        "left_side_braid",
+        "rounded_puff_hair",
+        "side_swept_hair",
+        "tapered_hair_end"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5388,7 +6191,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add a large dark rounded hair mass with a long viewer-left segmented braid.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_14.compare.png"
     },
     {
       "optionId": "MainHair:15",
@@ -5403,10 +6208,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_15",
-        "long_hair"
+        "black_hair",
+        "double_puffs",
+        "afro_puffs",
+        "high_pigtails",
+        "hair_ties",
+        "yellow_hair_ties",
+        "rounded_puff_hair",
+        "symmetrical_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5424,7 +6235,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff show two high dark puff clusters with small yellow ties on both sides.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_15.compare.png"
     },
     {
       "optionId": "MainHair:16",
@@ -5439,10 +6252,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_16",
-        "long_hair"
+        "black_hair",
+        "long_hair",
+        "twin_braids",
+        "pigtail_braids",
+        "segmented_braids",
+        "center_part",
+        "symmetrical_hair",
+        "tapered_hair_ends"
       ],
-      "confidence": 0.78,
+      "confidence": 0.96,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5460,7 +6279,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add matching long segmented braids on both sides beneath a dark top cap.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_16.compare.png"
     },
     {
       "optionId": "MainHair:17",
@@ -5475,10 +6296,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_17",
-        "long_hair"
+        "black_hair",
+        "long_hair",
+        "voluminous_hair",
+        "twin_braids",
+        "thick_pigtails",
+        "rounded_lobed_hair",
+        "full_side_hair",
+        "symmetrical_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5496,7 +6323,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff show a broad dark scalloped hair frame with long rounded side sections on both sides.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_17.compare.png"
     },
     {
       "optionId": "MainHair:18",
@@ -5511,10 +6340,16 @@
       "tags": [
         "hair",
         "main_hair",
-        "hair_18",
-        "long_hair"
+        "black_hair",
+        "medium_hair",
+        "low_side_puffs",
+        "side_buns",
+        "rounded_side_hair",
+        "center_part",
+        "symmetrical_hair",
+        "bob_like_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.89,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5532,7 +6367,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add a dark top cap plus rounded low hair puffs near both ears.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_18.compare.png"
     },
     {
       "optionId": "GlassesColor:2",
@@ -5785,10 +6622,13 @@
       "index": 0,
       "color": null,
       "tags": [
-        "none",
-        "no_glasses"
+        "no_glasses",
+        "no_eyewear",
+        "bare_face",
+        "unobstructed_eyes",
+        "absent_accessory"
       ],
-      "confidence": 0.78,
+      "confidence": 0.99,
       "visible": false,
       "needsReview": false,
       "requires": [],
@@ -5799,7 +6639,9 @@
         "ENG_ONLY_Zoom": 0,
         "Glasses": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline and option both show a bare face, and diff shows no added glasses frame.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Glasses_0.compare.png"
     },
     {
       "optionId": "Glasses:1",
@@ -5813,10 +6655,16 @@
       "color": null,
       "tags": [
         "glasses",
-        "glasses_1",
-        "round_glasses"
+        "eyeglasses",
+        "blue_frames",
+        "round_glasses",
+        "thick_rim_glasses",
+        "full_rim_glasses",
+        "clear_lenses",
+        "large_glasses",
+        "hinge_dots"
       ],
-      "confidence": 0.78,
+      "confidence": 0.97,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5827,7 +6675,9 @@
         "ENG_ONLY_Zoom": 0,
         "Glasses": 1
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add thick blue round full-rim glasses over both eyes.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Glasses_1.compare.png"
     },
     {
       "optionId": "Glasses:2",
@@ -5841,10 +6691,17 @@
       "color": null,
       "tags": [
         "glasses",
-        "glasses_2",
-        "round_glasses"
+        "eyeglasses",
+        "blue_frames",
+        "rectangular_glasses",
+        "square_glasses",
+        "thick_rim_glasses",
+        "full_rim_glasses",
+        "clear_lenses",
+        "wide_glasses",
+        "hinge_dots"
       ],
-      "confidence": 0.78,
+      "confidence": 0.96,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5855,7 +6712,9 @@
         "ENG_ONLY_Zoom": 0,
         "Glasses": 2
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add blue rounded-rectangular full-rim glasses across the eye area.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Glasses_2.compare.png"
     },
     {
       "optionId": "Glasses:3",
@@ -5869,10 +6728,16 @@
       "color": null,
       "tags": [
         "glasses",
-        "glasses_3",
-        "square_glasses"
+        "eyeglasses",
+        "blue_frames",
+        "round_glasses",
+        "circular_glasses",
+        "full_rim_glasses",
+        "clear_lenses",
+        "medium_glasses",
+        "hinge_dots"
       ],
-      "confidence": 0.78,
+      "confidence": 0.97,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5883,7 +6748,9 @@
         "ENG_ONLY_Zoom": 0,
         "Glasses": 3
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add medium blue circular full-rim glasses with clear lenses.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Glasses_3.compare.png"
     },
     {
       "optionId": "Glasses:4",
@@ -5897,10 +6764,17 @@
       "color": null,
       "tags": [
         "glasses",
-        "glasses_4",
-        "square_glasses"
+        "sunglasses",
+        "blue_frames",
+        "round_sunglasses",
+        "dark_lenses",
+        "tinted_lenses",
+        "full_rim_glasses",
+        "reflective_lenses",
+        "large_glasses",
+        "hinge_dots"
       ],
-      "confidence": 0.78,
+      "confidence": 0.98,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5911,7 +6785,9 @@
         "ENG_ONLY_Zoom": 0,
         "Glasses": 4
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option and diff add blue round glasses with dark filled lenses and diagonal highlights.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Glasses_4.compare.png"
     },
     {
       "optionId": "Glasses:5",
@@ -5925,10 +6801,16 @@
       "color": null,
       "tags": [
         "glasses",
-        "glasses_5",
-        "bold_glasses"
+        "eyewear",
+        "rectangular_glasses",
+        "square_lenses",
+        "blue_frame",
+        "dark_tinted_lenses",
+        "full_rim",
+        "thick_frame",
+        "wide_bridge"
       ],
-      "confidence": 0.78,
+      "confidence": 0.97,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5939,7 +6821,9 @@
         "ENG_ONLY_Zoom": 0,
         "Glasses": 5
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add large blue full-rim rectangular glasses over both eyes.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Glasses_5.compare.png"
     },
     {
       "optionId": "Glasses:6",
@@ -5953,10 +6837,16 @@
       "color": null,
       "tags": [
         "glasses",
-        "glasses_6",
-        "bold_glasses"
+        "eyewear",
+        "round_glasses",
+        "circular_lenses",
+        "blue_frame",
+        "dark_tinted_lenses",
+        "full_rim",
+        "thick_frame",
+        "small_bridge"
       ],
-      "confidence": 0.78,
+      "confidence": 0.98,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5967,7 +6857,9 @@
         "ENG_ONLY_Zoom": 0,
         "Glasses": 6
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add large blue round glasses with dark circular lenses.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Glasses_6.compare.png"
     },
     {
       "optionId": "Wrinkles:0",
@@ -5980,10 +6872,12 @@
       "index": 0,
       "color": null,
       "tags": [
-        "none",
-        "no_wrinkles"
+        "no_wrinkles",
+        "no_face_detail",
+        "bare_face",
+        "smooth_face"
       ],
-      "confidence": 0.78,
+      "confidence": 0.99,
       "visible": false,
       "needsReview": false,
       "requires": [],
@@ -6000,7 +6894,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline and option match; diff shows no added wrinkle or face-detail marks.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Wrinkles_0.compare.png"
     },
     {
       "optionId": "Wrinkles:1",
@@ -6014,10 +6910,14 @@
       "color": null,
       "tags": [
         "wrinkles",
-        "older",
-        "wrinkles_1"
+        "aging_lines",
+        "facial_lines",
+        "smile_lines",
+        "cheek_lines",
+        "eye_corner_lines",
+        "chin_crease"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6034,7 +6934,9 @@
         "Piercings": 0,
         "Wrinkles": 1
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add curved wrinkle lines around eyes, cheeks, mouth, and chin.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Wrinkles_1.compare.png"
     },
     {
       "optionId": "Wrinkles:2",
@@ -6047,13 +6949,15 @@
       "index": 2,
       "color": null,
       "tags": [
-        "wrinkles",
-        "older",
-        "wrinkles_2"
+        "freckles",
+        "cheek_dots",
+        "face_spots",
+        "dotted_face_detail",
+        "bilateral_cheek_marks"
       ],
-      "confidence": 0.78,
+      "confidence": 0.82,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -6068,7 +6972,9 @@
         "Piercings": 0,
         "Wrinkles": 2
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add cheek dot clusters rather than visible line wrinkles, conflicting with the Wrinkles state name.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Wrinkles_2.compare.png"
     },
     {
       "optionId": "Piercings:0",
@@ -6081,10 +6987,12 @@
       "index": 0,
       "color": null,
       "tags": [
-        "none",
-        "no_earrings"
+        "no_earrings",
+        "no_piercing",
+        "bare_ears",
+        "no_jewelry"
       ],
-      "confidence": 0.78,
+      "confidence": 0.99,
       "visible": false,
       "needsReview": false,
       "requires": [],
@@ -6101,7 +7009,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline and option match; diff shows no added earrings or piercing marks.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Piercings_0.compare.png"
     },
     {
       "optionId": "Piercings:1",
@@ -6115,10 +7025,13 @@
       "color": null,
       "tags": [
         "earrings",
-        "piercing",
-        "earrings_1"
+        "stud_earrings",
+        "round_studs",
+        "gold_earrings",
+        "bilateral_earrings",
+        "small_jewelry"
       ],
-      "confidence": 0.78,
+      "confidence": 0.98,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6135,7 +7048,9 @@
         "Piercings": 1,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add small yellow circular studs on both ears.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Piercings_1.compare.png"
     },
     {
       "optionId": "Piercings:2",
@@ -6149,10 +7064,13 @@
       "color": null,
       "tags": [
         "earrings",
-        "piercing",
-        "earrings_2"
+        "stud_earrings",
+        "round_studs",
+        "pearl_earrings",
+        "light_earrings",
+        "bilateral_earrings"
       ],
-      "confidence": 0.78,
+      "confidence": 0.98,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6169,7 +7087,9 @@
         "Piercings": 2,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add small light cream circular studs on both ears.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Piercings_2.compare.png"
     },
     {
       "optionId": "Piercings:3",
@@ -6183,10 +7103,13 @@
       "color": null,
       "tags": [
         "earrings",
-        "piercing",
-        "earrings_3"
+        "stud_earrings",
+        "round_studs",
+        "blue_earrings",
+        "light_blue_studs",
+        "bilateral_earrings"
       ],
-      "confidence": 0.78,
+      "confidence": 0.98,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6203,7 +7126,9 @@
         "Piercings": 3,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add small light blue circular studs on both ears.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Piercings_3.compare.png"
     },
     {
       "optionId": "Piercings:4",
@@ -6217,10 +7142,13 @@
       "color": null,
       "tags": [
         "earrings",
-        "piercing",
-        "earrings_4"
+        "hoop_earrings",
+        "large_hoops",
+        "gold_earrings",
+        "circular_earrings",
+        "bilateral_earrings"
       ],
-      "confidence": 0.78,
+      "confidence": 0.98,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6237,7 +7165,9 @@
         "Piercings": 4,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff add large yellow hoop earrings around both ears.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Piercings_4.compare.png"
     },
     {
       "optionId": "Piercings:5",
@@ -6252,9 +7182,13 @@
       "tags": [
         "earrings",
         "piercing",
-        "earrings_5"
+        "large_hoop_earrings",
+        "round_hoops",
+        "bilateral_earrings",
+        "warm_light_earring_color",
+        "face_accessory"
       ],
-      "confidence": 0.78,
+      "confidence": 0.97,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6271,7 +7205,9 @@
         "Piercings": 5,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds large pale hoop earrings on both ears while baseline has none; diff highlights both hoops.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Piercings_5.compare.png"
     },
     {
       "optionId": "Piercings:6",
@@ -6286,9 +7222,13 @@
       "tags": [
         "earrings",
         "piercing",
-        "earrings_6"
+        "large_hoop_earrings",
+        "round_hoops",
+        "bilateral_earrings",
+        "silver_earrings",
+        "face_accessory"
       ],
-      "confidence": 0.78,
+      "confidence": 0.97,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6305,7 +7245,9 @@
         "Piercings": 6,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds large light gray hoop earrings on both ears; diff marks the two circular hoops.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Piercings_6.compare.png"
     },
     {
       "optionId": "Nose Piercing:0",
@@ -6318,10 +7260,12 @@
       "index": 0,
       "color": null,
       "tags": [
+        "no_nose_piercing",
         "none",
-        "no_nose_piercing"
+        "no_face_accessory",
+        "plain_nose"
       ],
-      "confidence": 0.78,
+      "confidence": 0.99,
       "visible": false,
       "needsReview": false,
       "requires": [],
@@ -6333,7 +7277,9 @@
         "Nose Piercing": 0,
         "Piercings": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline and option both show a plain nose, and diff shows no visible nose-piercing change.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Nose_Piercing_0.compare.png"
     },
     {
       "optionId": "Nose Piercing:1",
@@ -6347,9 +7293,13 @@
       "color": null,
       "tags": [
         "nose_piercing",
-        "nose_piercing_1"
+        "nose_stud",
+        "nostril_stud",
+        "small_round_stud",
+        "gold_stud",
+        "face_accessory"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6361,7 +7311,9 @@
         "Nose Piercing": 1,
         "Piercings": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds a small gold dot on the viewer-right side of the nose; diff isolates that stud.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Nose_Piercing_1.compare.png"
     },
     {
       "optionId": "Nose Piercing:2",
@@ -6375,9 +7327,13 @@
       "color": null,
       "tags": [
         "nose_piercing",
-        "nose_piercing_2"
+        "nose_stud",
+        "nostril_stud",
+        "small_round_stud",
+        "pale_stud",
+        "face_accessory"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6389,7 +7345,9 @@
         "Nose Piercing": 2,
         "Piercings": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds a small pale dot on the viewer-right side of the nose, with the diff marking the same spot.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Nose_Piercing_2.compare.png"
     },
     {
       "optionId": "Nose Piercing:3",
@@ -6403,9 +7361,13 @@
       "color": null,
       "tags": [
         "nose_piercing",
-        "nose_piercing_3"
+        "nose_stud",
+        "nostril_stud",
+        "small_round_stud",
+        "silver_blue_stud",
+        "face_accessory"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6417,7 +7379,9 @@
         "Nose Piercing": 3,
         "Piercings": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds a tiny light blue gray stud on the viewer-right side of the nose; diff highlights one small dot.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Nose_Piercing_3.compare.png"
     },
     {
       "optionId": "FacialHairColor:1",
@@ -6820,11 +7784,12 @@
       "index": 0,
       "color": null,
       "tags": [
-        "facial_hair",
+        "no_facial_hair",
+        "clean_shaven",
         "none",
-        "no_facial_hair"
+        "plain_lower_face"
       ],
-      "confidence": 0.78,
+      "confidence": 0.99,
       "visible": false,
       "needsReview": false,
       "requires": [],
@@ -6841,7 +7806,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline and option are clean shaven, and diff shows no facial-hair change.",
+      "imagePath": ".cache/avatar-semantic/codex/images/FacialHair_0.compare.png"
     },
     {
       "optionId": "FacialHair:1",
@@ -6856,10 +7823,13 @@
       "tags": [
         "facial_hair",
         "mustache",
-        "short",
-        "classic"
+        "goatee_like",
+        "short_beard",
+        "rounded_facial_hair",
+        "dark_gray_facial_hair",
+        "dense_facial_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6876,7 +7846,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds a dark rounded facial-hair shape around the mouth and lower face; diff highlights that new mass.",
+      "imagePath": ".cache/avatar-semantic/codex/images/FacialHair_1.compare.png"
     },
     {
       "optionId": "FacialHair:2",
@@ -6890,10 +7862,14 @@
       "color": null,
       "tags": [
         "facial_hair",
-        "goatee",
-        "short"
+        "full_beard",
+        "wide_beard",
+        "thick_beard",
+        "rounded_beard",
+        "dark_gray_facial_hair",
+        "large_lower_face_coverage"
       ],
-      "confidence": 0.78,
+      "confidence": 0.97,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6910,7 +7886,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option adds a broad dark full beard across the lower face; diff shows large lower-face coverage.",
+      "imagePath": ".cache/avatar-semantic/codex/images/FacialHair_2.compare.png"
     },
     {
       "optionId": "FacialHair:3",
@@ -6924,12 +7902,16 @@
       "color": null,
       "tags": [
         "facial_hair",
-        "mustache",
-        "thick"
+        "goatee",
+        "chin_beard",
+        "short_chin_hair",
+        "pointed_beard",
+        "dark_gray_facial_hair",
+        "small_lower_face_coverage"
       ],
-      "confidence": 0.78,
+      "confidence": 0.82,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -6944,7 +7926,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option shows a small dark pointed chin beard, while the reference says mustache; diff highlights only the chin area.",
+      "imagePath": ".cache/avatar-semantic/codex/images/FacialHair_3.compare.png"
     },
     {
       "optionId": "FacialHair:4",
@@ -6959,9 +7943,14 @@
       "tags": [
         "facial_hair",
         "full_beard",
-        "beard"
+        "short_full_beard",
+        "jawline_beard",
+        "chinstrap_beard",
+        "rounded_beard",
+        "dark_brown_beard",
+        "lower_face_coverage"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6978,7 +7967,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 相比 baseline 在下颌和脸颊下缘新增深色 U 形胡须，diff 标出下脸部差异。",
+      "imagePath": ".cache/avatar-semantic/codex/images/FacialHair_4.compare.png"
     },
     {
       "optionId": "FacialHair:5",
@@ -6993,9 +7984,13 @@
       "tags": [
         "facial_hair",
         "full_beard",
-        "rounded_beard"
+        "boxed_beard",
+        "rounded_square_beard",
+        "dark_brown_beard",
+        "lower_half_face_beard",
+        "dense_beard"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7012,7 +8007,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 相比 baseline 将脸部下半区变为深色块状胡须，diff 集中在下脸和下颌。",
+      "imagePath": ".cache/avatar-semantic/codex/images/FacialHair_5.compare.png"
     },
     {
       "optionId": "FacialHair:6",
@@ -7026,10 +8023,15 @@
       "color": null,
       "tags": [
         "facial_hair",
+        "full_beard",
+        "long_beard",
+        "wide_beard",
         "sideburns",
-        "beard"
+        "chin_beard",
+        "dark_gray_beard",
+        "heavy_lower_face_coverage"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7046,7 +8048,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 相比 baseline 新增大面积深灰全胡须并覆盖嘴部周围，diff 显示下脸大块变化。",
+      "imagePath": ".cache/avatar-semantic/codex/images/FacialHair_6.compare.png"
     },
     {
       "optionId": "HeadwearColor:1",
@@ -7329,10 +8333,13 @@
       "index": 0,
       "color": null,
       "tags": [
+        "no_headwear",
         "none",
-        "no_headwear"
+        "bare_head",
+        "no_hat",
+        "no_accessory"
       ],
-      "confidence": 0.78,
+      "confidence": 0.98,
       "visible": false,
       "needsReview": false,
       "requires": [],
@@ -7349,7 +8356,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "baseline 与 option 视觉一致，diff 未显示新增头饰差异。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_0.compare.png"
     },
     {
       "optionId": "Headwear:10",
@@ -7364,11 +8373,14 @@
       "tags": [
         "headwear",
         "hat",
-        "headwear_10",
-        "bowler_like",
-        "brimmed_hat"
+        "baseball_cap",
+        "curved_brim",
+        "panel_cap",
+        "top_button",
+        "purple_hat",
+        "front_facing_cap"
       ],
-      "confidence": 0.78,
+      "confidence": 0.96,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7385,7 +8397,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 相比 baseline 新增紫色分片棒球帽，diff 在头顶和帽檐区域突出显示。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_10.compare.png"
     },
     {
       "optionId": "Headwear:11",
@@ -7400,11 +8414,15 @@
       "tags": [
         "headwear",
         "hat",
-        "headwear_11",
-        "bowler_like",
-        "brimmed_hat"
+        "baseball_cap",
+        "curved_brim",
+        "panel_cap",
+        "top_button",
+        "green_hat",
+        "front_logo",
+        "letter_logo"
       ],
-      "confidence": 0.78,
+      "confidence": 0.97,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7421,7 +8439,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 相比 baseline 新增绿色棒球帽和正面白色字母标识，diff 显示帽体、帽檐和标识差异。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_11.compare.png"
     },
     {
       "optionId": "Headwear:7",
@@ -7435,11 +8455,15 @@
       "color": null,
       "tags": [
         "headwear",
-        "hat",
-        "headwear_7",
-        "cap"
+        "headwrap",
+        "headscarf",
+        "bandana",
+        "forehead_band",
+        "side_drape",
+        "purple_headwear",
+        "fabric_head_covering"
       ],
-      "confidence": 0.78,
+      "confidence": 0.91,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7456,7 +8480,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 相比 baseline 新增紫色头巾式覆盖物，diff 显示额带、头顶和左侧垂布差异。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_7.compare.png"
     },
     {
       "optionId": "Headwear:8",
@@ -7470,11 +8496,14 @@
       "color": null,
       "tags": [
         "headwear",
-        "hat",
-        "headwear_8",
-        "cap"
+        "beanie",
+        "knit_cap",
+        "folded_brim",
+        "purple_hat",
+        "rounded_cap",
+        "hair_peeking_sides"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7491,7 +8520,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 相比 baseline 新增紫色圆顶便帽和厚额带，diff 标出头顶与额带区域。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_8.compare.png"
     },
     {
       "optionId": "Headwear:9",
@@ -7505,11 +8536,14 @@
       "color": null,
       "tags": [
         "headwear",
-        "hat",
-        "headwear_9",
-        "cap"
+        "slouchy_beanie",
+        "knit_cap",
+        "folded_brim",
+        "side_swept_cap",
+        "purple_hat",
+        "hair_peeking_sides"
       ],
-      "confidence": 0.78,
+      "confidence": 0.92,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7526,7 +8560,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 相比 baseline 新增紫色斜顶便帽，diff 显示帽身、折边和侧发遮挡差异。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_9.compare.png"
     },
     {
       "optionId": "Headwear:1",
@@ -7540,11 +8576,14 @@
       "color": null,
       "tags": [
         "headwear",
-        "hat",
-        "headwear_1",
-        "brimmed_hat"
+        "turban",
+        "headwrap",
+        "large_round_head_covering",
+        "front_v_fold",
+        "purple_headwear",
+        "full_crown_cover"
       ],
-      "confidence": 0.78,
+      "confidence": 0.94,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7561,7 +8600,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option 相比 baseline 新增大面积紫色包头，diff 显示圆形头部覆盖和前额 V 形折线差异。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_1.compare.png"
     },
     {
       "optionId": "Headwear:2",
@@ -7575,13 +8616,19 @@
       "color": null,
       "tags": [
         "headwear",
-        "hat",
-        "headwear_2",
-        "brimmed_hat"
+        "purple_headwear",
+        "full_head_covering",
+        "hood",
+        "headscarf",
+        "hijab_style_wrap",
+        "round_face_opening",
+        "soft_fabric",
+        "no_brim",
+        "diagonal_fold"
       ],
-      "confidence": 0.78,
+      "confidence": 0.82,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -7596,7 +8643,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 新增包围面部的紫色圆形头巾，未见 referenceTags 所示帽檐。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_2.compare.png"
     },
     {
       "optionId": "Headwear:3",
@@ -7610,13 +8659,19 @@
       "color": null,
       "tags": [
         "headwear",
-        "hat",
-        "headwear_3",
-        "brimmed_hat"
+        "purple_headwear",
+        "hood",
+        "headscarf",
+        "hijab_style_wrap",
+        "neck_covering",
+        "front_tail",
+        "rounded_square_face_opening",
+        "soft_fabric",
+        "no_brim"
       ],
-      "confidence": 0.78,
+      "confidence": 0.83,
       "visible": true,
-      "needsReview": false,
+      "needsReview": true,
       "requires": [],
       "statesToOverride": {
         "BackgroundColor": 0,
@@ -7631,7 +8686,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 显示紫色包头结构和正面下垂尾片，未出现帽檐。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_3.compare.png"
     },
     {
       "optionId": "Headwear:4",
@@ -7645,11 +8702,17 @@
       "color": null,
       "tags": [
         "headwear",
-        "hat",
-        "headwear_4",
-        "soft_hat"
+        "purple_headwear",
+        "soft_hat",
+        "draped_headwrap",
+        "long_side_drape",
+        "rounded_top",
+        "center_peak",
+        "asymmetric_drape",
+        "face_uncovered",
+        "soft_fabric"
       ],
-      "confidence": 0.78,
+      "confidence": 0.86,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7666,7 +8729,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 新增宽圆顶部和左侧长垂片，baseline 无头饰。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_4.compare.png"
     },
     {
       "optionId": "Headwear:5",
@@ -7680,11 +8745,17 @@
       "color": null,
       "tags": [
         "headwear",
-        "hat",
-        "headwear_5",
-        "soft_hat"
+        "purple_headwear",
+        "soft_hat",
+        "side_swept_headwrap",
+        "long_left_drape",
+        "asymmetric",
+        "rounded_cap",
+        "diagonal_sweep",
+        "face_uncovered",
+        "soft_fabric"
       ],
-      "confidence": 0.78,
+      "confidence": 0.86,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7701,7 +8772,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 显示紫色圆顶头饰、斜向扫过的纹理和左侧长垂片。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_5.compare.png"
     },
     {
       "optionId": "Headwear:6",
@@ -7715,11 +8788,17 @@
       "color": null,
       "tags": [
         "headwear",
-        "hat",
-        "headwear_6",
-        "soft_hat"
+        "purple_headwear",
+        "beanie",
+        "pom_pom_hat",
+        "winter_hat",
+        "rounded_cap",
+        "top_pom_pom",
+        "soft_hat",
+        "face_uncovered",
+        "no_brim"
       ],
-      "confidence": 0.78,
+      "confidence": 0.95,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7736,7 +8815,9 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "evidence": "option/diff 新增紫色圆顶帽和顶部圆球，baseline 无头饰。",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_6.compare.png"
     },
     {
       "optionId": "ClothingColor:1",
