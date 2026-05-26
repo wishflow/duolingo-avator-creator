@@ -135,7 +135,7 @@ flowchart TD
 验收重点：
 
 - 文档明确测试识别和全量识别流程。
-- JSONL schema、受控 `tags`、开放 `extraTags`、批大小和 smoke 样本固定。
+- JSONL schema、开放 `tags`、`attributes`、机器可读审核状态、批大小和 smoke 样本固定。
 - Codespaces 浏览器准备方式固定为推荐使用 Playwright Chromium 缓存，脚本优先尊重 `CHROME_EXEC`。
 - 记录 full 标注验证通过后，再创建并 push 私有 skill 仓库 `wishflow/avatar-semantic-labeler-skill`。
 

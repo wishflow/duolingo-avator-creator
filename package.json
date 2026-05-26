@@ -13,6 +13,7 @@
     "semantic:codex:tasks": "python3 scripts/semantic_codex.py tasks",
     "semantic:codex:merge": "python3 scripts/semantic_codex.py merge",
     "semantic:codex:compare": "python3 scripts/semantic_codex.py compare",
+    "semantic:codex:report": "python3 scripts/semantic_codex.py report",
     "test:ci": "npm run test:static && npm run test:worker && python3 tests/test_avatar_explorer.py --port 8775 --debug-port 9228 --require-browser",
     "check:cloudflare-config": "node scripts/check_cloudflare_config.mjs",
     "deploy:cf:pages": "wrangler pages deploy _site --project-name=duolingo-avator-creator --branch=master",

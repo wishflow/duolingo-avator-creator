@@ -36,12 +36,18 @@ REVIEW_PATH = catalog_lib.REVIEW_PATH
 CODEX_DIR = catalog_lib.CACHE_DIR / "codex"
 TASKS_DIR = CODEX_DIR / "tasks"
 IMAGES_DIR = CODEX_DIR / "images"
-DEFAULT_LABELS_PATH = CODEX_DIR / "labels.jsonl"
+LABELS_DIR = CODEX_DIR / "labels"
+REPORTS_DIR = CODEX_DIR / "reports"
+DEFAULT_LABELS_PATH = LABELS_DIR / "labels.jsonl"
 MERGE_REPORT_PATH = CODEX_DIR / "merge-report.json"
 COMPARE_REPORT_PATH = CODEX_DIR / "compare-report.md"
+REPORT_INDEX_PATH = REPORTS_DIR / "index.md"
 TASK_MANIFEST_PATH = TASKS_DIR / "current-task-set.json"
 REVIEW_THRESHOLD = 0.65
 PANEL_SIZE = (384, 530)
+LABEL_SCHEMA_VERSION = 2
+TASK_SCHEMA_VERSION = 2
+REVIEW_STATUSES = {"pending", "approved", "rejected"}
 SMOKE_OPTION_IDS = [
     "FacialHair:1",
     "Headwear:10",
@@ -54,9 +60,10 @@ REQUIRED_LABEL_FIELDS = {
     "optionId",
     "group",
     "tags",
-    "extraTags",
+    "attributes",
     "confidence",
     "needsReview",
+    "reviewStatus",
     "evidence",
     "labelSource",
     "imagePath",
@@ -340,7 +347,7 @@ def task_option_record(record: dict[str, Any]) -> dict[str, Any]:
         "tab": option["tab"],
         "section": option["section"],
         "index": option["index"],
-        "allowedTags": catalog_lib.allowed_tags_for_option(option),
+        "referenceTags": option.get("tags", []),
         "currentTags": option.get("tags", []),
         "imagePath": relpath(paths["compare"]),
         "sourceImages": {
@@ -351,13 +358,16 @@ def task_option_record(record: dict[str, Any]) -> dict[str, Any]:
         "baselineState": record["baselineState"],
         "optionState": record["optionState"],
         "outputTemplate": {
-            "schemaVersion": 1,
+            "schemaVersion": LABEL_SCHEMA_VERSION,
             "optionId": option["optionId"],
             "group": option["group"],
-            "tags": ["one or more allowedTags"],
-            "extraTags": [],
+            "tags": ["open visual tags generated from the image"],
+            "attributes": {
+                "dimensionName": "dimension value, array, number, boolean, or null",
+            },
             "confidence": "0..1",
             "needsReview": False,
+            "reviewStatus": "pending",
             "evidence": "short visual evidence",
             "labelSource": "codex_manual",
             "imagePath": relpath(paths["compare"]),
@@ -378,27 +388,32 @@ def write_task_batches(records: list[dict[str, Any]], args: argparse.Namespace) 
     for index in range(0, len(records), batch_size):
         batch_number = index // batch_size + 1
         batch = records[index:index + batch_size]
+        batch_id = f"{prefix}-{batch_number:03d}"
+        labels_path = LABELS_DIR / f"{batch_id}.jsonl"
         task = {
-            "schemaVersion": 1,
-            "taskType": "codex_semantic_labeling",
-            "batchId": f"{prefix}-{batch_number:03d}",
+            "schemaVersion": TASK_SCHEMA_VERSION,
+            "taskType": "codex_open_semantic_labeling",
+            "batchId": batch_id,
             "createdAt": created_at,
             "sourceVersion": source_version,
             "instructions": [
                 "Inspect each compare image: baseline, option, and diff.",
                 "Return JSONL only, one object per option.",
-                "Use only allowedTags in tags; put other visual details in extraTags.",
+                "Generate open visual tags. referenceTags/currentTags are examples only and do not limit the output.",
+                "Use attributes to capture multi-dimensional visual traits such as length, shape, coverage, style, emotion, position, or size.",
+                "Set reviewStatus to pending unless a human reviewer has explicitly approved or rejected this row.",
                 "Set needsReview true when the visual difference is too small or ambiguous.",
             ],
-            "labelsPath": relpath(DEFAULT_LABELS_PATH),
+            "labelsPath": relpath(labels_path),
+            "reportPath": relpath(REPORTS_DIR / f"{batch_id}.md"),
             "options": [task_option_record(record) for record in batch],
         }
-        path = TASKS_DIR / f"{task['batchId']}.json"
+        path = TASKS_DIR / f"{batch_id}.json"
         write_json(path, task)
         task_paths.append(path)
 
     manifest = {
-        "schemaVersion": 1,
+        "schemaVersion": LABEL_SCHEMA_VERSION,
         "createdAt": created_at,
         "taskFiles": [relpath(path) for path in task_paths],
         "optionIds": [record["option"]["optionId"] for record in records],
@@ -515,8 +530,8 @@ def validate_label_row(
     if option_id not in task_options:
         errors.append(f"line {line_no}: optionId is not in the current Codex task package: {option_id}")
 
-    if label.get("schemaVersion") != 1:
-        errors.append(f"line {line_no}: schemaVersion must be 1")
+    if label.get("schemaVersion") != LABEL_SCHEMA_VERSION:
+        errors.append(f"line {line_no}: schemaVersion must be {LABEL_SCHEMA_VERSION}")
     if label.get("group") != option["group"]:
         errors.append(f"line {line_no}: group mismatch for {option_id}; expected {option['group']}")
     if label.get("labelSource") != "codex_manual":
@@ -531,15 +546,14 @@ def validate_label_row(
     tags = label.get("tags")
     if not isinstance(tags, list) or not tags or not all(isinstance(tag, str) and tag for tag in tags):
         errors.append(f"line {line_no}: tags must be a non-empty string array")
-    else:
-        allowed = set(catalog_lib.allowed_tags_for_option(option))
-        unknown = [tag for tag in tags if tag not in allowed]
-        if unknown:
-            errors.append(f"line {line_no}: tags outside controlled vocabulary for {option_id}: {unknown}")
 
-    extra_tags = label.get("extraTags")
-    if not isinstance(extra_tags, list) or not all(isinstance(tag, str) and tag for tag in extra_tags):
-        errors.append(f"line {line_no}: extraTags must be a string array")
+    attributes = label.get("attributes")
+    if not isinstance(attributes, dict) or isinstance(attributes, list):
+        errors.append(f"line {line_no}: attributes must be an object")
+
+    review_status = label.get("reviewStatus")
+    if review_status not in REVIEW_STATUSES:
+        errors.append(f"line {line_no}: reviewStatus must be one of {sorted(REVIEW_STATUSES)}")
 
     evidence = label.get("evidence")
     if not isinstance(evidence, str) or not evidence.strip():
@@ -558,13 +572,14 @@ def validate_label_row(
     if errors:
         return None, errors, warnings
     normalized = {
-        "schemaVersion": 1,
+        "schemaVersion": LABEL_SCHEMA_VERSION,
         "optionId": option_id,
         "group": option["group"],
         "tags": list(dict.fromkeys(tags)),
-        "extraTags": list(dict.fromkeys(extra_tags)),
+        "attributes": attributes,
         "confidence": float(confidence),
         "needsReview": bool(label["needsReview"]),
+        "reviewStatus": review_status,
         "evidence": evidence.strip()[:240],
         "labelSource": "codex_manual",
         "imagePath": image_path,
@@ -602,12 +617,14 @@ def apply_codex_labels(catalog: dict[str, Any], labels: list[dict[str, Any]]) ->
         if not option:
             continue
         option["tags"] = label["tags"]
-        option["extraTags"] = label["extraTags"]
         option["confidence"] = label["confidence"]
         option["needsReview"] = label["needsReview"] or label["confidence"] < REVIEW_THRESHOLD or "unclear" in label["tags"]
         option["labelSource"] = "codex_manual"
         option["evidence"] = label["evidence"]
         option["imagePath"] = label["imagePath"]
+        option.pop("extraTags", None)
+        option.pop("attributes", None)
+        option.pop("reviewStatus", None)
         changed += 1
     catalog["labeling"] = {
         **(catalog.get("labeling") or {}),
@@ -641,6 +658,18 @@ def run_merge(args: argparse.Namespace) -> int:
     if errors:
         write_merge_report(report)
         for error in errors:
+            print(f"codex semantic merge error: {error}", file=sys.stderr)
+        print(f"Wrote {relpath(MERGE_REPORT_PATH)}", file=sys.stderr)
+        return 1
+
+    unapproved = [label["optionId"] for label in labels if label.get("reviewStatus") != "approved"]
+    if unapproved:
+        report["status"] = "failed"
+        report["errors"] = [
+            f"merge requires reviewStatus=approved; pending or rejected optionIds: {', '.join(unapproved)}"
+        ]
+        write_merge_report(report)
+        for error in report["errors"]:
             print(f"codex semantic merge error: {error}", file=sys.stderr)
         print(f"Wrote {relpath(MERGE_REPORT_PATH)}", file=sys.stderr)
         return 1
@@ -756,6 +785,227 @@ def run_compare(args: argparse.Namespace) -> int:
     return 0
 
 
+def markdown_cell(value: Any) -> str:
+    if isinstance(value, (dict, list)):
+        text = json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+    elif isinstance(value, bool):
+        text = str(value).lower()
+    else:
+        text = "" if value is None else str(value)
+    return text.replace("|", "\\|").replace("\n", " ")
+
+
+def markdown_link(target: Path, base_dir: Path) -> str:
+    return os.path.relpath(target, start=base_dir).replace(os.sep, "/")
+
+
+def task_label_path(task: dict[str, Any]) -> Path:
+    labels_path = task.get("labelsPath")
+    if isinstance(labels_path, str) and labels_path:
+        return PROJECT_DIR / labels_path
+    batch_id = str(task.get("batchId") or "labels")
+    return LABELS_DIR / f"{batch_id}.jsonl"
+
+
+def task_report_path(task: dict[str, Any]) -> Path:
+    report_path = task.get("reportPath")
+    if isinstance(report_path, str) and report_path:
+        return PROJECT_DIR / report_path
+    batch_id = str(task.get("batchId") or "batch")
+    return REPORTS_DIR / f"{batch_id}.md"
+
+
+def validated_labels_for_task(task: dict[str, Any], labels_path: Path) -> tuple[dict[str, dict[str, Any]], list[str], list[str]]:
+    options = task.get("options") if isinstance(task.get("options"), list) else []
+    task_options = {
+        option.get("optionId"): option
+        for option in options
+        if isinstance(option, dict) and isinstance(option.get("optionId"), str)
+    }
+    _, enum_by_id = option_maps()
+    labels, errors, warnings = validate_labels(labels_path, enum_by_id, task_options)
+    return {label["optionId"]: label for label in labels}, errors, warnings
+
+
+def write_batch_report(task_path: Path, task: dict[str, Any]) -> dict[str, Any]:
+    batch_id = str(task.get("batchId") or task_path.stem)
+    report_path = task_report_path(task)
+    labels_path = task_label_path(task)
+    options = [option for option in task.get("options", []) if isinstance(option, dict)]
+    labels_by_id: dict[str, dict[str, Any]] = {}
+    errors: list[str] = []
+    warnings: list[str] = []
+    if labels_path.exists():
+        labels_by_id, errors, warnings = validated_labels_for_task(task, labels_path)
+    else:
+        warnings.append(f"labels file not found: {relpath(labels_path)}")
+
+    status_counts = {status: 0 for status in sorted(REVIEW_STATUSES)}
+    missing_count = 0
+    group_counts: dict[str, int] = {}
+    for option in options:
+        group = str(option.get("group") or "")
+        if group:
+            group_counts[group] = group_counts.get(group, 0) + 1
+        label = labels_by_id.get(option.get("optionId"))
+        if not label:
+            missing_count += 1
+            continue
+        status = label.get("reviewStatus")
+        if status in status_counts:
+            status_counts[status] += 1
+
+    lines = [
+        f"# Codex Semantic Batch Report: {batch_id}",
+        "",
+        f"- task: `{relpath(task_path)}`",
+        f"- labels: `{relpath(labels_path)}`",
+        f"- optionCount: `{len(options)}`",
+        f"- labeledCount: `{len(labels_by_id)}`",
+        f"- missingCount: `{missing_count}`",
+        f"- reviewStatus: `pending={status_counts.get('pending', 0)}`, `approved={status_counts.get('approved', 0)}`, `rejected={status_counts.get('rejected', 0)}`",
+        "",
+    ]
+    if errors:
+        lines.extend(["## 校验错误", ""])
+        lines.extend(f"- {error}" for error in errors)
+        lines.append("")
+    if warnings:
+        lines.extend(["## 提示", ""])
+        lines.extend(f"- {warning}" for warning in warnings)
+        lines.append("")
+
+    lines.extend([
+        "## 索引",
+        "",
+        "| optionId | group | reviewStatus | confidence | tags |",
+        "| --- | --- | --- | --- | --- |",
+    ])
+    for option in options:
+        option_id = str(option.get("optionId") or "")
+        label = labels_by_id.get(option_id)
+        lines.append(
+            f"| `{option_id}` | `{markdown_cell(option.get('group'))}` | "
+            f"`{markdown_cell(label.get('reviewStatus') if label else 'missing')}` | "
+            f"`{markdown_cell(label.get('confidence') if label else '')}` | "
+            f"{markdown_cell(label.get('tags') if label else '')} |"
+        )
+
+    lines.extend(["", "## 详情", ""])
+    for option in options:
+        option_id = str(option.get("optionId") or "")
+        label = labels_by_id.get(option_id)
+        image_path = option.get("imagePath") or (label or {}).get("imagePath")
+        lines.extend([f"### `{option_id}`", ""])
+        if isinstance(image_path, str) and image_path:
+            image_abs = PROJECT_DIR / image_path
+            lines.append(f'<img src="{markdown_link(image_abs, report_path.parent)}" alt="{option_id} compare" width="100%">')
+            lines.append("")
+        lines.extend([
+            "| 字段 | 内容 |",
+            "| --- | --- |",
+            f"| group | `{markdown_cell(option.get('group'))}` |",
+            f"| referenceTags | {markdown_cell(option.get('referenceTags') or option.get('currentTags') or [])} |",
+            f"| reviewStatus | `{markdown_cell(label.get('reviewStatus') if label else 'missing')}` |",
+            f"| confidence | `{markdown_cell(label.get('confidence') if label else '')}` |",
+            f"| needsReview | `{markdown_cell(label.get('needsReview') if label else '')}` |",
+            f"| tags | {markdown_cell(label.get('tags') if label else [])} |",
+            f"| attributes | {markdown_cell(label.get('attributes') if label else {})} |",
+            f"| evidence | {markdown_cell(label.get('evidence') if label else '')} |",
+            "",
+            "审核备注：",
+            "",
+            "- [ ] approved",
+            "- [ ] rejected",
+            "- notes:",
+            "",
+        ])
+
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return {
+        "batchId": batch_id,
+        "taskPath": relpath(task_path),
+        "labelsPath": relpath(labels_path),
+        "reportPath": relpath(report_path),
+        "optionCount": len(options),
+        "labeledCount": len(labels_by_id),
+        "missingCount": missing_count,
+        "statusCounts": status_counts,
+        "groupCounts": group_counts,
+        "errorCount": len(errors),
+        "warningCount": len(warnings),
+    }
+
+
+def run_report(args: argparse.Namespace) -> int:
+    task_files, warnings = load_task_files(args)
+    if not task_files:
+        raise RuntimeError("No Codex task package found. Run `npm run semantic:codex:tasks` first or pass --task.")
+
+    summaries = []
+    errors = []
+    for task_file in task_files:
+        try:
+            task = read_json(task_file)
+        except json.JSONDecodeError as error:
+            errors.append(f"{task_file}: JSON parse failed: {error}")
+            continue
+        summaries.append(write_batch_report(task_file, task))
+
+    total_options = sum(item["optionCount"] for item in summaries)
+    total_labeled = sum(item["labeledCount"] for item in summaries)
+    total_missing = sum(item["missingCount"] for item in summaries)
+    total_status = {status: sum(item["statusCounts"].get(status, 0) for item in summaries) for status in sorted(REVIEW_STATUSES)}
+    group_counts: dict[str, int] = {}
+    for item in summaries:
+        for group, count in item["groupCounts"].items():
+            group_counts[group] = group_counts.get(group, 0) + count
+
+    lines = [
+        "# Codex Semantic 标注审核索引",
+        "",
+        f"- generatedAt: `{time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}`",
+        f"- batchCount: `{len(summaries)}`",
+        f"- optionCount: `{total_options}`",
+        f"- labeledCount: `{total_labeled}`",
+        f"- missingCount: `{total_missing}`",
+        f"- reviewStatus: `pending={total_status.get('pending', 0)}`, `approved={total_status.get('approved', 0)}`, `rejected={total_status.get('rejected', 0)}`",
+        "",
+        "## 批次索引",
+        "",
+        "| batch | task | labels | report | options | labeled | missing | pending | approved | rejected | errors | warnings |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for item in summaries:
+        report_link = markdown_link(PROJECT_DIR / item["reportPath"], REPORT_INDEX_PATH.parent)
+        lines.append(
+            f"| `{item['batchId']}` | `{item['taskPath']}` | `{item['labelsPath']}` | "
+            f"[open]({report_link}) | `{item['optionCount']}` | `{item['labeledCount']}` | "
+            f"`{item['missingCount']}` | `{item['statusCounts'].get('pending', 0)}` | "
+            f"`{item['statusCounts'].get('approved', 0)}` | `{item['statusCounts'].get('rejected', 0)}` | "
+            f"`{item['errorCount']}` | `{item['warningCount']}` |"
+        )
+
+    lines.extend(["", "## 分组统计", "", "| group | optionCount |", "| --- | --- |"])
+    for group, count in sorted(group_counts.items()):
+        lines.append(f"| `{group}` | `{count}` |")
+
+    if warnings:
+        lines.extend(["", "## 提示", ""])
+        lines.extend(f"- {warning}" for warning in warnings)
+    if errors:
+        lines.extend(["", "## 错误", ""])
+        lines.extend(f"- {error}" for error in errors)
+
+    REPORT_INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
+    REPORT_INDEX_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"Wrote {relpath(REPORT_INDEX_PATH)}")
+    for item in summaries:
+        print(f"Wrote {item['reportPath']}")
+    return 1 if errors else 0
+
+
 def add_task_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--sample", default="", help="Generate one task for this optionId")
     parser.add_argument("--smoke", action="store_true", help="Generate the 5-option smoke task package")
@@ -785,6 +1035,9 @@ def build_parser() -> argparse.ArgumentParser:
     compare_parser.add_argument("--codex", required=True, help="Codex JSONL or catalog/report JSON")
     compare_parser.add_argument("--cloudflare", required=True, help="Cloudflare JSONL or catalog/report JSON")
     compare_parser.add_argument("--output", default=str(COMPARE_REPORT_PATH), help="Markdown report path")
+
+    report_parser = subparsers.add_parser("report", help="Generate Codex batch reports and review index")
+    report_parser.add_argument("--task", action="append", default=[], help="Task package JSON to report; repeatable")
     return parser
 
 
@@ -798,6 +1051,8 @@ def main() -> int:
             return run_merge(args)
         if args.command == "compare":
             return run_compare(args)
+        if args.command == "report":
+            return run_report(args)
     except RuntimeError as error:
         print(f"codex semantic error: {error}", file=sys.stderr)
         return 2
