@@ -49,12 +49,13 @@ sequenceDiagram
   W-->>U: 返回短时 AI sessionToken
   U->>W: POST /api/avatar/generate + sessionToken
   W->>W: 校验 session 签名、过期时间和 Origin
-  W->>A: JSON Mode 调用，生成结构化 avatarState
-  W->>W: 白名单校验 state/value
+  W->>A: JSON Mode 调用，生成结构化 selectionIntent
+  W->>W: 匹配 semantic catalog，构造 patch/fullState
+  W->>A: streaming 调用，生成用户可读说明
+  W-->>U: SSE status / assistant_delta
+  W->>W: 校验 final schema
   W-->>U: SSE final
-  U->>U: 应用到 Rive 预览并保存本地状态
-  W->>A: streaming 调用，解释已应用的编辑
-  W-->>U: SSE plan_delta
+  U->>U: 应用 patch 到 Rive 预览并保存本地状态
 ```
 
 Worker API：
@@ -96,16 +97,17 @@ SSE 事件：
 | event | data |
 | --- | --- |
 | `status` | 当前阶段文案 |
-| `final` | `{ ok, avatarState, steps, warnings, confidence, usedFallback }` |
-| `plan_delta` | 根据已应用配置生成的用户可读说明 |
+| `assistant_delta` | 根据生成过程输出的用户可读流式说明，替代旧 `plan_delta` |
+| `final` | `{ ok, contextMode, model, patch, fullState, tutorialSteps, summary, warnings, confidence, usedFallback, selectionTrace }` |
 | `error` | 生成失败原因 |
 
 生成策略：
 
-1. Worker 先使用 Workers AI JSON Mode 生成结构化 `avatarState`。
-2. Worker 对 `state/value` 做白名单校验，只保留当前前端 catalog 中存在的选项。
-3. 若模型结构化输出失败、为空、或只有无变化值，Worker 使用确定性 fallback 映射，保证返回可编辑且可见的头像改动。
-4. Worker 先发送 `final`，前端立即应用头像变化；随后再流式输出说明文字，避免用户只看到“聊天文本”但头像没有变化。
+1. Worker 先使用 Workers AI JSON Mode 生成结构化 `selectionIntent`。
+2. Worker 用 semantic catalog 匹配合法选项，生成相对 `baselineState` 的 `patch`。
+3. Worker 构造 `fullState = baselineState + patch`，并生成结构化 `tutorialSteps`。
+4. 若模型结构化输出失败、为空、或只有无变化值，Worker 使用确定性 fallback 映射，保证返回可编辑且可见的头像改动。
+5. Worker 先发送 `status` 和可选 `assistant_delta`，最终只以已校验的 `final` 作为成功标准，且成功流最后发送 `final`。
 
 默认模型：
 
@@ -301,7 +303,7 @@ http://127.0.0.1:8787/api/config
 | `GET /health` | 200，`ok: true` |
 | `GET /api/config` | 200，包含 `features.avatarGeneration` 和 `generation.turnstileSiteKey` |
 | `POST /api/avatar/generate` 无 token | 400/403，不调用 AI |
-| `POST /api/avatar/generate` 有效 token | SSE 返回 `plan_delta` 和 `final` |
+| `POST /api/avatar/generate` 有效 token | SSE 返回 `status` / `assistant_delta`，并以包含 `patch/fullState/tutorialSteps` 的 `final` 结束 |
 | 未授权 Origin | 不返回 `Access-Control-Allow-Origin` |
 
 CI 不会真调用 generate，避免消耗 Workers AI 额度，也避免自动化绕过 Turnstile。

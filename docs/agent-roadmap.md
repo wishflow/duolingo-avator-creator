@@ -148,18 +148,33 @@ flowchart TD
 目标：
 
 - 继续使用 HTTP + SSE，不引入 WebSocket。
-- 支持边聊边生成，但最终成功标准只看结构化 `final` 事件。
+- 支持边聊边生成，但最终成功标准只看结构化 `final` 事件，且成功流最后发送 `final`。
 - AI 区域语言跟随用户输入语言，中文 prompt 输出中文说明和教程。
 - 每轮返回 `patch + fullState + tutorialSteps`，而不是只有散文说明。
+- 直接替换旧协议，不再设计 `plan_delta`、`final.avatarState`、`final.steps`。
 
 建议事件：
 
 | event | 用途 |
 | --- | --- |
-| `assistant_delta` | 流式展示 agent 正在分析或解释 |
 | `status` | 当前阶段，如读取上下文、生成结构化方案、校验结果 |
+| `assistant_delta` | 流式展示 agent 正在分析或解释，替代旧 `plan_delta` |
 | `final` | 已校验的 patch、fullState、教程步骤、warnings、confidence |
 | `error` | 可恢复错误或失败原因 |
+
+核心 schema：
+
+| 字段 | 说明 |
+| --- | --- |
+| `patch` | 相对请求中 `baselineState` 的本轮差量编辑 |
+| `fullState` | `baselineState` 合并 `patch` 后的完整头像 state |
+| `tutorialSteps` | 结构化教程步骤，包含用户可读文本，并预留 `state/value/optionId/tab/section` 等定位字段 |
+| `summary` / `warnings` | 跟随用户 prompt 主语言的可展示说明 |
+| `confidence` / `usedFallback` / `selectionTrace` | 置信度、fallback 标记和语义匹配排障信息 |
+
+独立文档：
+
+- `docs/agent-steps/04-sse-agent-protocol.md`
 
 ### 05. 本地多轮 conversation thread
 
