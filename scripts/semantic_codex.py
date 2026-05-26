@@ -271,7 +271,7 @@ async def capture_compare_images_async(records: list[dict[str, Any]], args: argp
     )
     cdp: CDPClient | None = None
     chrome_proc: subprocess.Popen[str] | None = None
-    with tempfile.TemporaryDirectory(prefix="avatar-semantic-codex-") as user_data_dir:
+    with tempfile.TemporaryDirectory(prefix="avatar-semantic-codex-", ignore_cleanup_errors=True) as user_data_dir:
         try:
             chrome_proc = subprocess.Popen(
                 [

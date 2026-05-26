@@ -3,7 +3,7 @@
   "sourceVersion": "avatar_builder_25_sept2025",
   "generatedAt": "manual-dry-run",
   "labeling": {
-    "mode": "deterministic_seed",
+    "mode": "deterministic_seed_with_codex_manual",
     "model": "@cf/meta/llama-4-scout-17b-16e-instruct",
     "reviewThreshold": 0.65
   },
@@ -1033,13 +1033,11 @@
       "index": 4,
       "color": null,
       "tags": [
-        "expression",
-        "expression_31",
-        "serious",
-        "stern",
-        "calm"
+        "smile",
+        "friendly",
+        "playful"
       ],
-      "confidence": 0.78,
+      "confidence": 0.88,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -1050,7 +1048,13 @@
         "ENG_ONLY_Zoom": 0,
         "Expression": 31
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "extraTags": [
+        "sideways_eyes",
+        "open_smile"
+      ],
+      "evidence": "The option changes the face to sideways eyes and an open smiling mouth, giving a playful friendly expression.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Expression_31.compare.png"
     },
     {
       "optionId": "Expression:32",
@@ -3446,12 +3450,10 @@
       "index": 14,
       "color": null,
       "tags": [
-        "hair",
-        "main_hair",
-        "hair_48",
-        "short_hair"
+        "short_hair",
+        "neat_hair"
       ],
-      "confidence": 0.78,
+      "confidence": 0.82,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -3469,7 +3471,13 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "extraTags": [
+        "rounded_full_top",
+        "side_coverage"
+      ],
+      "evidence": "The option adds a short dark hairstyle with a rounded neat top and side coverage above the ears.",
+      "imagePath": ".cache/avatar-semantic/codex/images/MainHair_48.compare.png"
     },
     {
       "optionId": "MainHair:63",
@@ -5813,10 +5821,9 @@
       "color": null,
       "tags": [
         "glasses",
-        "glasses_1",
         "round_glasses"
       ],
-      "confidence": 0.78,
+      "confidence": 0.9,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -5827,7 +5834,13 @@
         "ENG_ONLY_Zoom": 0,
         "Glasses": 1
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "extraTags": [
+        "blue_frame",
+        "large_lenses"
+      ],
+      "evidence": "The option adds blue glasses with two rounded lenses connected across the nose.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Glasses_1.compare.png"
     },
     {
       "optionId": "Glasses:2",
@@ -6854,12 +6867,10 @@
       "index": 1,
       "color": null,
       "tags": [
-        "facial_hair",
         "mustache",
-        "short",
-        "classic"
+        "thick"
       ],
-      "confidence": 0.78,
+      "confidence": 0.82,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -6876,7 +6887,12 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "extraTags": [
+        "large_drooping_mustache"
+      ],
+      "evidence": "The option adds a dark mustache below the nose with broad curved ends and no full beard.",
+      "imagePath": ".cache/avatar-semantic/codex/images/FacialHair_1.compare.png"
     },
     {
       "optionId": "FacialHair:2",
@@ -7362,13 +7378,11 @@
       "index": 1,
       "color": null,
       "tags": [
-        "headwear",
         "hat",
-        "headwear_10",
-        "bowler_like",
+        "cap",
         "brimmed_hat"
       ],
-      "confidence": 0.78,
+      "confidence": 0.93,
       "visible": true,
       "needsReview": false,
       "requires": [],
@@ -7385,7 +7399,13 @@
         "Piercings": 0,
         "Wrinkles": 0
       },
-      "labelSource": "deterministic"
+      "labelSource": "codex_manual",
+      "extraTags": [
+        "baseball_cap",
+        "front_brim"
+      ],
+      "evidence": "The option adds a purple cap with a rounded crown and clear front brim.",
+      "imagePath": ".cache/avatar-semantic/codex/images/Headwear_10.compare.png"
     },
     {
       "optionId": "Headwear:11",

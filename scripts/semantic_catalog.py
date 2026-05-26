@@ -51,7 +51,9 @@ CHROME_CANDIDATES = [
 ]
 PLAYWRIGHT_CHROMIUM_PATTERNS = [
     "chromium-*/chrome-linux/chrome",
+    "chromium-*/chrome-linux64/chrome",
     "chromium_headless_shell-*/chrome-linux/headless_shell",
+    "chromium_headless_shell-*/chrome-linux64/headless_shell",
     "chromium-*/chrome-mac/Chromium.app/Contents/MacOS/Chromium",
     "chromium-*/chrome-win/chrome.exe",
 ]
@@ -675,7 +677,11 @@ def build_capture_state(option: dict[str, Any], default_state: dict[str, Any]) -
     state[option["state"]] = option["value"]
     overrides = option.get("statesToOverride")
     if isinstance(overrides, dict):
-        state.update(overrides)
+        primary_state = option["state"]
+        for key, value in overrides.items():
+            if value == 0 and key != primary_state:
+                continue
+            state[key] = value
     return state
 
 
