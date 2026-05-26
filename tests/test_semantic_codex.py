@@ -133,6 +133,27 @@ def test_merge_accepts_approved_labels_in_check_only(tmp_path):
     assert code == 0
 
 
+def test_report_issue_rows_explain_missing_labels(tmp_path):
+    rows = semantic_codex.report_issue_rows([{
+        "batchId": "features-001",
+        "labelsPath": ".cache/avatar-semantic/codex/labels/features-001.jsonl",
+        "reportPath": ".cache/avatar-semantic/codex/reports/features-001.md",
+        "missingCount": 10,
+        "errors": [],
+        "warnings": [
+            "labels file not found: .cache/avatar-semantic/codex/labels/features-001.jsonl",
+        ],
+    }])
+
+    assert rows == [{
+        "batchId": "features-001",
+        "labelsPath": ".cache/avatar-semantic/codex/labels/features-001.jsonl",
+        "reportPath": ".cache/avatar-semantic/codex/reports/features-001.md",
+        "issue": "missing labels: 10; warning: labels file not found: .cache/avatar-semantic/codex/labels/features-001.jsonl",
+        "nextAction": "补齐该 batch 的 labels JSONL; 按 task labelsPath 写入对应 JSONL",
+    }]
+
+
 def main():
     tests = [
         test_validate_labels_accepts_open_tags_and_attributes,
@@ -142,6 +163,7 @@ def main():
         test_validate_labels_requires_current_task_scope,
         test_merge_rejects_pending_labels,
         test_merge_accepts_approved_labels_in_check_only,
+        test_report_issue_rows_explain_missing_labels,
     ]
     for test in tests:
         with tempfile.TemporaryDirectory() as tmp:

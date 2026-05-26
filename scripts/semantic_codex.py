@@ -1077,7 +1077,37 @@ def write_batch_report(task_path: Path, task: dict[str, Any]) -> dict[str, Any]:
         "captureMetrics": capture_metrics,
         "errorCount": len(errors),
         "warningCount": len(warnings),
+        "errors": errors,
+        "warnings": warnings,
     }
+
+
+def report_issue_rows(summaries: list[dict[str, Any]]) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for item in summaries:
+        issues: list[str] = []
+        actions: list[str] = []
+        if item.get("missingCount"):
+            issues.append(f"missing labels: {item['missingCount']}")
+            actions.append("补齐该 batch 的 labels JSONL")
+        for error in item.get("errors", []):
+            issues.append(f"error: {error}")
+            actions.append("修正 JSONL 或 task 校验错误")
+        for warning in item.get("warnings", []):
+            issues.append(f"warning: {warning}")
+            if "labels file not found" in warning:
+                actions.append("按 task labelsPath 写入对应 JSONL")
+            else:
+                actions.append("查看对应 batch report 的提示")
+        if issues:
+            rows.append({
+                "batchId": str(item.get("batchId") or ""),
+                "labelsPath": str(item.get("labelsPath") or ""),
+                "reportPath": str(item.get("reportPath") or ""),
+                "issue": "; ".join(dict.fromkeys(issues)),
+                "nextAction": "; ".join(dict.fromkeys(actions)),
+            })
+    return rows
 
 
 def run_report(args: argparse.Namespace) -> int:
@@ -1147,6 +1177,22 @@ def run_report(args: argparse.Namespace) -> int:
     lines.extend(["", "## 分组统计", "", "| group | optionCount |", "| --- | --- |"])
     for group, count in sorted(group_counts.items()):
         lines.append(f"| `{group}` | `{count}` |")
+
+    issue_rows = report_issue_rows(summaries)
+    if issue_rows:
+        lines.extend([
+            "",
+            "## 需要处理",
+            "",
+            "| batch | labels | report | issue | nextAction |",
+            "| --- | --- | --- | --- | --- |",
+        ])
+        for row in issue_rows:
+            report_link = markdown_link(PROJECT_DIR / row["reportPath"], REPORT_INDEX_PATH.parent)
+            lines.append(
+                f"| `{row['batchId']}` | `{row['labelsPath']}` | "
+                f"[open]({report_link}) | {markdown_cell(row['issue'])} | {markdown_cell(row['nextAction'])} |"
+            )
 
     if warnings:
         lines.extend(["", "## 提示", ""])
