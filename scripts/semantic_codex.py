@@ -237,19 +237,77 @@ async def wait_for_avatar_ready(cdp: CDPClient) -> None:
     raise RuntimeError("Avatar editor did not become ready for Codex screenshot capture")
 
 
-async def capture_state(cdp: CDPClient, state: dict[str, Any]) -> Any:
-    data_url = await cdp.evaluate_async(f"""
+def metric_round(value: float) -> float:
+    return round(float(value), 2)
+
+
+def capture_attempt_metrics(result: dict[str, Any], elapsed_ms: float, strict: bool) -> dict[str, Any]:
+    return {
+        "strict": strict,
+        "timingMs": metric_round(elapsed_ms),
+        "hookTimingMs": metric_round(result.get("timingMs", 0)),
+        "stable": bool(result.get("stable")),
+        "frameCount": int(result.get("frameCount") or 0),
+        "fallbackUsed": bool(result.get("fallbackUsed")),
+    }
+
+
+def capture_public_metrics(
+    result: dict[str, Any],
+    elapsed_ms: float,
+    fallback_used: bool,
+    attempts: list[dict[str, Any]],
+) -> dict[str, Any]:
+    return {
+        "timingMs": metric_round(elapsed_ms),
+        "hookTimingMs": metric_round(result.get("timingMs", 0)),
+        "stable": bool(result.get("stable")),
+        "frameCount": int(result.get("frameCount") or 0),
+        "fallbackUsed": fallback_used,
+        "attemptCount": len(attempts),
+        "attempts": attempts,
+    }
+
+
+def strip_capture_data_url(result: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in result.items() if key != "dataUrl"}
+
+
+async def capture_state_attempt(cdp: CDPClient, state: dict[str, Any], *, strict: bool) -> dict[str, Any]:
+    result = await cdp.evaluate_async(f"""
         (async function() {{
-            window.__avatarTestHooks.setStatePatch({compact_json(state)});
-            await new Promise(function(resolve) {{ setTimeout(resolve, 280); }});
-            if (window.riveInst && typeof window.riveInst.drawFrame === 'function') {{
-                window.riveInst.drawFrame();
+            const hook = window.__avatarTestHooks && window.__avatarTestHooks.captureAvatarState;
+            if (typeof hook !== 'function') {{
+                throw new Error('captureAvatarState test hook is not available');
             }}
-            await new Promise(function(resolve) {{ requestAnimationFrame(resolve); }});
-            return document.getElementById('riveCanvas').toDataURL('image/png');
+            return await hook({compact_json(state)}, {{ strict: {str(strict).lower()} }});
         }})()
     """)
-    return image_from_data_url(data_url)
+    if not isinstance(result, dict) or not result.get("dataUrl"):
+        raise RuntimeError("captureAvatarState did not return a PNG data URL")
+    return result
+
+
+async def capture_state(cdp: CDPClient, state: dict[str, Any]) -> tuple[Any, dict[str, Any]]:
+    started = time.perf_counter()
+    attempt_started = time.perf_counter()
+    result = await capture_state_attempt(cdp, state, strict=False)
+    attempts = [
+        capture_attempt_metrics(result, (time.perf_counter() - attempt_started) * 1000, strict=False)
+    ]
+    fallback_used = False
+    if not result.get("stable"):
+        fallback_used = True
+        attempt_started = time.perf_counter()
+        result = await capture_state_attempt(cdp, state, strict=True)
+        attempts.append(capture_attempt_metrics(result, (time.perf_counter() - attempt_started) * 1000, strict=True))
+        if not result.get("stable"):
+            raise RuntimeError(
+                f"captureAvatarState remained unstable after strict fallback: {strip_capture_data_url(result)}"
+            )
+
+    elapsed_ms = (time.perf_counter() - started) * 1000
+    return image_from_data_url(result["dataUrl"]), capture_public_metrics(result, elapsed_ms, fallback_used, attempts)
 
 
 async def capture_compare_images_async(records: list[dict[str, Any]], args: argparse.Namespace) -> None:
@@ -265,6 +323,7 @@ async def capture_compare_images_async(records: list[dict[str, Any]], args: argp
         if not args.resume or not all(path.exists() for path in record["paths"].values())
     ]
     if not missing:
+        print(f"Reused existing Codex compare images for {len(records)} option(s)")
         return
 
     catalog_lib.run_site_build()
@@ -305,10 +364,33 @@ async def capture_compare_images_async(records: list[dict[str, Any]], args: argp
             await cdp.send("Runtime.enable")
             await cdp.send("Page.enable")
             await wait_for_avatar_ready(cdp)
+            captured_count = 0
+            capture_started = time.perf_counter()
+            fallback_states = 0
             for record in missing:
-                baseline = await capture_state(cdp, record["baselineState"])
-                option = await capture_state(cdp, record["optionState"])
+                option_started = time.perf_counter()
+                baseline, baseline_metrics = await capture_state(cdp, record["baselineState"])
+                option, option_metrics = await capture_state(cdp, record["optionState"])
                 write_compare_image(baseline, option, record["paths"])
+                total_ms = (time.perf_counter() - option_started) * 1000
+                fallback_states += int(bool(baseline_metrics.get("fallbackUsed")))
+                fallback_states += int(bool(option_metrics.get("fallbackUsed")))
+                record["captureMetrics"] = {
+                    "totalMs": metric_round(total_ms),
+                    "baseline": baseline_metrics,
+                    "option": option_metrics,
+                }
+                captured_count += 1
+            if captured_count:
+                elapsed_ms = (time.perf_counter() - capture_started) * 1000
+                print(
+                    "Captured "
+                    f"{captured_count} Codex compare image set(s) in {metric_round(elapsed_ms)} ms "
+                    f"(avg {metric_round(elapsed_ms / captured_count)} ms/option, "
+                    f"fallbackStates={fallback_states})"
+                )
+            else:
+                print(f"Reused existing Codex compare images for {len(records)} option(s)")
         finally:
             if cdp:
                 await cdp.close()
@@ -336,10 +418,35 @@ def task_prefix(args: argparse.Namespace) -> str:
     return "features"
 
 
+def summarize_capture_metrics(records: list[dict[str, Any]]) -> dict[str, Any]:
+    metrics = [
+        record.get("captureMetrics")
+        for record in records
+        if isinstance(record.get("captureMetrics"), dict)
+    ]
+    total_ms = sum(float(item.get("totalMs") or 0) for item in metrics)
+    fallback_states = 0
+    unstable_states = 0
+    for item in metrics:
+        for key in ("baseline", "option"):
+            state_metrics = item.get(key) if isinstance(item.get(key), dict) else {}
+            fallback_states += int(bool(state_metrics.get("fallbackUsed")))
+            unstable_states += int(not bool(state_metrics.get("stable", True)))
+    captured_count = len(metrics)
+    return {
+        "capturedOptionCount": captured_count,
+        "skippedOptionCount": len(records) - captured_count,
+        "totalMs": metric_round(total_ms),
+        "avgOptionMs": metric_round(total_ms / captured_count) if captured_count else None,
+        "fallbackStateCount": fallback_states,
+        "unstableStateCount": unstable_states,
+    }
+
+
 def task_option_record(record: dict[str, Any]) -> dict[str, Any]:
     option = record["option"]
     paths = record["paths"]
-    return {
+    result = {
         "optionId": option["optionId"],
         "state": option["state"],
         "value": option["value"],
@@ -373,6 +480,9 @@ def task_option_record(record: dict[str, Any]) -> dict[str, Any]:
             "imagePath": relpath(paths["compare"]),
         },
     }
+    if isinstance(record.get("captureMetrics"), dict):
+        result["captureMetrics"] = record["captureMetrics"]
+    return result
 
 
 def write_task_batches(records: list[dict[str, Any]], args: argparse.Namespace) -> list[Path]:
@@ -406,6 +516,7 @@ def write_task_batches(records: list[dict[str, Any]], args: argparse.Namespace) 
             ],
             "labelsPath": relpath(labels_path),
             "reportPath": relpath(REPORTS_DIR / f"{batch_id}.md"),
+            "captureMetrics": summarize_capture_metrics(batch),
             "options": [task_option_record(record) for record in batch],
         }
         path = TASKS_DIR / f"{batch_id}.json"
@@ -417,6 +528,7 @@ def write_task_batches(records: list[dict[str, Any]], args: argparse.Namespace) 
         "createdAt": created_at,
         "taskFiles": [relpath(path) for path in task_paths],
         "optionIds": [record["option"]["optionId"] for record in records],
+        "captureMetrics": summarize_capture_metrics(records),
     }
     write_json(TASK_MANIFEST_PATH, manifest)
     return task_paths
@@ -799,6 +911,29 @@ def markdown_link(target: Path, base_dir: Path) -> str:
     return os.path.relpath(target, start=base_dir).replace(os.sep, "/")
 
 
+def capture_fallback_count(metrics: dict[str, Any] | None) -> int:
+    if not isinstance(metrics, dict):
+        return 0
+    return sum(
+        int(bool((metrics.get(key) if isinstance(metrics.get(key), dict) else {}).get("fallbackUsed")))
+        for key in ("baseline", "option")
+    )
+
+
+def capture_summary_cell(metrics: dict[str, Any] | None) -> str:
+    if not isinstance(metrics, dict) or not metrics:
+        return "not captured"
+    captured = metrics.get("capturedOptionCount")
+    skipped = metrics.get("skippedOptionCount")
+    total_ms = metrics.get("totalMs")
+    avg_ms = metrics.get("avgOptionMs")
+    fallback = metrics.get("fallbackStateCount")
+    return (
+        f"captured={captured}, skipped={skipped}, "
+        f"totalMs={total_ms}, avgOptionMs={avg_ms}, fallbackStates={fallback}"
+    )
+
+
 def task_label_path(task: dict[str, Any]) -> Path:
     labels_path = task.get("labelsPath")
     if isinstance(labels_path, str) and labels_path:
@@ -832,6 +967,7 @@ def write_batch_report(task_path: Path, task: dict[str, Any]) -> dict[str, Any]:
     report_path = task_report_path(task)
     labels_path = task_label_path(task)
     options = [option for option in task.get("options", []) if isinstance(option, dict)]
+    capture_metrics = task.get("captureMetrics") if isinstance(task.get("captureMetrics"), dict) else {}
     labels_by_id: dict[str, dict[str, Any]] = {}
     errors: list[str] = []
     warnings: list[str] = []
@@ -864,6 +1000,7 @@ def write_batch_report(task_path: Path, task: dict[str, Any]) -> dict[str, Any]:
         f"- labeledCount: `{len(labels_by_id)}`",
         f"- missingCount: `{missing_count}`",
         f"- reviewStatus: `pending={status_counts.get('pending', 0)}`, `approved={status_counts.get('approved', 0)}`, `rejected={status_counts.get('rejected', 0)}`",
+        f"- captureMetrics: `{capture_summary_cell(capture_metrics)}`",
         "",
     ]
     if errors:
@@ -878,16 +1015,19 @@ def write_batch_report(task_path: Path, task: dict[str, Any]) -> dict[str, Any]:
     lines.extend([
         "## 索引",
         "",
-        "| optionId | group | reviewStatus | confidence | tags |",
-        "| --- | --- | --- | --- | --- |",
+        "| optionId | group | reviewStatus | confidence | captureMs | fallback | tags |",
+        "| --- | --- | --- | --- | --- | --- | --- |",
     ])
     for option in options:
         option_id = str(option.get("optionId") or "")
         label = labels_by_id.get(option_id)
+        option_capture = option.get("captureMetrics") if isinstance(option.get("captureMetrics"), dict) else None
         lines.append(
             f"| `{option_id}` | `{markdown_cell(option.get('group'))}` | "
             f"`{markdown_cell(label.get('reviewStatus') if label else 'missing')}` | "
             f"`{markdown_cell(label.get('confidence') if label else '')}` | "
+            f"`{markdown_cell(option_capture.get('totalMs') if option_capture else 'not captured')}` | "
+            f"`{capture_fallback_count(option_capture)}` | "
             f"{markdown_cell(label.get('tags') if label else '')} |"
         )
 
@@ -912,6 +1052,7 @@ def write_batch_report(task_path: Path, task: dict[str, Any]) -> dict[str, Any]:
             f"| tags | {markdown_cell(label.get('tags') if label else [])} |",
             f"| attributes | {markdown_cell(label.get('attributes') if label else {})} |",
             f"| evidence | {markdown_cell(label.get('evidence') if label else '')} |",
+            f"| captureMetrics | {markdown_cell(option.get('captureMetrics') or {})} |",
             "",
             "审核备注：",
             "",
@@ -933,6 +1074,7 @@ def write_batch_report(task_path: Path, task: dict[str, Any]) -> dict[str, Any]:
         "missingCount": missing_count,
         "statusCounts": status_counts,
         "groupCounts": group_counts,
+        "captureMetrics": capture_metrics,
         "errorCount": len(errors),
         "warningCount": len(warnings),
     }
@@ -957,6 +1099,17 @@ def run_report(args: argparse.Namespace) -> int:
     total_labeled = sum(item["labeledCount"] for item in summaries)
     total_missing = sum(item["missingCount"] for item in summaries)
     total_status = {status: sum(item["statusCounts"].get(status, 0) for item in summaries) for status in sorted(REVIEW_STATUSES)}
+    total_capture = {
+        "capturedOptionCount": sum((item.get("captureMetrics") or {}).get("capturedOptionCount") or 0 for item in summaries),
+        "skippedOptionCount": sum((item.get("captureMetrics") or {}).get("skippedOptionCount") or 0 for item in summaries),
+        "totalMs": metric_round(sum((item.get("captureMetrics") or {}).get("totalMs") or 0 for item in summaries)),
+        "fallbackStateCount": sum((item.get("captureMetrics") or {}).get("fallbackStateCount") or 0 for item in summaries),
+    }
+    total_capture["avgOptionMs"] = (
+        metric_round(total_capture["totalMs"] / total_capture["capturedOptionCount"])
+        if total_capture["capturedOptionCount"]
+        else None
+    )
     group_counts: dict[str, int] = {}
     for item in summaries:
         for group, count in item["groupCounts"].items():
@@ -971,18 +1124,22 @@ def run_report(args: argparse.Namespace) -> int:
         f"- labeledCount: `{total_labeled}`",
         f"- missingCount: `{total_missing}`",
         f"- reviewStatus: `pending={total_status.get('pending', 0)}`, `approved={total_status.get('approved', 0)}`, `rejected={total_status.get('rejected', 0)}`",
+        f"- captureMetrics: `{capture_summary_cell(total_capture)}`",
         "",
         "## 批次索引",
         "",
-        "| batch | task | labels | report | options | labeled | missing | pending | approved | rejected | errors | warnings |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| batch | task | labels | report | options | labeled | missing | captureMs | avgMs | fallback | pending | approved | rejected | errors | warnings |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for item in summaries:
         report_link = markdown_link(PROJECT_DIR / item["reportPath"], REPORT_INDEX_PATH.parent)
+        item_capture = item.get("captureMetrics") or {}
         lines.append(
             f"| `{item['batchId']}` | `{item['taskPath']}` | `{item['labelsPath']}` | "
             f"[open]({report_link}) | `{item['optionCount']}` | `{item['labeledCount']}` | "
-            f"`{item['missingCount']}` | `{item['statusCounts'].get('pending', 0)}` | "
+            f"`{item['missingCount']}` | `{item_capture.get('totalMs')}` | "
+            f"`{item_capture.get('avgOptionMs')}` | `{item_capture.get('fallbackStateCount')}` | "
+            f"`{item['statusCounts'].get('pending', 0)}` | "
             f"`{item['statusCounts'].get('approved', 0)}` | `{item['statusCounts'].get('rejected', 0)}` | "
             f"`{item['errorCount']}` | `{item['warningCount']}` |"
         )

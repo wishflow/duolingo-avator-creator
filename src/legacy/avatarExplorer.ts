@@ -39,6 +39,9 @@ let suppressTurnstileCallbacks = false;
 let mentionRange = null;
 let semanticCatalog = null;
 let semanticCatalogStatus = { ready: false, error: 'semantic_catalog_loading' };
+let captureCanvas = null;
+let captureRiveInst = null;
+let captureRivePromise = null;
 
 const STORAGE_KEY = 'duolingoAvatarCreator.avatarState.v1';
 const HISTORY_KEY = 'duolingoAvatarCreator.avatarHistory.v1';
@@ -115,6 +118,8 @@ async function loadRiveFile(buffer) {
 
   // Clean up old state
   if (riveInst) { try { riveInst.cleanup(); } catch(e) {} riveInst = null; }
+  if (captureRiveInst) { try { captureRiveInst.cleanup(); } catch(e) {} captureRiveInst = null; }
+  captureRivePromise = null;
   destroyAllTileInstances();
   smNames = []; currentSM = ''; stateMachineInputs = {}; currentInputValues = {};
   defaultInputValues = {}; hasAvatarChanges = false;
@@ -1512,6 +1517,192 @@ function resetAll(options = {}) {
   setTimeout(updateAiPreviewSnapshot, 180);
 }
 
+// Dedicated deterministic renderer for automation screenshots. It does not
+// touch editor state, history, storage, thumbnails, or AI preview state.
+function createAvatarLayout() {
+  const Layout = window.rive?.Layout;
+  const Fit = window.rive?.Fit;
+  const Alignment = window.rive?.Alignment;
+  return Layout && Fit && Alignment
+    ? new Layout({ fit: Fit.Cover, alignment: Alignment.Center })
+    : undefined;
+}
+
+function ensureCaptureCanvas() {
+  if (captureCanvas) return captureCanvas;
+  captureCanvas = document.createElement('canvas');
+  captureCanvas.width = canvas.width;
+  captureCanvas.height = canvas.height;
+  captureCanvas.style.cssText = [
+    'position:fixed',
+    'left:-10000px',
+    'top:-10000px',
+    `width:${canvas.width}px`,
+    `height:${canvas.height}px`,
+    'opacity:0',
+    'pointer-events:none',
+  ].join(';');
+  captureCanvas.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(captureCanvas);
+  return captureCanvas;
+}
+
+function createCaptureRiveInstance(targetCanvas) {
+  return new Promise((resolve, reject) => {
+    const Rive = window.rive?.Rive;
+    if (!Rive || !sharedRiveFile) {
+      reject(new Error('Rive capture runtime is not ready'));
+      return;
+    }
+    let settled = false;
+    const instance = new Rive({
+      canvas: targetCanvas,
+      riveFile: sharedRiveFile,
+      layout: createAvatarLayout(),
+      autoplay: false,
+      stateMachines: 'SMAvatar',
+      onLoad: () => {
+        settled = true;
+        resolve(instance);
+      },
+      onLoadError: (err) => {
+        settled = true;
+        reject(err || new Error('Rive capture instance failed to load'));
+      },
+    });
+    setTimeout(() => {
+      if (!settled) reject(new Error('Rive capture instance timed out'));
+    }, 5000);
+  });
+}
+
+async function getCaptureRiveInstance() {
+  if (captureRiveInst) return captureRiveInst;
+  if (!captureRivePromise) {
+    captureRivePromise = createCaptureRiveInstance(ensureCaptureCanvas())
+      .then((instance) => {
+        captureRiveInst = instance;
+        return instance;
+      })
+      .finally(() => {
+        captureRivePromise = null;
+      });
+  }
+  return captureRivePromise;
+}
+
+function applyStateToInputs(inputs, state) {
+  const inputMap = Object.create(null);
+  let trigger = null;
+  for (const inp of inputs || []) {
+    inputMap[inp.name] = inp;
+    if (inp.type === 58 && inp.name === 'bounce_trig') trigger = inp;
+  }
+  const applyValues = (values) => {
+    for (const [name, value] of Object.entries(values || {})) {
+      const inp = inputMap[name];
+      if (!inp) continue;
+      if (inp.type === 56 && typeof value === 'number') inp.value = value;
+      else if (inp.type === 59) inp.value = !!value;
+    }
+  };
+  const defaults = Object.keys(defaultInputValues).length
+    ? defaultInputValues
+    : builderConfig?.avatarBuilderConfig?.defaultBuiltAvatarState;
+  applyValues(defaults);
+  applyValues(state);
+  return trigger;
+}
+
+function resetCaptureInstance(instance, state) {
+  instance.reset({ stateMachines: 'SMAvatar', autoplay: false });
+  const trigger = applyStateToInputs(instance.stateMachineInputs('SMAvatar'), state);
+  if (trigger) trigger.fire();
+  if (typeof instance.animator?.advanceIfPaused === 'function') {
+    instance.animator.advanceIfPaused();
+  }
+}
+
+function captureCanvasHash(targetCanvas) {
+  const ctx = targetCanvas.getContext('2d', { willReadFrequently: true });
+  const pixels = ctx.getImageData(0, 0, targetCanvas.width, targetCanvas.height).data;
+  let hash = 2166136261;
+  for (let i = 0; i < pixels.length; i += 32) {
+    hash ^= pixels[i];
+    hash = Math.imul(hash, 16777619);
+    hash ^= pixels[i + 1] || 0;
+    hash = Math.imul(hash, 16777619);
+    hash ^= pixels[i + 2] || 0;
+    hash = Math.imul(hash, 16777619);
+    hash ^= pixels[i + 3] || 0;
+    hash = Math.imul(hash, 16777619);
+  }
+  return String(hash >>> 0);
+}
+
+function nextFrame() {
+  return new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+async function waitForCaptureStable(instance, targetCanvas) {
+  const maxFrames = 16;
+  let previousHash = '';
+  let sameFrameCount = 0;
+  for (let frame = 1; frame <= maxFrames; frame++) {
+    instance.drawFrame();
+    await nextFrame();
+    const hash = captureCanvasHash(targetCanvas);
+    if (hash === previousHash) sameFrameCount += 1;
+    else sameFrameCount = 0;
+    if (sameFrameCount >= 1) {
+      return { stable: true, frameCount: frame };
+    }
+    previousHash = hash;
+  }
+  return { stable: false, frameCount: maxFrames };
+}
+
+async function captureWithInstance(state, options = {}) {
+  const start = performance.now();
+  const useStrictInstance = options.strict === true;
+  const targetCanvas = useStrictInstance ? document.createElement('canvas') : ensureCaptureCanvas();
+  let instance = null;
+  if (useStrictInstance) {
+    targetCanvas.width = canvas.width;
+    targetCanvas.height = canvas.height;
+    targetCanvas.style.cssText = [
+      'position:fixed',
+      'left:-10000px',
+      'top:-10000px',
+      `width:${canvas.width}px`,
+      `height:${canvas.height}px`,
+      'opacity:0',
+      'pointer-events:none',
+    ].join(';');
+    targetCanvas.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(targetCanvas);
+    instance = await createCaptureRiveInstance(targetCanvas);
+  } else {
+    instance = await getCaptureRiveInstance();
+  }
+  try {
+    resetCaptureInstance(instance, state);
+    const settle = await waitForCaptureStable(instance, targetCanvas);
+    return {
+      dataUrl: targetCanvas.toDataURL('image/png'),
+      timingMs: Math.round((performance.now() - start) * 100) / 100,
+      stable: settle.stable,
+      frameCount: settle.frameCount,
+      fallbackUsed: useStrictInstance,
+    };
+  } finally {
+    if (useStrictInstance && instance) {
+      try { instance.cleanup(); } catch(e) {}
+    }
+    if (useStrictInstance) targetCanvas.remove();
+  }
+}
+
 // ===================== EVENTS =====================
 document.addEventListener('change', async (e) => {
   if (e.target?.id !== 'fileInput') return;
@@ -1600,6 +1791,7 @@ function installAvatarGlobals() {
     isReady: () => !!riveInst && sharedRiveFile !== null && tileInstances.size > 0,
     getState: () => getSerializableAvatarState(),
     setStatePatch: (patch) => applyGeneratedAvatarState(patch),
+    captureAvatarState: (state, options = {}) => captureWithInstance(state, options),
     switchTab,
     openGeneratePage,
     showEditorPage,

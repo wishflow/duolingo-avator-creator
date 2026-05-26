@@ -11,7 +11,7 @@ Usage:
   python3 tests/test_avatar_explorer.py --test 3 # run only test #3
 """
 
-import asyncio, json, sys, os, time, signal, subprocess, base64, hashlib, shutil
+import asyncio, json, sys, os, time, signal, subprocess, base64, hashlib, shutil, tempfile
 from pathlib import Path
 from io import BytesIO
 
@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.cdp import CDPClient
 
 try:
-    from PIL import Image
+    from PIL import Image, ImageChops
     HAS_PIL = True
 except ImportError:
     HAS_PIL = False
@@ -101,6 +101,7 @@ class TestRunner:
         self.tests = []
         self.results = []
         self._ws_url = None
+        self.chrome_user_data = None
 
     def register(self, name, fn):
         self.tests.append((name, fn))
@@ -142,13 +143,16 @@ class TestRunner:
 
         # 4. Launch Chrome
         info("Launching Chrome...")
-        os.makedirs(CHROME_USER_DATA, exist_ok=True)
+        self.chrome_user_data = tempfile.TemporaryDirectory(
+            prefix="avatar-e2e-chrome-",
+            ignore_cleanup_errors=True,
+        )
         self.chrome_proc = subprocess.Popen(
             [
                 self.chrome_exec,
                 f"--remote-debugging-port={self.debug_port}",
                 "--remote-debugging-address=127.0.0.1",
-                f"--user-data-dir={CHROME_USER_DATA}",
+                f"--user-data-dir={self.chrome_user_data.name}",
                 "--no-first-run",
                 "--no-default-browser-check",
                 "--headless=new",
@@ -237,6 +241,10 @@ class TestRunner:
                 self.http_proc.kill()
             self.http_proc = None
 
+        if self.chrome_user_data:
+            self.chrome_user_data.cleanup()
+            self.chrome_user_data = None
+
     # -- run -------------------------------------------------------------
 
     async def run(self, only_test=None):
@@ -301,6 +309,29 @@ async def assert_neq(cdp, expected, expr, desc):
     val = await cdp.evaluate(expr)
     if val == expected:
         raise AssertionError(f"{desc}: got unexpected {expected!r}")
+
+
+def image_from_data_url(data_url):
+    if not HAS_PIL:
+        raise AssertionError("Pillow is required for capture stability checks")
+    payload = data_url.split(",", 1)[1]
+    return Image.open(BytesIO(base64.b64decode(payload))).convert("RGBA")
+
+
+def changed_pixel_count(first, second, threshold=3):
+    diff = ImageChops.difference(first, second).convert("L")
+    hist = diff.histogram()
+    return sum(count for value, count in enumerate(hist) if value > threshold)
+
+
+def visible_pixel_count(image):
+    flattened = Image.alpha_composite(
+        Image.new("RGBA", image.size, (255, 255, 255, 255)),
+        image,
+    ).convert("RGB")
+    diff = ImageChops.difference(flattened, Image.new("RGB", image.size, (255, 255, 255))).convert("L")
+    hist = diff.histogram()
+    return sum(count for value, count in enumerate(hist) if value > 10)
 
 
 # === TEST CASES ========================================================
@@ -907,6 +938,42 @@ async def test_12_ai_generate_mock_and_history(cdp: CDPClient):
         f"Mobile action bar should include Generate, got {result['actionLabels']}"
 
 
+async def test_13_capture_avatar_state_stability(cdp: CDPClient):
+    """Verify deterministic semantic screenshot capture for the same state."""
+    if not HAS_PIL:
+        warn("Skipping capture stability test because Pillow is unavailable")
+        return
+
+    result_json = await cdp.evaluate_async("""
+        (async function() {
+            const hook = window.__avatarTestHooks.captureAvatarState;
+            const base = window.__avatarTestHooks.getState();
+            const state = Object.assign({}, base, {
+                Expression: 31,
+                MainHair: 48,
+                Glasses: 1
+            });
+            const first = await hook(state);
+            const second = await hook(state);
+            return JSON.stringify({ first: first, second: second });
+        })()
+    """)
+    result = json.loads(result_json)
+    assert result["first"]["stable"] is True, f"first capture was unstable: {result['first']}"
+    assert result["second"]["stable"] is True, f"second capture was unstable: {result['second']}"
+    first_image = image_from_data_url(result["first"]["dataUrl"])
+    second_image = image_from_data_url(result["second"]["dataUrl"])
+    visible = visible_pixel_count(first_image)
+    assert visible > 1000, f"capture image appears blank: visiblePixels={visible}"
+    changed = changed_pixel_count(first_image, second_image)
+    assert changed <= 20, f"same state capture changed {changed} pixels"
+    ok(
+        "captureAvatarState is stable "
+        f"(changedPixels={changed}, visiblePixels={visible}, "
+        f"frames={result['first']['frameCount']}/{result['second']['frameCount']})"
+    )
+
+
 # === MAIN ===============================================================
 
 async def main():
@@ -963,6 +1030,7 @@ async def main():
     runner.register("No duplicate images in tiles", test_10_no_duplicate_thumbnails_in_tile)
     runner.register("Mobile shell layout", test_11_mobile_shell_layout)
     runner.register("Mocked AI generation and history", test_12_ai_generate_mock_and_history)
+    runner.register("Semantic capture stability", test_13_capture_avatar_state_stability)
 
     exit_code = await runner.run(only_test=args.test)
     sys.exit(exit_code)
