@@ -1314,7 +1314,31 @@ function getCurrentBgHex() {
   return bgColorMap[bgVal] || '#E5E5E5';
 }
 
+function defaultExportFilename() {
+  return `avatar_${Date.now()}.png`;
+}
+
+function sanitizeExportFilename(value, fallback = defaultExportFilename()) {
+  const fallbackBase = String(fallback || 'avatar.png').replace(/\.png$/i, '') || 'avatar';
+  const raw = String(value || '').trim().replace(/\.png$/i, '');
+  const clean = raw
+    .replace(/[<>:"/\\|?*\u0000-\u001F]/g, '_')
+    .replace(/\s+/g, '_')
+    .replace(/^\.+/, '')
+    .slice(0, 80);
+  return `${clean || fallbackBase}.png`;
+}
+
+function getExportFilename() {
+  const fallback = defaultExportFilename();
+  const entered = window.prompt?.('Export filename', fallback);
+  if (entered === null) return null;
+  return sanitizeExportFilename(entered, fallback);
+}
+
 function exportPNG() {
+  const filename = getExportFilename();
+  if (!filename) return;
   const bgHex = getCurrentBgHex();
   const srcW = canvas.width;
   const srcH = canvas.height;
@@ -1325,7 +1349,7 @@ function exportPNG() {
   ctx.fillRect(0, 0, srcW, srcH);
   ctx.drawImage(canvas, 0, 0);
   const link = document.createElement('a');
-  link.download = `avatar_${Date.now()}.png`;
+  link.download = filename;
   link.href = exportCanvas.toDataURL('image/png');
   link.click();
 }
@@ -1764,6 +1788,7 @@ function installAvatarGlobals() {
     verifyAiSession,
     startAvatarGeneration,
     insertMention,
+    sanitizeExportFilename,
   });
   Object.defineProperties(global, {
     riveInst: { configurable: true, get: () => riveInst },
@@ -1792,6 +1817,7 @@ function installAvatarGlobals() {
     getState: () => getSerializableAvatarState(),
     setStatePatch: (patch) => applyGeneratedAvatarState(patch),
     captureAvatarState: (state, options = {}) => captureWithInstance(state, options),
+    sanitizeExportFilename,
     switchTab,
     openGeneratePage,
     showEditorPage,

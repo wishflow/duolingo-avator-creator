@@ -44,6 +44,10 @@ const TEST_CATALOG = {
       { value: 1, tab: 'Body', section: 'Body', kind: 'feature', index: 0 },
       { value: 5, tab: 'Body', section: 'Body', kind: 'feature', index: 1 },
     ],
+    SkinTone: [
+      { value: 1, tab: 'Body', section: 'Skin tone', kind: 'color', color: '#F2A07D', index: 0 },
+      { value: 15, tab: 'Body', section: 'Skin tone', kind: 'color', color: '#6E3D3A', index: 1 },
+    ],
     ClothingColor: [
       { value: 1, tab: 'Shirt', section: 'Clothing', kind: 'color', color: '#B782C2', index: 0 },
       { value: 9, tab: 'Shirt', section: 'Clothing', kind: 'color', color: '#424242', index: 1 },
@@ -86,14 +90,19 @@ const TEST_CATALOG = {
 };
 TEST_CATALOG.semanticOptions = [
   sem({ state: 'Body', value: 5, group: 'body', tags: ['body_5', 'silhouette'] }),
+  sem({ state: 'SkinTone', value: 15, group: 'skin_tone', tags: ['dark', 'brown'], kind: 'color', color: '#6E3D3A' }),
   sem({ state: 'ClothingColor', value: 9, group: 'clothing_color', tags: ['dark', 'black', 'color'], kind: 'color', color: '#424242' }),
   sem({ state: 'BackgroundColor', value: 6, group: 'background_color', tags: ['purple', 'color'], kind: 'color', color: '#9069CD' }),
+  sem({ state: 'FacialHair', value: 0, group: 'facial_hair', tags: ['none', 'no_facial_hair', 'clean_shaven'] }),
   sem({ state: 'FacialHair', value: 1, group: 'facial_hair', tags: ['mustache', 'short', 'classic'] }),
   sem({ state: 'FacialHairColor', value: 1, group: 'facial_hair_color', tags: ['dark', 'black'], kind: 'color', color: '#434343', requires: [{ state: 'FacialHair', notValue: 0 }] }),
+  sem({ state: 'Headwear', value: 0, group: 'headwear', tags: ['none', 'no_hat', 'no_headwear', 'bare_head'] }),
   sem({ state: 'Headwear', value: 10, group: 'headwear', tags: ['hat', 'bowler_like', 'brimmed_hat'] }),
+  sem({ state: 'Expression', value: 1, group: 'expression', tags: ['smile'] }),
   sem({ state: 'Expression', value: 31, group: 'expression', tags: ['serious', 'stern'] }),
   sem({ state: 'MainHair', value: 48, group: 'main_hair', tags: ['short_hair', 'receding_hair'] }),
   sem({ state: 'MainHairColor', value: 1, group: 'main_hair_color', tags: ['dark', 'black'], kind: 'color', color: '#3D3D3D' }),
+  sem({ state: 'Glasses', value: 0, group: 'glasses', tags: ['no_glasses', 'no_eyewear', 'bare_face'] }),
   sem({ state: 'Glasses', value: 1, group: 'glasses', tags: ['glasses', 'round_glasses'] }),
   sem({ state: 'GlassesColor', value: 2, group: 'glasses_color', tags: ['purple'], kind: 'color', color: '#9069CD', requires: [{ state: 'Glasses', notValue: 0 }] }),
 ];
@@ -317,10 +326,15 @@ describe('Cloudflare Worker API', () => {
     assert.deepEqual(final.selectionTrace.map((item) => item.matchedOptionId), ['Body:5', 'BackgroundColor:6']);
     assert.equal(ai.calls.length, 2);
     assert.equal(ai.calls[0].input.response_format.type, 'json_schema');
+    assert.ok(ai.calls[0].input.response_format.json_schema.required.includes('characterAnalysis'));
     assert.ok(ai.calls[0].input.response_format.json_schema.required.includes('selectionIntent'));
     assert.equal(ai.calls[0].input.response_format.json_schema.properties.avatarState, undefined);
     assert.equal(ai.calls[0].input.response_format.json_schema.properties.targetTraits, undefined);
     assert.equal(ai.calls[0].input.response_format.json_schema.properties.selectionIntent.maxItems, 8);
+    assert.match(ai.calls[0].input.messages[0].content, /visual feature analysis/);
+    assert.match(ai.calls[0].input.messages[0].content, /Obama.*no facial hair.*no glasses.*no hat/i);
+    assert.match(ai.calls[0].input.messages[0].content, /Lu Xun.*mustache/i);
+    assert.match(ai.calls[0].input.messages[0].content, /cowboy.*hat/i);
     assert.equal(ai.calls[1].input.stream, true);
   });
 
@@ -693,6 +707,82 @@ describe('Cloudflare Worker API', () => {
       'Expression:31',
       'ClothingColor:9',
     ]);
+  });
+
+  it('fallback aligns Obama with real-person no-accessory traits', async () => {
+    const ai = makeAiMock({ throwStructured: true });
+    const env = testEnv({ AI: ai });
+    const { response, final } = await generateAvatar(env, {
+      prompt: '生成一个奥巴马 @current',
+      contextMode: 'current',
+      baselineState: {
+        SkinTone: 1,
+        MainHair: 58,
+        MainHairColor: 1,
+        FacialHair: 1,
+        Glasses: 1,
+        Headwear: 10,
+        Expression: 31,
+      },
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.equal(final.usedFallback, true);
+    assert.deepEqual(final.avatarState, {
+      SkinTone: 15,
+      MainHair: 48,
+      FacialHair: 0,
+      Glasses: 0,
+      Headwear: 0,
+      Expression: 1,
+    });
+  });
+
+  it('fallback keeps Lu Xun mustache and removes unsupported headwear', async () => {
+    const ai = makeAiMock({ throwStructured: true });
+    const env = testEnv({ AI: ai });
+    const { response, final } = await generateAvatar(env, {
+      prompt: '生成一个鲁迅 @default',
+      contextMode: 'default',
+      baselineState: {
+        MainHair: 58,
+        MainHairColor: 1,
+        FacialHair: 0,
+        FacialHairColor: 1,
+        Headwear: 10,
+      },
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.equal(final.usedFallback, true);
+    assert.deepEqual(final.avatarState, {
+      MainHair: 48,
+      FacialHair: 1,
+      Headwear: 0,
+    });
+  });
+
+  it('fallback gives cowboys signature headwear', async () => {
+    const ai = makeAiMock({ throwStructured: true });
+    const env = testEnv({ AI: ai });
+    const { response, final } = await generateAvatar(env, {
+      prompt: '生成一个西部牛仔 @default',
+      contextMode: 'default',
+      baselineState: {
+        Headwear: 0,
+        FacialHair: 0,
+        ClothingColor: 1,
+      },
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.equal(final.usedFallback, true);
+    assert.equal(final.avatarState.Headwear, 10);
+    assert.equal(final.avatarState.FacialHair, 1);
+    assert.equal(final.avatarState.ClothingColor, 9);
   });
 
   it('filters unsupported model state values', () => {

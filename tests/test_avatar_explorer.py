@@ -974,6 +974,54 @@ async def test_13_capture_avatar_state_stability(cdp: CDPClient):
     )
 
 
+async def test_14_export_filename_prompt(cdp: CDPClient):
+    """Verify PNG export supports an editable and sanitized filename."""
+    info("Testing editable export filename...")
+
+    result_json = await cdp.evaluate_async("""
+        (async function() {
+            var originalPrompt = window.prompt;
+            var originalClick = HTMLAnchorElement.prototype.click;
+            var downloads = [];
+            HTMLAnchorElement.prototype.click = function() {
+                downloads.push({
+                    download: this.download,
+                    hrefPrefix: String(this.href).slice(0, 22)
+                });
+            };
+            try {
+                window.prompt = function() { return '  my/avatar: test?  '; };
+                exportPNG();
+                window.prompt = function() { return 'report.png'; };
+                exportPNG();
+                window.prompt = function() { return null; };
+                exportPNG();
+                return JSON.stringify({
+                    downloads: downloads,
+                    helperClean: window.__avatarTestHooks.sanitizeExportFilename('..bad/name*.png', 'fallback.png'),
+                    helperFallback: window.__avatarTestHooks.sanitizeExportFilename('   ', 'fallback.png')
+                });
+            } finally {
+                window.prompt = originalPrompt;
+                HTMLAnchorElement.prototype.click = originalClick;
+            }
+        })()
+    """)
+    result = json.loads(result_json)
+    info(f"Export filename result: {result}")
+
+    assert len(result["downloads"]) == 2, "Canceling filename prompt should cancel export"
+    assert result["downloads"][0]["download"] == "my_avatar__test_.png", \
+        f"Invalid filename chars should be sanitized, got {result['downloads'][0]['download']}"
+    assert result["downloads"][1]["download"] == "report.png", \
+        f"Existing .png suffix should be kept once, got {result['downloads'][1]['download']}"
+    assert all(item["hrefPrefix"] == "data:image/png;base64," for item in result["downloads"]), \
+        "Export should still produce PNG data URLs"
+    assert result["helperClean"] == "bad_name_.png", "Helper should trim leading dots and invalid chars"
+    assert result["helperFallback"] == "fallback.png", "Blank filename should use fallback"
+    ok("Export prompts for a sanitized editable filename")
+
+
 # === MAIN ===============================================================
 
 async def main():
@@ -1031,6 +1079,7 @@ async def main():
     runner.register("Mobile shell layout", test_11_mobile_shell_layout)
     runner.register("Mocked AI generation and history", test_12_ai_generate_mock_and_history)
     runner.register("Semantic capture stability", test_13_capture_avatar_state_stability)
+    runner.register("Editable export filename", test_14_export_filename_prompt)
 
     exit_code = await runner.run(only_test=args.test)
     sys.exit(exit_code)

@@ -68,3 +68,4 @@ crawler/
 ## Architecture
 
 See [CLAUDE.md](CLAUDE.md) for detailed architecture decisions, anti-patterns, and lessons learned.
+See [docs/architecture.md](docs/architecture.md) for the current end-to-end frontend, Worker, Generate, and Export flow.

@@ -66,6 +66,7 @@ type TraitIntent = {
   required: boolean;
 };
 type SanitizedTraitResult = {
+  characterAnalysis: string;
   summary: string;
   confidence: number;
   selectionIntent: TraitIntent[];
@@ -137,6 +138,7 @@ const modelTraitIntentSchema = z.object({
   required: z.unknown().optional(),
 }).passthrough();
 const modelTraitResultSchema = z.object({
+  characterAnalysis: z.unknown().optional(),
   summary: z.unknown().optional(),
   confidence: z.unknown().optional(),
   targetTraits: z.unknown().optional(),
@@ -473,6 +475,7 @@ function parsePartialTraitJson(value: string): SanitizedTraitResult {
     });
   }
   return {
+    characterAnalysis: '',
     summary: value.match(/"summary"\s*:\s*"([^"]{0,280})"/)?.[1] || '',
     confidence: Math.max(0, Math.min(1, Number(value.match(/"confidence"\s*:\s*([0-9.]+)/)?.[1] || 0.45))),
     selectionIntent: intents.slice(0, 12),
@@ -486,6 +489,7 @@ function traitJsonSchema(catalog: AvatarCatalog): Record<string, unknown> {
     type: 'object',
     additionalProperties: false,
     properties: {
+      characterAnalysis: { type: 'string', maxLength: 280 },
       summary: { type: 'string', maxLength: 160 },
       confidence: { type: 'number', minimum: 0, maximum: 1 },
       selectionIntent: {
@@ -509,7 +513,7 @@ function traitJsonSchema(catalog: AvatarCatalog): Record<string, unknown> {
         items: { type: 'string', maxLength: 140 },
       },
     },
-    required: ['summary', 'confidence', 'selectionIntent', 'warnings'],
+    required: ['characterAnalysis', 'summary', 'confidence', 'selectionIntent', 'warnings'],
   };
 }
 
@@ -566,6 +570,14 @@ function buildTraitMessages({ prompt, contextMode, baselineState, catalog }: Val
       role: 'system',
       content: [
         'You convert an avatar request into visual target traits for a Duolingo-style avatar editor.',
+        'Before choosing traits, perform a concise visual feature analysis and put it in characterAnalysis.',
+        'For real historical or public figures, align with well-known real photo features and never add unsupported hats, glasses, facial hair, or accessories.',
+        'Known real-figure anchors: Barack Obama has dark skin, very short black or slightly gray hair, no facial hair, no glasses, and no hat; Lu Xun has a short bristly haircut and an iconic thick straight mustache, with no hat.',
+        'For occupation or identity roles, include the signature outfit or prop when the taxonomy supports it; a cowboy should include a cowboy or brimmed hat and may include rugged facial hair.',
+        'For fictional or animated characters, follow their canonical hairstyle, accessories, and clothing when represented by the taxonomy.',
+        'Wrong pattern to avoid: adding a baseball cap, round glasses, or beard to Obama. Correct pattern: choose no headwear, no glasses, no facial hair, short dark hair, dark skin, and a confident smile if available.',
+        'Correct occupation pattern: a western cowboy requires headwear tags like hat or brimmed_hat, and can use mustache or rugged facial hair when supported.',
+        'Correct historical pattern: Lu Xun requires facial_hair tags like mustache and short dark hair when supported.',
         'Do not choose raw option numbers, state names, or state values.',
         'Use only groups and tags from the supplied semantic taxonomy.',
         'For real or fictional people, infer a small set of recognizable visual traits, but treat the result as a stylized approximation.',
@@ -582,7 +594,9 @@ function buildTraitMessages({ prompt, contextMode, baselineState, catalog }: Val
         baselineState,
         semanticTaxonomy: buildTraitCatalog(catalog),
         outputRules: {
+          characterAnalysis: 'Briefly name the character type and visual basis, such as real person, historical figure, occupation role, or fictional character.',
           selectionIntent: 'Array of { group, tags, required }. Tags must come from semanticTaxonomy[group].',
+          required: 'Use true for signature traits that must be present for the requested person or role.',
           warnings: 'Mention approximation limits or traits that cannot be represented.',
         },
       }),
@@ -631,6 +645,7 @@ function sanitizeTraitResult(rawResult: unknown, catalog: AvatarCatalog): Saniti
     : [];
 
   return {
+    characterAnalysis: String(result.characterAnalysis || '').trim().slice(0, 280),
     summary: String(result.summary || '').trim().slice(0, 280),
     confidence: Math.max(0, Math.min(1, Number(result.confidence ?? 0.55))),
     selectionIntent: intents.slice(0, 12),
@@ -961,6 +976,27 @@ function buildTraitFallback(validated: ValidatedGenerationRequest, warning?: str
   const add = (group: string, tags: string[], required = false) => {
     intents.push({ group, tags, required });
   };
+  if (/obama|barack|奥巴马/.test(lower)) {
+    add('skin_tone', ['dark', 'brown'], true);
+    add('main_hair', ['short_hair', 'cropped', 'dark_hair'], true);
+    add('main_hair_color', ['dark', 'black'], false);
+    add('facial_hair', ['none', 'no_facial_hair', 'clean_shaven'], true);
+    add('glasses', ['no_glasses', 'no_eyewear', 'bare_face'], true);
+    add('headwear', ['none', 'no_hat', 'no_headwear', 'bare_head'], true);
+    add('expression', ['smile'], false);
+  }
+  if (/鲁迅|lu\s*xun/.test(lower)) {
+    add('main_hair', ['short_hair', 'cropped', 'spiky_hair'], true);
+    add('main_hair_color', ['dark', 'black'], false);
+    add('facial_hair', ['mustache'], true);
+    add('facial_hair_color', ['dark', 'black'], true);
+    add('headwear', ['none', 'no_hat', 'no_headwear', 'bare_head'], true);
+  }
+  if (/cowboy|western|西部牛仔|牛仔/.test(lower)) {
+    add('headwear', ['hat', 'curved_brim', 'folded_brim'], true);
+    add('facial_hair', ['mustache', 'short_beard'], false);
+    add('clothing_color', ['dark'], false);
+  }
   if (/black|dark|深|黑/.test(lower)) {
     add('clothing_color', ['dark'], true);
     add('background_color', ['dark'], false);
@@ -979,6 +1015,7 @@ function buildTraitFallback(validated: ValidatedGenerationRequest, warning?: str
     add('background_color', ['blue'], false);
   }
   return {
+    characterAnalysis: '',
     summary: warning || 'Used deterministic target traits where model semantics were uncertain.',
     confidence: 0.42,
     selectionIntent: intents,
