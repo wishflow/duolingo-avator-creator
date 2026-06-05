@@ -163,17 +163,28 @@ Worker 要求模型返回紧凑 JSON：
 
 | 字段 | 作用 |
 | --- | --- |
-| `characterAnalysis` | 简述人物/角色类型和视觉依据，用于强制特征对齐 |
-| `summary` | 生成摘要 |
-| `confidence` | 0-1 置信度 |
+| `characterAnalysis` | 结构化角色分析对象，包含类型、身份、核心视觉特征和必须排除的特征 |
+| `summary` | 可选生成摘要 |
+| `confidence` | 可选 0-1 置信度 |
 | `selectionIntent` | `{ group, tags, required }[]`，只能使用语义目录里的 group/tag |
 | `warnings` | 无法表达或近似表达的说明 |
 
+`characterAnalysis` 结构：
+
+| 字段 | 说明 |
+| --- | --- |
+| `type` | `real_person`、`fictional_character`、`occupation`、`generic` |
+| `identity` | 识别出的人物、角色或职业身份 |
+| `core_visual_traits` | 3-5 个核心视觉特征，例如短黑发、圆眼镜、蓝色上衣 |
+| `excluded_traits` | 必须不存在的特征，例如胡子、帽子、成人特征、通用侦探帽 |
+
 当前 Prompt 规则强调：
 
+- 具体角色优先于职业刻板印象：如“江户川柯南”按柯南设定，不按普通侦探生成帽子、烟斗或胡子。
+- 年龄/性别一致：儿童或女性默认排除胡子，除非该具体角色官方设定确实有。
+- 强制排除法：模型必须先列出 `excluded_traits`，后续选择不得与排除项冲突。
+- 关键配饰优先：如柯南的眼镜，taxonomy 支持时必须标记为 required。
 - 真实/公众人物必须按真实照片或经典形象对齐，不得凭空添加帽子、眼镜、胡子等特征。
-- 奥巴马锚点：深色皮肤、极短黑/灰黑发、无胡子、无眼镜、无帽。
-- 鲁迅锚点：短寸头、标志性一字胡、无帽。
 - 职业/身份角色必须使用标志性服饰或道具；牛仔必须优先匹配帽子类 headwear。
 - 虚构/动漫角色按官方设定选择可表达特征。
 
@@ -185,7 +196,9 @@ flowchart TD
   B -- 否 --> F[buildTraitFallback]
   B -- 是 --> C[sanitizeTraitResult]
   C --> D[过滤不存在的 group/tag]
-  D --> E[scoreSemanticOption]
+  D --> X[按 excluded_traits 过滤冲突正向 intent]
+  X --> Y[为胡子/帽子/眼镜等排除项补充 none/no_* intent]
+  Y --> E[scoreSemanticOption]
   E --> G{有可见改动?}
   G -- 是 --> H[avatarState + selectionTrace]
   G -- 否 --> F

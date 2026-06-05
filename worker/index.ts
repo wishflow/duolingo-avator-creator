@@ -65,8 +65,14 @@ type TraitIntent = {
   color?: string;
   required: boolean;
 };
+type CharacterAnalysis = {
+  type: string;
+  identity: string;
+  coreVisualTraits: string[];
+  excludedTraits: string[];
+};
 type SanitizedTraitResult = {
-  characterAnalysis: string;
+  characterAnalysis: CharacterAnalysis;
   summary: string;
   confidence: number;
   selectionIntent: TraitIntent[];
@@ -460,6 +466,93 @@ function parseTraitJsonString(value: string): unknown {
   }
 }
 
+function emptyCharacterAnalysis(): CharacterAnalysis {
+  return {
+    type: 'generic',
+    identity: '',
+    coreVisualTraits: [],
+    excludedTraits: [],
+  };
+}
+
+function normalizeTraitText(value: unknown): string {
+  return String(value || '').toLowerCase().replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function cleanTraitList(value: unknown, maxItems = 8): string[] {
+  return (Array.isArray(value) ? value : [])
+    .map((item) => String(item || '').trim())
+    .filter(Boolean)
+    .slice(0, maxItems);
+}
+
+function normalizeCharacterAnalysis(value: unknown): CharacterAnalysis {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    const text = typeof value === 'string' ? value.trim().slice(0, 280) : '';
+    return {
+      ...emptyCharacterAnalysis(),
+      coreVisualTraits: text ? [text] : [],
+    };
+  }
+  const raw = value as Record<string, unknown>;
+  return {
+    type: String(raw.type || 'generic').trim().slice(0, 48) || 'generic',
+    identity: String(raw.identity || '').trim().slice(0, 80),
+    coreVisualTraits: cleanTraitList(raw.core_visual_traits ?? raw.coreVisualTraits, 5),
+    excludedTraits: cleanTraitList(raw.excluded_traits ?? raw.excludedTraits, 8),
+  };
+}
+
+const EXCLUSION_RULES = [
+  {
+    group: 'facial_hair',
+    excluded: ['mustache', 'moustache', 'beard', 'facial hair', 'stubble', 'adult features'],
+    blockedTags: ['mustache', 'beard', 'facial_hair', 'goatee', 'sideburns', 'stubble'],
+    noneTags: ['none', 'no_facial_hair', 'clean_shaven', 'plain_lower_face'],
+  },
+  {
+    group: 'headwear',
+    excluded: ['hat', 'cap', 'headwear', 'helmet'],
+    blockedTags: ['hat', 'cap', 'headwear', 'helmet', 'brim', 'beanie', 'hood', 'headwrap', 'headscarf', 'turban'],
+    noneTags: ['none', 'no_hat', 'no_headwear', 'bare_head', 'no_accessory'],
+  },
+  {
+    group: 'glasses',
+    excluded: ['glasses', 'eyeglasses', 'eyewear', 'sunglasses'],
+    blockedTags: ['glasses', 'eyeglasses', 'eyewear', 'sunglasses', 'lenses', 'rim'],
+    noneTags: ['no_glasses', 'no_eyewear', 'bare_face', 'absent_accessory', 'unobstructed_eyes'],
+  },
+] as const;
+
+function activeExclusionRules(excludedTraits: string[]): typeof EXCLUSION_RULES[number][] {
+  const normalized = excludedTraits.map(normalizeTraitText).filter(Boolean);
+  return EXCLUSION_RULES.filter((rule) => normalized.some((trait) => (
+    rule.excluded.some((needle) => trait.includes(needle) || needle.includes(trait))
+  )));
+}
+
+function isNoneLikeTag(tag: string, rule: typeof EXCLUSION_RULES[number]): boolean {
+  const normalizedTag = normalizeTraitText(tag);
+  return rule.noneTags.some((needle) => normalizedTag === needle || normalizedTag.includes(needle));
+}
+
+function tagConflictsWithExclusion(group: string, tag: string, excludedTraits: string[]): boolean {
+  const rule = activeExclusionRules(excludedTraits).find((item) => item.group === group);
+  if (!rule || isNoneLikeTag(tag, rule)) return false;
+  const normalizedTag = normalizeTraitText(tag);
+  return rule.blockedTags.some((needle) => normalizedTag.includes(needle));
+}
+
+function appendNegativeExclusionIntents(intents: TraitIntent[], taxonomy: Record<string, string[]>, excludedTraits: string[]): void {
+  for (const rule of activeExclusionRules(excludedTraits)) {
+    const availableTags = taxonomy[rule.group] || [];
+    const tags = rule.noneTags.filter((tag) => availableTags.includes(tag));
+    if (!tags.length) continue;
+    const existing = intents.some((intent) => intent.group === rule.group && intent.tags.some((tag) => tags.includes(tag)));
+    if (!existing) intents.push({ group: rule.group, tags: tags.slice(0, 4), required: true });
+  }
+}
+
 function parsePartialTraitJson(value: string): SanitizedTraitResult {
   const intents: TraitIntent[] = [];
   const intentMatcher = /\{[^{}]*"group"\s*:\s*"([^"]+)"[^{}]*"tags"\s*:\s*\[([^\]]*)\][^{}]*\}/g;
@@ -475,7 +568,7 @@ function parsePartialTraitJson(value: string): SanitizedTraitResult {
     });
   }
   return {
-    characterAnalysis: '',
+    characterAnalysis: emptyCharacterAnalysis(),
     summary: value.match(/"summary"\s*:\s*"([^"]{0,280})"/)?.[1] || '',
     confidence: Math.max(0, Math.min(1, Number(value.match(/"confidence"\s*:\s*([0-9.]+)/)?.[1] || 0.45))),
     selectionIntent: intents.slice(0, 12),
@@ -489,7 +582,29 @@ function traitJsonSchema(catalog: AvatarCatalog): Record<string, unknown> {
     type: 'object',
     additionalProperties: false,
     properties: {
-      characterAnalysis: { type: 'string', maxLength: 280 },
+      characterAnalysis: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          type: {
+            type: 'string',
+            enum: ['real_person', 'fictional_character', 'occupation', 'generic'],
+          },
+          identity: { type: 'string', maxLength: 80 },
+          core_visual_traits: {
+            type: 'array',
+            minItems: 1,
+            maxItems: 5,
+            items: { type: 'string', maxLength: 80 },
+          },
+          excluded_traits: {
+            type: 'array',
+            maxItems: 8,
+            items: { type: 'string', maxLength: 80 },
+          },
+        },
+        required: ['type', 'identity', 'core_visual_traits', 'excluded_traits'],
+      },
       summary: { type: 'string', maxLength: 160 },
       confidence: { type: 'number', minimum: 0, maximum: 1 },
       selectionIntent: {
@@ -513,7 +628,7 @@ function traitJsonSchema(catalog: AvatarCatalog): Record<string, unknown> {
         items: { type: 'string', maxLength: 140 },
       },
     },
-    required: ['characterAnalysis', 'summary', 'confidence', 'selectionIntent', 'warnings'],
+    required: ['characterAnalysis', 'selectionIntent', 'warnings'],
   };
 }
 
@@ -570,20 +685,21 @@ function buildTraitMessages({ prompt, contextMode, baselineState, catalog }: Val
       role: 'system',
       content: [
         'You convert an avatar request into visual target traits for a Duolingo-style avatar editor.',
-        'Before choosing traits, perform a concise visual feature analysis and put it in characterAnalysis.',
-        'For real historical or public figures, align with well-known real photo features and never add unsupported hats, glasses, facial hair, or accessories.',
-        'Known real-figure anchors: Barack Obama has dark skin, very short black or slightly gray hair, no facial hair, no glasses, and no hat; Lu Xun has a short bristly haircut and an iconic thick straight mustache, with no hat.',
-        'For occupation or identity roles, include the signature outfit or prop when the taxonomy supports it; a cowboy should include a cowboy or brimmed hat and may include rugged facial hair.',
-        'For fictional or animated characters, follow their canonical hairstyle, accessories, and clothing when represented by the taxonomy.',
-        'Wrong pattern to avoid: adding a baseball cap, round glasses, or beard to Obama. Correct pattern: choose no headwear, no glasses, no facial hair, short dark hair, dark skin, and a confident smile if available.',
-        'Correct occupation pattern: a western cowboy requires headwear tags like hat or brimmed_hat, and can use mustache or rugged facial hair when supported.',
-        'Correct historical pattern: Lu Xun requires facial_hair tags like mustache and short dark hair when supported.',
+        '### CRITICAL REASONING RULES ###',
+        '1. SPECIFIC CHARACTER > GENERIC TROPE: If the user names a specific character, prioritize the specific canonical look. Do not fall back to generic occupation traits. For Conan Edogawa, use his child face, black hair, glasses, and suit-like clothing if supported; do not add a generic detective hat, pipe, beard, or mustache.',
+        '2. AGE & GENDER CONSISTENCY: Infer age and gender from the character name or prompt. If the character is a child or female, facial_hair must be none unless that exact character canonically has facial hair. Never add mustaches or beards to children.',
+        '3. REAL FIGURES: Align with real photos or stable public visual references. Do not add unsupported hats, glasses, beards, or mustaches. For Obama, exclude hat, glasses, beard, and mustache.',
+        '4. KEY ACCESSORIES: Some characters are defined by accessories. If the taxonomy supports a signature item, mark it required. Conan must have glasses when glasses tags are available.',
+        '5. FORCED EXCLUSION CHECK: Before selecting tags, list excluded_traits that must not be present. Selection intents must not contradict excluded_traits.',
+        '### OUTPUT FORMAT ###',
+        'Return one compact JSON object. characterAnalysis must be an object with type, identity, core_visual_traits, and excluded_traits. type must be one of real_person, fictional_character, occupation, generic. core_visual_traits lists 3-5 specific visual elements. excluded_traits lists traits that must not be present, such as mustache, beard, hat, generic detective hat, pipe, adult features, or unsupported glasses.',
         'Do not choose raw option numbers, state names, or state values.',
         'Use only groups and tags from the supplied semantic taxonomy.',
-        'For real or fictional people, infer a small set of recognizable visual traits, but treat the result as a stylized approximation.',
-        'Prefer visible traits such as facial hair, headwear, hair shape, expression, clothing color, background color, glasses, wrinkles, and skin tone.',
-        'Do not output traits for unavailable or unsupported details.',
-        'Keep the JSON compact. Return at most 8 selectionIntent items and at most 4 tags per item.',
+        'selectionIntent is an array of { group, tags, required }. Tags must come from semanticTaxonomy[group].',
+        'required true means the trait is essential for identity, such as glasses for Conan or a cowboy hat for a generic cowboy.',
+        'Prefer visible traits such as hair shape, hair color, skin tone, glasses, headwear, facial hair, expression, clothing color, and background color.',
+        'Do not output traits for unavailable or unsupported details; put them in warnings instead.',
+        'Keep JSON compact: at most 8 selectionIntent items, at most 4 tags per item.',
       ].join(' '),
     },
     {
@@ -594,7 +710,7 @@ function buildTraitMessages({ prompt, contextMode, baselineState, catalog }: Val
         baselineState,
         semanticTaxonomy: buildTraitCatalog(catalog),
         outputRules: {
-          characterAnalysis: 'Briefly name the character type and visual basis, such as real person, historical figure, occupation role, or fictional character.',
+          characterAnalysis: 'Object: { type, identity, core_visual_traits, excluded_traits }. Use excluded_traits for features that must be absent.',
           selectionIntent: 'Array of { group, tags, required }. Tags must come from semanticTaxonomy[group].',
           required: 'Use true for signature traits that must be present for the requested person or role.',
           warnings: 'Mention approximation limits or traits that cannot be represented.',
@@ -609,6 +725,7 @@ function sanitizeTraitResult(rawResult: unknown, catalog: AvatarCatalog): Saniti
   const result = modelTraitResultSchema.safeParse(rawResult).success
     ? modelTraitResultSchema.parse(rawResult)
     : {};
+  const characterAnalysis = normalizeCharacterAnalysis(result.characterAnalysis);
   const intents: TraitIntent[] = [];
   const addIntent = (rawGroup: unknown, rawTags: unknown, rawRequired: unknown, rawColor?: unknown) => {
     const group = typeof rawGroup === 'string' ? rawGroup : '';
@@ -616,6 +733,7 @@ function sanitizeTraitResult(rawResult: unknown, catalog: AvatarCatalog): Saniti
     const tags = (Array.isArray(rawTags) ? rawTags : [rawTags])
       .map((tag) => String(tag || '').trim())
       .filter((tag) => taxonomy[group].includes(tag))
+      .filter((tag) => !tagConflictsWithExclusion(group, tag, characterAnalysis.excludedTraits))
       .slice(0, 8);
     if (!tags.length) return;
     intents.push({
@@ -639,13 +757,14 @@ function sanitizeTraitResult(rawResult: unknown, catalog: AvatarCatalog): Saniti
       addIntent(group, rawTags, true);
     }
   }
+  appendNegativeExclusionIntents(intents, taxonomy, characterAnalysis.excludedTraits);
 
   const warnings = Array.isArray(result.warnings)
     ? result.warnings.map((warning) => String(warning).trim()).filter(Boolean).slice(0, 8)
     : [];
 
   return {
-    characterAnalysis: String(result.characterAnalysis || '').trim().slice(0, 280),
+    characterAnalysis,
     summary: String(result.summary || '').trim().slice(0, 280),
     confidence: Math.max(0, Math.min(1, Number(result.confidence ?? 0.55))),
     selectionIntent: intents.slice(0, 12),
@@ -973,10 +1092,17 @@ function buildAvatarStateFromTraits(result: SanitizedTraitResult, validated: Val
 function buildTraitFallback(validated: ValidatedGenerationRequest, warning?: string): SanitizedTraitResult {
   const lower = validated.prompt.toLowerCase();
   const intents: TraitIntent[] = [];
+  let characterAnalysis = emptyCharacterAnalysis();
   const add = (group: string, tags: string[], required = false) => {
     intents.push({ group, tags, required });
   };
   if (/obama|barack|奥巴马/.test(lower)) {
+    characterAnalysis = {
+      type: 'real_person',
+      identity: 'Barack Obama',
+      coreVisualTraits: ['dark skin tone', 'very short dark hair', 'clean-shaven face'],
+      excludedTraits: ['hat', 'glasses', 'beard', 'mustache'],
+    };
     add('skin_tone', ['dark', 'brown'], true);
     add('main_hair', ['short_hair', 'cropped', 'dark_hair'], true);
     add('main_hair_color', ['dark', 'black'], false);
@@ -986,6 +1112,12 @@ function buildTraitFallback(validated: ValidatedGenerationRequest, warning?: str
     add('expression', ['smile'], false);
   }
   if (/鲁迅|lu\s*xun/.test(lower)) {
+    characterAnalysis = {
+      type: 'real_person',
+      identity: 'Lu Xun',
+      coreVisualTraits: ['short bristly hair', 'iconic straight mustache', 'dark facial hair'],
+      excludedTraits: ['hat'],
+    };
     add('main_hair', ['short_hair', 'cropped', 'spiky_hair'], true);
     add('main_hair_color', ['dark', 'black'], false);
     add('facial_hair', ['mustache'], true);
@@ -993,6 +1125,12 @@ function buildTraitFallback(validated: ValidatedGenerationRequest, warning?: str
     add('headwear', ['none', 'no_hat', 'no_headwear', 'bare_head'], true);
   }
   if (/cowboy|western|西部牛仔|牛仔/.test(lower)) {
+    characterAnalysis = {
+      type: 'occupation',
+      identity: 'cowboy',
+      coreVisualTraits: ['brimmed hat', 'rugged face', 'dark clothing'],
+      excludedTraits: [],
+    };
     add('headwear', ['hat', 'curved_brim', 'folded_brim'], true);
     add('facial_hair', ['mustache', 'short_beard'], false);
     add('clothing_color', ['dark'], false);
@@ -1015,7 +1153,7 @@ function buildTraitFallback(validated: ValidatedGenerationRequest, warning?: str
     add('background_color', ['blue'], false);
   }
   return {
-    characterAnalysis: '',
+    characterAnalysis,
     summary: warning || 'Used deterministic target traits where model semantics were uncertain.',
     confidence: 0.42,
     selectionIntent: intents,

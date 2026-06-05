@@ -328,13 +328,16 @@ describe('Cloudflare Worker API', () => {
     assert.equal(ai.calls[0].input.response_format.type, 'json_schema');
     assert.ok(ai.calls[0].input.response_format.json_schema.required.includes('characterAnalysis'));
     assert.ok(ai.calls[0].input.response_format.json_schema.required.includes('selectionIntent'));
+    assert.equal(ai.calls[0].input.response_format.json_schema.properties.characterAnalysis.type, 'object');
+    assert.ok(ai.calls[0].input.response_format.json_schema.properties.characterAnalysis.required.includes('excluded_traits'));
     assert.equal(ai.calls[0].input.response_format.json_schema.properties.avatarState, undefined);
     assert.equal(ai.calls[0].input.response_format.json_schema.properties.targetTraits, undefined);
     assert.equal(ai.calls[0].input.response_format.json_schema.properties.selectionIntent.maxItems, 8);
-    assert.match(ai.calls[0].input.messages[0].content, /visual feature analysis/);
-    assert.match(ai.calls[0].input.messages[0].content, /Obama.*no facial hair.*no glasses.*no hat/i);
-    assert.match(ai.calls[0].input.messages[0].content, /Lu Xun.*mustache/i);
-    assert.match(ai.calls[0].input.messages[0].content, /cowboy.*hat/i);
+    assert.match(ai.calls[0].input.messages[0].content, /SPECIFIC CHARACTER > GENERIC TROPE/);
+    assert.match(ai.calls[0].input.messages[0].content, /AGE & GENDER CONSISTENCY/);
+    assert.match(ai.calls[0].input.messages[0].content, /excluded_traits/);
+    assert.match(ai.calls[0].input.messages[0].content, /Conan.*glasses/i);
+    assert.match(ai.calls[0].input.messages[0].content, /Obama.*exclude.*hat.*glasses.*beard.*mustache/i);
     assert.equal(ai.calls[1].input.stream, true);
   });
 
@@ -501,6 +504,55 @@ describe('Cloudflare Worker API', () => {
     assert.equal(final.avatarState.GlassesColor, undefined);
     assert.ok(final.steps.every((step) => step.startsWith('Open ')));
     assert.deepEqual(final.selectionTrace.map((item) => item.state), ['Body', 'BackgroundColor']);
+  });
+
+  it('uses excluded traits to reject generic trope conflicts for a child character', async () => {
+    const ai = makeAiMock({
+      response: {
+        characterAnalysis: {
+          type: 'fictional_character',
+          identity: 'Conan Edogawa',
+          core_visual_traits: ['child face', 'short black hair', 'round glasses', 'blue suit'],
+          excluded_traits: ['mustache', 'beard', 'hat', 'adult features'],
+        },
+        summary: 'Conan-like visual traits.',
+        confidence: 0.91,
+        selectionIntent: [
+          { group: 'facial_hair', tags: ['mustache'], required: true },
+          { group: 'headwear', tags: ['hat'], required: true },
+          { group: 'glasses', tags: ['round_glasses'], required: true },
+          { group: 'main_hair', tags: ['short_hair'], required: true },
+          { group: 'clothing_color', tags: ['dark'], required: false },
+        ],
+        warnings: [],
+      },
+    });
+    const env = testEnv({ AI: ai });
+    const { response, final } = await generateAvatar(env, {
+      prompt: '生成一个江户川柯南 @current',
+      contextMode: 'current',
+      baselineState: {
+        FacialHair: 1,
+        Headwear: 10,
+        Glasses: 0,
+        MainHair: 58,
+        ClothingColor: 1,
+      },
+    });
+
+    assert.equal(response.status, 200);
+    assert.equal(final.ok, true);
+    assert.equal(final.usedFallback, false);
+    assert.deepEqual(final.avatarState, {
+      Glasses: 1,
+      MainHair: 48,
+      ClothingColor: 9,
+      FacialHair: 0,
+      Headwear: 0,
+    });
+    assert.ok(final.selectionTrace.some((item) => item.matchedOptionId === 'Glasses:1'));
+    assert.ok(final.selectionTrace.some((item) => item.matchedOptionId === 'FacialHair:0'));
+    assert.ok(final.selectionTrace.some((item) => item.matchedOptionId === 'Headwear:0'));
   });
 
   it('recovers complete trait intents from malformed model JSON', async () => {
